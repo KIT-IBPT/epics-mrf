@@ -19,6 +19,7 @@
   <macros>
     <include_parent_macros>true</include_parent_macros>
     <mrf_description_pv_suffix>.VAL$ {"longString":true}</mrf_description_pv_suffix>
+    <mrf_evr_type>MTCA-EVR-300</mrf_evr_type>
   </macros>
   <name>$(mrf_evr_name) Overview</name>
   <rules />
