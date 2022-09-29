@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2016 aquenos GmbH.
- * Copyright 2015-2016 Karlsruhe Institute of Technology.
+ * Copyright 2015-2022 aquenos GmbH.
+ * Copyright 2015-2022 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -27,6 +27,7 @@
  * of the GNU LGPL version 3 or newer.
  */
 
+#include <algorithm>
 #include <cstring>
 
 #include <alarm.h>
@@ -34,6 +35,7 @@
 #include <recGbl.h>
 
 #include "MrfDeviceRegistry.h"
+#include "mrfEpicsError.h"
 
 #include "MrfWaveformOutRecord.h"
 
@@ -157,12 +159,35 @@ MrfWaveformOutRecord::MrfWaveformOutRecord(::waveformRecord *record) :
     }
     // Read current value from device and update record's value and last value
     // written.
+    bool readFromDeviceSuccessful = true;
     for (std::uint32_t arrayIndex = 0; arrayIndex < this->record->nelm;
         ++arrayIndex) {
-      std::uint32_t value = deviceCache->readUInt32(
-          this->address.getMemoryAddress()
-              + (sizeof(std::uint32_t) + this->address.getElementDistance())
-                  * arrayIndex);
+      // We try to read the value from the device, so that we can initialize the
+      // record’s value. If this fails, we do not let the exception bubble up,
+      // because we still want the record to be initialized (so that it can be
+      // processed later). In this case, the record will simply stay in an
+      // undefined state (associated with an invalid alarm) until it is
+      // successfully processed for the first time.
+      std::uint32_t value;
+      try {
+        value = deviceCache->readUInt32(
+            this->address.getMemoryAddress()
+                + (sizeof(std::uint32_t) + this->address.getElementDistance())
+                    * arrayIndex);
+        } catch (std::exception &e) {
+          errorExtendedPrintf(
+              "%s Reading initial value from device failed: %s",
+              this->record->name,
+              e.what());
+          readFromDeviceSuccessful = false;
+          break;
+        } catch (...) {
+          errorExtendedPrintf(
+              "%s Reading initial value from device failed: Unknown error.",
+              this->record->name);
+          readFromDeviceSuccessful = false;
+          break;
+        }
       lastValueWritten[arrayIndex] = value;
       lastValueWrittenValid[arrayIndex] = true;
       switch (this->record->ftvl) {
@@ -180,33 +205,44 @@ MrfWaveformOutRecord::MrfWaveformOutRecord(::waveformRecord *record) :
         break;
       }
     }
-    // The record's value has been initialized, thus it is not undefined any
-    // longer.
-    this->record->udf = false;
-    // We have to reset the alarm state explicitly, so that the record is not
-    // marked as invalid. This is not optimal because the record will not be
-    // placed in an alarm state if the value would usually trigger an alarm.
-    // However, alarms on output records are uncommon and we do not use them
-    // for the EVG or EVR, so this is fine. We also update the time stamp so
-    // that it represents the current time.
-    recGblGetTimeStamp(this->record);
-    recGblResetAlarms(this->record);
-  } else {
-    // Make sure that all elements are initialized with zeros.
-    switch (this->record->ftvl) {
-    case DBF_CHAR:
-    case DBF_UCHAR:
-      std::memset(this->record->bptr, 0, this->record->nelm);
-      break;
-    case DBF_SHORT:
-    case DBF_USHORT:
-      std::memset(this->record->bptr, 0, this->record->nelm * 2);
-      break;
-    case DBF_LONG:
-    case DBF_ULONG:
-      std::memset(this->record->bptr, 0, this->record->nelm * 4);
-      break;
+    if (readFromDeviceSuccessful) {
+      // The record's value has been initialized, thus it is not undefined any
+      // longer.
+      this->record->udf = false;
+      // We have to reset the alarm state explicitly, so that the record is not
+      // marked as invalid. This is not optimal because the record will not be
+      // placed in an alarm state if the value would usually trigger an alarm.
+      // However, alarms on output records are uncommon and we do not use them
+      // for the EVG or EVR, so this is fine. We also update the time stamp so
+      // that it represents the current time.
+      recGblGetTimeStamp(this->record);
+      recGblResetAlarms(this->record);
+      // We return because we do not want to initialize the record’s value with
+      // zeros.
+      return;
+    } else {
+      // We reset the last value-written valid flag, because we don’t want to
+      // use a partially initialized array. Having such an array could lead to
+      // very confusing behavior that would not be transparent to the user at
+      // all.
+      std::fill(
+          lastValueWrittenValid.begin(), lastValueWrittenValid.end(), false);
     }
+  }
+  // Make sure that all elements are initialized with zeros.
+  switch (this->record->ftvl) {
+  case DBF_CHAR:
+  case DBF_UCHAR:
+    std::memset(this->record->bptr, 0, this->record->nelm);
+    break;
+  case DBF_SHORT:
+  case DBF_USHORT:
+    std::memset(this->record->bptr, 0, this->record->nelm * 2);
+    break;
+  case DBF_LONG:
+  case DBF_ULONG:
+    std::memset(this->record->bptr, 0, this->record->nelm * 4);
+    break;
   }
 }
 

@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2016 aquenos GmbH.
- * Copyright 2015-2016 Karlsruhe Institute of Technology.
+ * Copyright 2015-2022 aquenos GmbH.
+ * Copyright 2015-2022 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -34,6 +34,7 @@
 #include <recGbl.h>
 
 #include "MrfRecord.h"
+#include "mrfEpicsError.h"
 
 namespace anka {
 namespace mrf {
@@ -113,27 +114,46 @@ MrfOutputRecord<RecordType>::MrfOutputRecord(RecordType *record) :
 template<typename RecordType>
 void MrfOutputRecord<RecordType>::initializeValue() {
   if (this->getRecordAddress().isReadOnInit()) {
-    std::shared_ptr<MrfMemoryCache> deviceCache =
-        MrfDeviceRegistry::getInstance().getDeviceCache(
-            this->getRecordAddress().getDeviceId());
-    if (!deviceCache) {
-      throw std::runtime_error(
-          std::string("Could not find cache for device ")
-              + this->getRecordAddress().getDeviceId() + ".");
-    }
-    switch (this->getRecordAddress().getDataType()) {
-    case MrfRecordAddress::DataType::uInt16:
-      this->writeRecordValue(
-          this->convertFromDevice(
-              deviceCache->readUInt16(
-                  this->getRecordAddress().getMemoryAddress())));
-      break;
-    case MrfRecordAddress::DataType::uInt32:
-      this->writeRecordValue(
-          this->convertFromDevice(
-              deviceCache->readUInt32(
-                  this->getRecordAddress().getMemoryAddress())));
-      break;
+    // We try to read the value from the device, so that we can initialize the
+    // record’s value. If this fails, we do not let the exception bubble up,
+    // because we still want the record to be initialized (so that it can be
+    // processed later). In this case, the record will simply stay in an
+    // undefined state (associated with an invalid alarm) until it is
+    // successfully processed for the first time.
+    try {
+      std::shared_ptr<MrfMemoryCache> deviceCache =
+          MrfDeviceRegistry::getInstance().getDeviceCache(
+              this->getRecordAddress().getDeviceId());
+      if (!deviceCache) {
+        throw std::runtime_error(
+            std::string("Could not find cache for device ")
+                + this->getRecordAddress().getDeviceId() + ".");
+      }
+      switch (this->getRecordAddress().getDataType()) {
+      case MrfRecordAddress::DataType::uInt16:
+        this->writeRecordValue(
+            this->convertFromDevice(
+                deviceCache->readUInt16(
+                    this->getRecordAddress().getMemoryAddress())));
+        break;
+      case MrfRecordAddress::DataType::uInt32:
+        this->writeRecordValue(
+            this->convertFromDevice(
+                deviceCache->readUInt32(
+                    this->getRecordAddress().getMemoryAddress())));
+        break;
+      }
+    } catch (std::exception &e) {
+      errorExtendedPrintf(
+          "%s Reading initial value from device failed: %s",
+          this->getRecord()->name,
+          e.what());
+      return;
+    } catch (...) {
+      errorExtendedPrintf(
+          "%s Reading initial value from device failed: Unknown error.",
+          this->getRecord()->name);
+      return;
     }
     // The record's value has been initialized, therefore it is not undefined
     // any longer.
