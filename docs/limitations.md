@@ -5,6 +5,7 @@ This device support is currently limited to the following devices:
 
 - MTCA-EVR-300
 - VME-EVG-230
+- VME-EVR-230
 - VME-EVR-230RF
 
 However, it can easily be [extended](extending.md) to support additional

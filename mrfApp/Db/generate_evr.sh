@@ -15,7 +15,7 @@ case "${device_type}" in
     form_factor="mtca"
     series="300"
     ;;
-  vme-evr-230rf)
+  vme-evr-230|vme-evr-230rf)
     form_factor="vme"
     series="230"
     ;;
@@ -249,7 +249,12 @@ if [ "${form_factor}" = "vme" -a "${series}" = "230" ]; then
   done
 fi
 
-if [ "${device_type}" = "vme-evr-230rf" ]; then
+if [ "${device_type}" = "vme-evr-230" ]; then
+  # The standard VME-EVR-230 (non RF version) has one additional front-panel
+  # output.
+  fp_output 7
+  write_all_pvs+=("\$(P)\$(R)FPOut7:Map")
+elif [ "${device_type}" = "vme-evr-230rf" ]; then
   cat "${db_dir}/evr-vme-230rf.inc.${extension}"
   write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:FPOut:CML")
 fi

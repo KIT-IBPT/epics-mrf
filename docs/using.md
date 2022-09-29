@@ -111,13 +111,16 @@ default values are used.
 </table>
 
 
-### VME-EVR-230RF
+### VME-EVR-230 and VME-EVR-230RF
 
 ```
 mrfUdpIpEvrDevice("EVR01", "evr.example.com")
 
 dbLoadRecords("${MRF}/db/vme-evr-230rf.db","P=TEST:EVR:,R=01:,DEVICE=EVR01,UNIV_OUT_0_1_INSTALLED=0,UNIV_OUT_2_3_INSTALLED=0,UNIV_OUT_0_1_FD_AVAILABLE=0,UNIV_OUT_2_3_FD_AVAILABLE=0,TB_UNIV_OUT_0_1_INSTALLED=0,TB_UNIV_OUT_2_3_INSTALLED=0,TB_UNIV_OUT_4_5_INSTALLED=0,TB_UNIV_OUT_6_7_INSTALLED=0,TB_UNIV_OUT_8_9_INSTALLED=0,TB_UNIV_OUT_10_11_INSTALLED=0,TB_UNIV_OUT_12_13_INSTALLED=0,TB_UNIV_OUT_14_15_INSTALLED=0")
 ```
+
+For a VME-EVR-230, the file `vme-evr-230.db` has to be loaded instead of
+`vme-evr-230rf.db`.
 
 The following parameters have to be passed to `dbLoadRecords`:
 
