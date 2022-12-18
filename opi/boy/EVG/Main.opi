@@ -94,7 +94,7 @@ $(pv_value)</tooltip>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <mode>1</mode>
+        <mode>0</mode>
         <description>General Settings...</description>
       </action>
     </actions>
@@ -271,7 +271,7 @@ EVG</text>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <mode>1</mode>
+        <mode>0</mode>
         <description>Event Clock...</description>
       </action>
     </actions>
@@ -326,7 +326,7 @@ $(pv_value)</tooltip>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <mode>1</mode>
+        <mode>0</mode>
         <description>Multiplexed Counters...</description>
       </action>
     </actions>
@@ -381,7 +381,7 @@ $(pv_value)</tooltip>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <mode>1</mode>
+        <mode>0</mode>
         <description>Inputs...</description>
       </action>
     </actions>
@@ -436,7 +436,7 @@ $(pv_value)</tooltip>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <mode>1</mode>
+        <mode>0</mode>
         <description>Outputs...</description>
       </action>
     </actions>
@@ -491,7 +491,7 @@ $(pv_value)</tooltip>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <mode>1</mode>
+        <mode>0</mode>
         <description>AC Synchronization...</description>
       </action>
     </actions>
@@ -658,7 +658,7 @@ $(pv_value)</tooltip>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <mode>1</mode>
+        <mode>0</mode>
         <description>Distributed Bus...</description>
       </action>
     </actions>
@@ -713,7 +713,7 @@ $(pv_value)</tooltip>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <mode>1</mode>
+        <mode>0</mode>
         <description>Events...</description>
       </action>
     </actions>
@@ -1289,7 +1289,7 @@ $(pv_value)</tooltip>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <mode>1</mode>
+        <mode>0</mode>
         <description>Interrupts...</description>
       </action>
     </actions>
@@ -1344,7 +1344,7 @@ $(pv_value)</tooltip>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <mode>1</mode>
+        <mode>0</mode>
         <description>SFP Module...</description>
       </action>
     </actions>
