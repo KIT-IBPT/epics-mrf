@@ -14,6 +14,9 @@ DKMS for automatically building the module on systems that are based on Debian.
 The kernel module is distributed under the terms of the GNU General Public
 License version 2.
 
+The original source tree can be found on [GitHub](
+https://github.com/jpietari/mrf-linux-driver/).
+
 
 Building on Debian (or derivatives)
 -----------------------------------
