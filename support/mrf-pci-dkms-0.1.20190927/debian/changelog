@@ -1,3 +1,9 @@
+mrf-pci-dkms (0.1.20190927) stable; urgency=low
+
+  * Include upstream changes.
+
+ -- Dynamic Kernel Modules Support Team <pkg-dkms-maint@lists.alioth.debian.org>  Thu, 06 Apr 2023 09:58:36 +0200
+
 mrf-pci-dkms (0.1.20180824) stable; urgency=low
 
   * Automatically packaged by DKMS.

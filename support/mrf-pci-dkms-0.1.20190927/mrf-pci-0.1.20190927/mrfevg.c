@@ -227,6 +227,11 @@ static int pci_evg_probe(struct pci_dev *pcidev, const struct pci_device_id *dev
       ev_device->pEv = ev_device->BAR_mmapped[0];
       break;
 
+    case PCI_DEVICE_ID_MRF_MTCAEVG300:
+      ev_device->devtype = MRF_DEVTYPE_K7_PCIE;
+      ev_device->pEv = ev_device->BAR_mmapped[0];
+      break;
+
     default:
       printk(KERN_WARNING DEVICE_NAME ": Unknown subsystem device id 0x%04X\n.",
 	     ev_device->subsys_id);
@@ -245,7 +250,8 @@ static int pci_evg_probe(struct pci_dev *pcidev, const struct pci_device_id *dev
       dev_t devno = MKDEV(ev_device->major, i);
       char devletter = 'a' + (char) id->driver_data;
       struct device *device = NULL;
-      device = device_create(mrf_evg_class, &pcidev->dev, devno, NULL, "eg%c%d", devletter, i);
+      device = device_create(mrf_evg_class, &pcidev->dev, devno, NULL, "eg%c%d",
+			     devletter, i);
       if (IS_ERR(device))
         {
           printk(KERN_WARNING DEVICE_NAME ": could not register device eg%c%d.\n", devletter, i);

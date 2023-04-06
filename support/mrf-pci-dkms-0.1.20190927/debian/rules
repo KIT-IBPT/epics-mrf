@@ -6,7 +6,7 @@
 
 DEB_NAME=mrf-pci
 NAME=mrf-pci
-VERSION=0.1.20180824
+VERSION=0.1.20190927
 
 configure: configure-stamp
 configure-stamp:
