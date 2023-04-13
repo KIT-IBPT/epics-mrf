@@ -1,669 +1,537 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <display typeId="org.csstudio.opibuilder.Display" version="1.0.0">
-  <show_close_button>true</show_close_button>
-  <rules />
-  <wuid>5cccfaca:14dde8a1ae8:-7ed6</wuid>
-  <show_grid>true</show_grid>
-  <auto_zoom_to_fit_all>false</auto_zoom_to_fit_all>
-  <scripts />
-  <height>600</height>
-  <macros>
-    <include_parent_macros>true</include_parent_macros>
-  </macros>
-  <boy_version>4.0.103.201506301920</boy_version>
-  <show_edit_range>true</show_edit_range>
-  <widget_type>Display</widget_type>
+  <actions hook="false" hook_all="false" />
   <auto_scale_widgets>
     <auto_scale_widgets>false</auto_scale_widgets>
     <min_width>-1</min_width>
     <min_height>-1</min_height>
   </auto_scale_widgets>
+  <auto_zoom_to_fit_all>false</auto_zoom_to_fit_all>
   <background_color>
     <color red="240" green="240" blue="240" />
   </background_color>
-  <width>800</width>
-  <x>-1</x>
-  <name>$(mrf_evr_name) General Settings</name>
-  <grid_space>6</grid_space>
-  <show_ruler>true</show_ruler>
-  <y>-1</y>
-  <snap_to_geometry>true</snap_to_geometry>
+  <boy_version>5.1.0.202302222212</boy_version>
   <foreground_color>
     <color red="192" green="192" blue="192" />
   </foreground_color>
-  <actions hook="false" hook_all="false" />
+  <grid_space>6</grid_space>
+  <height>600</height>
+  <macros>
+    <include_parent_macros>true</include_parent_macros>
+  </macros>
+  <name>$(mrf_evr_name) General Settings</name>
+  <rules />
+  <scripts />
+  <show_close_button>true</show_close_button>
+  <show_edit_range>true</show_edit_range>
+  <show_grid>true</show_grid>
+  <show_ruler>true</show_ruler>
+  <snap_to_geometry>true</snap_to_geometry>
+  <widget_type>Display</widget_type>
+  <width>800</width>
+  <wuid>5cccfaca:14dde8a1ae8:-7ed6</wuid>
+  <x>-1</x>
+  <y>-1</y>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>0</border_style>
-    <tooltip></tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>5cccfaca:14dde8a1ae8:-6140</wuid>
-    <transparent>true</transparent>
+    <actions hook="false" hook_all="false" />
     <auto_size>false</auto_size>
-    <text>$(mrf_evr_name) General Settings</text>
-    <scripts />
-    <height>37</height>
-    <border_width>1</border_width>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <visible>true</visible>
-    <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Label</widget_type>
-    <wrap_words>false</wrap_words>
     <background_color>
       <color red="255" green="255" blue="255" />
     </background_color>
-    <width>619</width>
-    <x>174</x>
-    <name>Label_2</name>
-    <y>12</y>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="25" style="1" pixels="false">Header 1</opifont.name>
+    </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
     </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="25" style="1">Header 1</opifont.name>
-    </font>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
-    <toggle_button>false</toggle_button>
-    <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <alarm_pulsing>false</alarm_pulsing>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <push_action_index>0</push_action_index>
+    <height>37</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Label_2</name>
     <rules />
-    <enabled>true</enabled>
-    <wuid>5cccfaca:14dde8a1ae8:-7ec0</wuid>
-    <pv_value />
-    <text>$(actions)</text>
-    <scripts />
-    <border_alarm_sensitive>false</border_alarm_sensitive>
-    <height>25</height>
-    <border_width>1</border_width>
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <image></image>
+    <scripts />
+    <text>$(mrf_evr_name) General Settings</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
+    <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
-    <pv_name></pv_name>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Action Button</widget_type>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <background_color>
-      <color red="240" green="240" blue="240" />
-    </background_color>
-    <width>133</width>
-    <x>18</x>
-    <name>Action Button</name>
-    <y>18</y>
-    <style>0</style>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
+    <widget_type>Label</widget_type>
+    <width>619</width>
+    <wrap_words>false</wrap_words>
+    <wuid>5cccfaca:14dde8a1ae8:-6140</wuid>
+    <x>174</x>
+    <y>12</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="OPEN_DISPLAY">
         <path>Main_$(mrf_evr_type).opi</path>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <replace>1</replace>
+        <mode>0</mode>
         <description>Overview...</description>
       </action>
     </actions>
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.choiceButton" version="1.0.0">
-    <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <alarm_pulsing>false</alarm_pulsing>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>5cccfaca:14dde8a1ae8:-501d</wuid>
-    <selected_color>
-      <color red="255" green="255" blue="255" />
-    </selected_color>
-    <horizontal>true</horizontal>
-    <pv_value />
-    <scripts />
-    <border_alarm_sensitive>true</border_alarm_sensitive>
-    <height>23</height>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
+    <border_alarm_sensitive>false</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
     <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>25</height>
+    <image></image>
+    <name>Action Button</name>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <items_from_pv>true</items_from_pv>
+    <scripts />
+    <style>0</style>
+    <text>$(actions)</text>
+    <toggle_button>false</toggle_button>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
     <visible>true</visible>
-    <pv_name>$(mrf_evr_prefix)Enabled</pv_name>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Choice Button</widget_type>
+    <widget_type>Action Button</widget_type>
+    <width>133</width>
+    <wuid>5cccfaca:14dde8a1ae8:-7ec0</wuid>
+    <x>18</x>
+    <y>18</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.choiceButton" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <alarm_pulsing>false</alarm_pulsing>
     <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
     <background_color>
       <color red="240" green="240" blue="240" />
     </background_color>
-    <width>169</width>
-    <x>168</x>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>23</height>
+    <horizontal>true</horizontal>
+    <items_from_pv>true</items_from_pv>
     <name>Choice Button</name>
+    <pv_name>$(mrf_evr_prefix)Enabled</pv_name>
+    <pv_value />
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <selected_color>
+      <color red="255" green="255" blue="255" />
+    </selected_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Choice Button</widget_type>
+    <width>169</width>
+    <wuid>5cccfaca:14dde8a1ae8:-501d</wuid>
+    <x>168</x>
     <y>82</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>0</border_style>
-    <tooltip></tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>5cccfaca:14dde8a1ae8:-5003</wuid>
-    <transparent>true</transparent>
+    <actions hook="false" hook_all="false" />
     <auto_size>false</auto_size>
-    <text>EVR Master Enable:</text>
-    <scripts />
-    <height>20</height>
-    <border_width>1</border_width>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <visible>true</visible>
-    <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Label</widget_type>
-    <wrap_words>false</wrap_words>
     <background_color>
       <color red="255" green="255" blue="255" />
     </background_color>
-    <width>151</width>
-    <x>18</x>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
     <name>Label</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <text>EVR Master Enable:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Label</widget_type>
+    <width>151</width>
+    <wrap_words>false</wrap_words>
+    <wuid>5cccfaca:14dde8a1ae8:-5003</wuid>
+    <x>18</x>
     <y>84</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>0</border_style>
-    <tooltip></tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>5cccfaca:14dde8a1ae8:-4fb8</wuid>
-    <transparent>true</transparent>
+    <actions hook="false" hook_all="false" />
     <auto_size>false</auto_size>
-    <text>Soft Reset IP:</text>
-    <scripts />
-    <height>20</height>
-    <border_width>1</border_width>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <visible>true</visible>
-    <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Label</widget_type>
-    <wrap_words>false</wrap_words>
     <background_color>
       <color red="255" green="255" blue="255" />
     </background_color>
-    <width>151</width>
-    <x>18</x>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
     <name>Label_3</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <text>Soft Reset IP:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Label</widget_type>
+    <width>151</width>
+    <wrap_words>false</wrap_words>
+    <wuid>5cccfaca:14dde8a1ae8:-4fb8</wuid>
+    <x>18</x>
     <y>114</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
-    <toggle_button>false</toggle_button>
-    <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <actions hook="false" hook_all="false">
+      <action type="WRITE_PV">
+        <pv_name>$(pv_name)</pv_name>
+        <value>0</value>
+        <timeout>10</timeout>
+        <confirm_message></confirm_message>
+        <description>Reset</description>
+      </action>
+    </actions>
     <alarm_pulsing>false</alarm_pulsing>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <push_action_index>0</push_action_index>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>5cccfaca:14dde8a1ae8:-4fa8</wuid>
-    <pv_value />
-    <text>$(actions)</text>
-    <scripts />
-    <border_alarm_sensitive>false</border_alarm_sensitive>
-    <height>18</height>
-    <border_width>1</border_width>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <image></image>
-    <visible>true</visible>
-    <pv_name>$(mrf_evr_prefix)Cmd:Reset.PROC</pv_name>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Action Button</widget_type>
     <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
     <background_color>
       <color red="240" green="240" blue="240" />
     </background_color>
-    <width>97</width>
-    <x>170</x>
+    <border_alarm_sensitive>false</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>18</height>
+    <image></image>
     <name>Action Button_1</name>
-    <y>115</y>
+    <push_action_index>0</push_action_index>
+    <pv_name>$(mrf_evr_prefix)Cmd:Reset.PROC</pv_name>
+    <pv_value />
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
     <style>0</style>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false">
-      <action type="WRITE_PV">
-        <pv_name>$(pv_name)</pv_name>
-        <value>0</value>
-        <timeout>10</timeout>
-        <confirm_message></confirm_message>
-        <description>Reset</description>
-      </action>
-    </actions>
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
+    <text>$(actions)</text>
+    <toggle_button>false</toggle_button>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Action Button</widget_type>
+    <width>97</width>
+    <wuid>5cccfaca:14dde8a1ae8:-4fa8</wuid>
+    <x>170</x>
+    <y>115</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>0</border_style>
-    <tooltip></tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>5cccfaca:14dde8a1ae8:-4f88</wuid>
-    <transparent>true</transparent>
+    <actions hook="false" hook_all="false" />
     <auto_size>false</auto_size>
-    <text>Firmware:</text>
-    <scripts />
-    <height>20</height>
-    <border_width>1</border_width>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <visible>true</visible>
-    <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Label</widget_type>
-    <wrap_words>false</wrap_words>
     <background_color>
       <color red="255" green="255" blue="255" />
     </background_color>
-    <width>139</width>
-    <x>18</x>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
     <name>Label_4</name>
-    <y>360</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>0</border_style>
-    <tooltip></tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
     <rules />
-    <enabled>true</enabled>
-    <wuid>5cccfaca:14dde8a1ae8:-4f78</wuid>
-    <transparent>true</transparent>
-    <auto_size>false</auto_size>
-    <text>Form Factor:</text>
-    <scripts />
-    <height>20</height>
-    <border_width>1</border_width>
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <visible>true</visible>
+    <scripts />
+    <text>Firmware:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
     <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <visible>true</visible>
     <widget_type>Label</widget_type>
+    <width>139</width>
     <wrap_words>false</wrap_words>
+    <wuid>5cccfaca:14dde8a1ae8:-4f88</wuid>
+    <x>18</x>
+    <y>360</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <auto_size>false</auto_size>
     <background_color>
       <color red="255" green="255" blue="255" />
     </background_color>
-    <width>139</width>
-    <x>18</x>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
     <name>Label_5</name>
-    <y>390</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>0</border_style>
-    <tooltip></tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
     <rules />
-    <enabled>true</enabled>
-    <wuid>5cccfaca:14dde8a1ae8:-4f68</wuid>
-    <transparent>true</transparent>
-    <auto_size>false</auto_size>
-    <text>Version:</text>
-    <scripts />
-    <height>20</height>
-    <border_width>1</border_width>
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <visible>true</visible>
+    <scripts />
+    <text>Form Factor:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
     <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <visible>true</visible>
     <widget_type>Label</widget_type>
-    <wrap_words>false</wrap_words>
-    <background_color>
-      <color red="255" green="255" blue="255" />
-    </background_color>
     <width>139</width>
+    <wrap_words>false</wrap_words>
+    <wuid>5cccfaca:14dde8a1ae8:-4f78</wuid>
     <x>18</x>
-    <name>Label_6</name>
-    <y>420</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
-    <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <alarm_pulsing>false</alarm_pulsing>
-    <precision>0</precision>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>5cccfaca:14dde8a1ae8:-4f5e</wuid>
-    <transparent>false</transparent>
-    <pv_value />
-    <auto_size>false</auto_size>
-    <text>######</text>
-    <rotation_angle>0.0</rotation_angle>
-    <scripts />
-    <border_alarm_sensitive>true</border_alarm_sensitive>
-    <show_units>true</show_units>
-    <height>20</height>
-    <border_width>1</border_width>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <visible>true</visible>
-    <pv_name>$(mrf_evr_prefix)Firmware:Version:Complete</pv_name>
-    <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <precision_from_pv>true</precision_from_pv>
-    <widget_type>Text Update</widget_type>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <wrap_words>false</wrap_words>
-    <format_type>3</format_type>
-    <background_color>
-      <color red="255" green="255" blue="255" />
-    </background_color>
-    <width>120</width>
-    <x>169</x>
-    <name>Text Update</name>
-    <y>360</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
-    <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <alarm_pulsing>false</alarm_pulsing>
-    <precision>0</precision>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>5cccfaca:14dde8a1ae8:-4f46</wuid>
-    <transparent>false</transparent>
-    <pv_value />
-    <auto_size>false</auto_size>
-    <text>######</text>
-    <rotation_angle>0.0</rotation_angle>
-    <scripts />
-    <border_alarm_sensitive>true</border_alarm_sensitive>
-    <show_units>true</show_units>
-    <height>20</height>
-    <border_width>1</border_width>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <visible>true</visible>
-    <pv_name>$(mrf_evr_prefix)Firmware:FormFactor</pv_name>
-    <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <precision_from_pv>true</precision_from_pv>
-    <widget_type>Text Update</widget_type>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <wrap_words>false</wrap_words>
-    <format_type>4</format_type>
-    <background_color>
-      <color red="255" green="255" blue="255" />
-    </background_color>
-    <width>120</width>
-    <x>169</x>
-    <name>Text Update_1</name>
     <y>390</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <alarm_pulsing>false</alarm_pulsing>
+    <auto_size>false</auto_size>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="255" green="255" blue="255" />
+    </background_color>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
       <color red="0" green="0" blue="0" />
     </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
-    <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <alarm_pulsing>false</alarm_pulsing>
-    <precision>0</precision>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>5cccfaca:14dde8a1ae8:-4f37</wuid>
-    <transparent>false</transparent>
-    <pv_value />
-    <auto_size>false</auto_size>
-    <text>######</text>
-    <rotation_angle>0.0</rotation_angle>
-    <scripts />
-    <border_alarm_sensitive>true</border_alarm_sensitive>
-    <show_units>true</show_units>
+    <format_type>3</format_type>
     <height>20</height>
-    <border_width>1</border_width>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Text Update</name>
+    <precision>0</precision>
+    <precision_from_pv>true</precision_from_pv>
+    <pv_name>$(mrf_evr_prefix)Firmware:Version:Complete</pv_name>
+    <pv_value />
+    <rotation_angle>0.0</rotation_angle>
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <visible>true</visible>
-    <pv_name>$(mrf_evr_prefix)Firmware:Version</pv_name>
+    <scripts />
+    <show_units>true</show_units>
+    <text>######</text>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <transparent>false</transparent>
     <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <precision_from_pv>true</precision_from_pv>
+    <visible>true</visible>
     <widget_type>Text Update</widget_type>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <width>120</width>
     <wrap_words>false</wrap_words>
-    <format_type>3</format_type>
+    <wuid>5cccfaca:14dde8a1ae8:-4f5e</wuid>
+    <x>169</x>
+    <y>360</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <alarm_pulsing>false</alarm_pulsing>
+    <auto_size>false</auto_size>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
     <background_color>
       <color red="255" green="255" blue="255" />
     </background_color>
-    <width>120</width>
-    <x>169</x>
-    <name>Text Update_2</name>
-    <y>420</y>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
       <color red="0" green="0" blue="0" />
     </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
+    <format_type>4</format_type>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Text Update_1</name>
+    <precision>0</precision>
+    <precision_from_pv>true</precision_from_pv>
+    <pv_name>$(mrf_evr_prefix)Firmware:FormFactor</pv_name>
+    <pv_value />
+    <rotation_angle>0.0</rotation_angle>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <show_units>true</show_units>
+    <text>######</text>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <transparent>false</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Text Update</widget_type>
+    <width>120</width>
+    <wrap_words>false</wrap_words>
+    <wuid>5cccfaca:14dde8a1ae8:-4f46</wuid>
+    <x>169</x>
+    <y>390</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>0</border_style>
-    <tooltip></tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>4a318208:14de1f4e024:-374</wuid>
-    <transparent>true</transparent>
+    <actions hook="false" hook_all="false" />
     <auto_size>false</auto_size>
-    <text>Event FIFO stopped:</text>
-    <scripts />
-    <height>20</height>
+    <background_color>
+      <color red="255" green="255" blue="255" />
+    </background_color>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
     <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Label_9</name>
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <visible>true</visible>
+    <scripts />
+    <text>Event FIFO stopped:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
     <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <visible>true</visible>
     <widget_type>Label</widget_type>
-    <wrap_words>false</wrap_words>
-    <background_color>
-      <color red="255" green="255" blue="255" />
-    </background_color>
     <width>151</width>
+    <wrap_words>false</wrap_words>
+    <wuid>4a318208:14de1f4e024:-374</wuid>
     <x>18</x>
-    <name>Label_9</name>
     <y>158</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
-    <toggle_button>false</toggle_button>
-    <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <alarm_pulsing>false</alarm_pulsing>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <push_action_index>0</push_action_index>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>4a318208:14de1f4e024:-373</wuid>
-    <pv_value />
-    <text>$(actions)</text>
-    <scripts />
-    <border_alarm_sensitive>false</border_alarm_sensitive>
-    <height>18</height>
-    <border_width>1</border_width>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <image></image>
-    <visible>true</visible>
-    <pv_name>$(mrf_evr_prefix)RX:ResetEventFIFO.PROC</pv_name>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Action Button</widget_type>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <background_color>
-      <color red="240" green="240" blue="240" />
-    </background_color>
-    <width>97</width>
-    <x>170</x>
-    <name>Action Button_2</name>
-    <y>187</y>
-    <style>0</style>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
     <actions hook="false" hook_all="false">
       <action type="WRITE_PV">
         <pv_name>$(pv_name)</pv_name>
@@ -673,462 +541,790 @@ $(pv_value)</tooltip>
         <description>Reset</description>
       </action>
     </actions>
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
+    <border_alarm_sensitive>false</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
     <border_style>0</border_style>
-    <tooltip></tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>-3a15dff4:14e25e56121:-7794</wuid>
-    <transparent>true</transparent>
-    <auto_size>false</auto_size>
-    <text>Reset RX Event FIFO:</text>
-    <scripts />
-    <height>20</height>
     <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>18</height>
+    <image></image>
+    <name>Action Button_2</name>
+    <push_action_index>0</push_action_index>
+    <pv_name>$(mrf_evr_prefix)RX:ResetEventFIFO.PROC</pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
+    <scripts />
+    <style>0</style>
+    <text>$(actions)</text>
+    <toggle_button>false</toggle_button>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
     <visible>true</visible>
-    <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Label</widget_type>
-    <wrap_words>false</wrap_words>
+    <widget_type>Action Button</widget_type>
+    <width>97</width>
+    <wuid>4a318208:14de1f4e024:-373</wuid>
+    <x>170</x>
+    <y>187</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <auto_size>false</auto_size>
     <background_color>
       <color red="255" green="255" blue="255" />
     </background_color>
-    <width>151</width>
-    <x>18</x>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
     <name>Label_10</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <text>Reset RX Event FIFO:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Label</widget_type>
+    <width>151</width>
+    <wrap_words>false</wrap_words>
+    <wuid>-3a15dff4:14e25e56121:-7794</wuid>
+    <x>18</x>
     <y>186</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>0</border_style>
-    <tooltip></tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>-3a15dff4:14e25e56121:-76af</wuid>
-    <transparent>true</transparent>
+    <actions hook="false" hook_all="false" />
     <auto_size>false</auto_size>
-    <text>RX Loopback:</text>
-    <scripts />
-    <height>20</height>
-    <border_width>1</border_width>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <visible>true</visible>
-    <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Label</widget_type>
-    <wrap_words>false</wrap_words>
     <background_color>
       <color red="255" green="255" blue="255" />
     </background_color>
-    <width>151</width>
-    <x>18</x>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
     <name>Label_11</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <text>RX Loopback:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Label</widget_type>
+    <width>151</width>
+    <wrap_words>false</wrap_words>
+    <wuid>-3a15dff4:14e25e56121:-76af</wuid>
+    <x>18</x>
     <y>216</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.choiceButton" version="1.0.0">
-    <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <actions hook="false" hook_all="false" />
     <alarm_pulsing>false</alarm_pulsing>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>-3a15dff4:14e25e56121:-7693</wuid>
-    <selected_color>
-      <color red="255" green="255" blue="255" />
-    </selected_color>
-    <horizontal>true</horizontal>
-    <pv_value />
-    <scripts />
-    <border_alarm_sensitive>true</border_alarm_sensitive>
-    <height>23</height>
-    <border_width>1</border_width>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <items_from_pv>true</items_from_pv>
-    <visible>true</visible>
-    <pv_name>$(mrf_evr_prefix)RX:Loopback</pv_name>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Choice Button</widget_type>
     <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
     <background_color>
       <color red="240" green="240" blue="240" />
     </background_color>
-    <width>205</width>
-    <x>168</x>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>23</height>
+    <horizontal>true</horizontal>
+    <items_from_pv>true</items_from_pv>
     <name>Choice Button_1</name>
-    <y>214</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>0</border_style>
-    <tooltip></tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
+    <pv_name>$(mrf_evr_prefix)RX:Loopback</pv_name>
+    <pv_value />
     <rules />
-    <enabled>true</enabled>
-    <wuid>-3a15dff4:14e25e56121:-767d</wuid>
-    <transparent>true</transparent>
-    <auto_size>false</auto_size>
-    <text>TX Loopback:</text>
-    <scripts />
-    <height>20</height>
-    <border_width>1</border_width>
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <visible>true</visible>
-    <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Label</widget_type>
-    <wrap_words>false</wrap_words>
-    <background_color>
-      <color red="255" green="255" blue="255" />
-    </background_color>
-    <width>151</width>
-    <x>18</x>
-    <name>Label_12</name>
-    <y>246</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.choiceButton" version="1.0.0">
-    <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <alarm_pulsing>false</alarm_pulsing>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>-3a15dff4:14e25e56121:-767c</wuid>
+    <scripts />
     <selected_color>
       <color red="255" green="255" blue="255" />
     </selected_color>
-    <horizontal>true</horizontal>
-    <pv_value />
-    <scripts />
-    <border_alarm_sensitive>true</border_alarm_sensitive>
-    <height>23</height>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Choice Button</widget_type>
+    <width>205</width>
+    <wuid>-3a15dff4:14e25e56121:-7693</wuid>
+    <x>168</x>
+    <y>214</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <auto_size>false</auto_size>
+    <background_color>
+      <color red="255" green="255" blue="255" />
+    </background_color>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
     <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Label_12</name>
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <items_from_pv>true</items_from_pv>
+    <scripts />
+    <text>TX Loopback:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
+    <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
-    <pv_name>$(mrf_evr_prefix)TX:Loopback</pv_name>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Choice Button</widget_type>
+    <widget_type>Label</widget_type>
+    <width>151</width>
+    <wrap_words>false</wrap_words>
+    <wuid>-3a15dff4:14e25e56121:-767d</wuid>
+    <x>18</x>
+    <y>246</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.choiceButton" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <alarm_pulsing>false</alarm_pulsing>
     <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
     <background_color>
       <color red="240" green="240" blue="240" />
     </background_color>
-    <width>205</width>
-    <x>168</x>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>23</height>
+    <horizontal>true</horizontal>
+    <items_from_pv>true</items_from_pv>
     <name>Choice Button_2</name>
+    <pv_name>$(mrf_evr_prefix)TX:Loopback</pv_name>
+    <pv_value />
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <selected_color>
+      <color red="255" green="255" blue="255" />
+    </selected_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Choice Button</widget_type>
+    <width>205</width>
+    <wuid>-3a15dff4:14e25e56121:-767c</wuid>
+    <x>168</x>
     <y>244</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>0</border_style>
-    <tooltip></tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>-3a15dff4:14e25e56121:-761e</wuid>
-    <transparent>true</transparent>
+    <actions hook="false" hook_all="false" />
     <auto_size>false</auto_size>
-    <text>SFP Missing:</text>
-    <scripts />
-    <height>20</height>
-    <border_width>1</border_width>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <visible>true</visible>
-    <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Label</widget_type>
-    <wrap_words>false</wrap_words>
     <background_color>
       <color red="255" green="255" blue="255" />
     </background_color>
-    <width>151</width>
-    <x>18</x>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
     <name>Label_13</name>
-    <y>288</y>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>0</border_style>
-    <tooltip></tooltip>
-    <horizontal_alignment>0</horizontal_alignment>
     <rules />
-    <enabled>true</enabled>
-    <wuid>-3a15dff4:14e25e56121:-7604</wuid>
-    <transparent>true</transparent>
-    <auto_size>false</auto_size>
-    <text>SFP Link:</text>
-    <scripts />
-    <height>20</height>
-    <border_width>1</border_width>
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <visible>true</visible>
+    <scripts />
+    <text>SFP Missing:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
     <vertical_alignment>1</vertical_alignment>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <visible>true</visible>
     <widget_type>Label</widget_type>
+    <width>151</width>
     <wrap_words>false</wrap_words>
+    <wuid>-3a15dff4:14e25e56121:-761e</wuid>
+    <x>18</x>
+    <y>288</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <auto_size>false</auto_size>
     <background_color>
       <color red="255" green="255" blue="255" />
     </background_color>
-    <width>151</width>
-    <x>18</x>
-    <name>Label_14</name>
-    <y>318</y>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
     </foreground_color>
-    <actions hook="false" hook_all="false" />
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Label_14</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <text>SFP Link:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Label</widget_type>
+    <width>151</width>
+    <wrap_words>false</wrap_words>
+    <wuid>-3a15dff4:14e25e56121:-7604</wuid>
+    <x>18</x>
+    <y>318</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.LED" version="1.0.0">
+    <actions hook="false" hook_all="false" />
     <alarm_pulsing>false</alarm_pulsing>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <rules />
-    <effect_3d>true</effect_3d>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <bit>-1</bit>
-    <pv_value />
-    <height>20</height>
-    <border_width>1</border_width>
-    <visible>true</visible>
-    <pv_name>$(mrf_evr_prefix)SFP:Missing</pv_name>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
-    <widget_type>LED</widget_type>
-    <name>LED</name>
-    <actions hook="false" hook_all="false" />
-    <show_boolean_label>false</show_boolean_label>
     <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <border_width>1</border_width>
+    <bulb_border>3</bulb_border>
+    <bulb_border_color>
+      <color red="150" green="150" blue="150" />
+    </bulb_border_color>
+    <data_type>0</data_type>
+    <effect_3d>true</effect_3d>
     <enabled>true</enabled>
-    <wuid>-3a15dff4:14e25e56121:-75fa</wuid>
-    <on_color>
-      <color red="255" green="0" blue="0" />
-    </on_color>
-    <scripts />
-    <border_alarm_sensitive>true</border_alarm_sensitive>
-    <on_label>ON</on_label>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>true</keep_wh_ratio>
-    </scale_options>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="192" green="192" blue="192" />
+    </foreground_color>
+    <height>20</height>
+    <name>LED</name>
     <off_color>
       <color red="100" green="0" blue="0" />
     </off_color>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <background_color>
-      <color red="240" green="240" blue="240" />
-    </background_color>
-    <square_led>false</square_led>
-    <width>20</width>
-    <x>170</x>
-    <data_type>0</data_type>
-    <y>288</y>
-    <foreground_color>
-      <color red="192" green="192" blue="192" />
-    </foreground_color>
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
     <off_label>OFF</off_label>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.LED" version="1.0.0">
-    <alarm_pulsing>false</alarm_pulsing>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <rules />
-    <effect_3d>true</effect_3d>
-    <bit>-1</bit>
-    <pv_value />
-    <height>20</height>
-    <border_width>1</border_width>
-    <visible>true</visible>
-    <pv_name>$(mrf_evr_prefix)SFP:Link</pv_name>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>LED</widget_type>
-    <name>LED_1</name>
-    <actions hook="false" hook_all="false" />
-    <show_boolean_label>false</show_boolean_label>
-    <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <enabled>true</enabled>
-    <wuid>-3a15dff4:14e25e56121:-75e8</wuid>
     <on_color>
-      <color red="0" green="255" blue="0" />
+      <color red="255" green="0" blue="0" />
     </on_color>
-    <scripts />
-    <border_alarm_sensitive>true</border_alarm_sensitive>
     <on_label>ON</on_label>
+    <pv_name>$(mrf_evr_prefix)SFP:Missing</pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>true</keep_wh_ratio>
     </scale_options>
+    <scripts />
+    <show_boolean_label>false</show_boolean_label>
+    <square_led>false</square_led>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>LED</widget_type>
+    <width>20</width>
+    <wuid>-3a15dff4:14e25e56121:-75fa</wuid>
+    <x>170</x>
+    <y>288</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.LED" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
+    <bit>-1</bit>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <bulb_border>3</bulb_border>
+    <bulb_border_color>
+      <color red="150" green="150" blue="150" />
+    </bulb_border_color>
+    <data_type>0</data_type>
+    <effect_3d>true</effect_3d>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="192" green="192" blue="192" />
+    </foreground_color>
+    <height>20</height>
+    <name>LED_1</name>
     <off_color>
       <color red="0" green="100" blue="0" />
     </off_color>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <background_color>
-      <color red="240" green="240" blue="240" />
-    </background_color>
-    <square_led>false</square_led>
-    <width>20</width>
-    <x>170</x>
-    <data_type>0</data_type>
-    <y>318</y>
-    <foreground_color>
-      <color red="192" green="192" blue="192" />
-    </foreground_color>
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
     <off_label>OFF</off_label>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.LED" version="1.0.0">
-    <alarm_pulsing>false</alarm_pulsing>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <rules />
-    <effect_3d>true</effect_3d>
-    <bit>-1</bit>
-    <pv_value />
-    <height>20</height>
-    <border_width>1</border_width>
-    <visible>true</visible>
-    <pv_name>$(mrf_evr_prefix)RX:EventFIFOStopped</pv_name>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>LED</widget_type>
-    <name>LED_2</name>
-    <actions hook="false" hook_all="false" />
-    <show_boolean_label>false</show_boolean_label>
-    <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <enabled>true</enabled>
-    <wuid>-3a15dff4:14e25e56121:-75d9</wuid>
     <on_color>
-      <color red="255" green="255" blue="0" />
+      <color red="0" green="255" blue="0" />
     </on_color>
-    <scripts />
-    <border_alarm_sensitive>true</border_alarm_sensitive>
     <on_label>ON</on_label>
+    <pv_name>$(mrf_evr_prefix)SFP:Link</pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>true</keep_wh_ratio>
     </scale_options>
-    <off_color>
-      <color red="100" green="100" blue="0" />
-    </off_color>
+    <scripts />
+    <show_boolean_label>false</show_boolean_label>
+    <square_led>false</square_led>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>LED</widget_type>
+    <width>20</width>
+    <wuid>-3a15dff4:14e25e56121:-75e8</wuid>
+    <x>170</x>
+    <y>318</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.LED" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <alarm_pulsing>false</alarm_pulsing>
     <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
     <background_color>
       <color red="240" green="240" blue="240" />
     </background_color>
-    <square_led>false</square_led>
-    <width>20</width>
-    <x>170</x>
+    <bit>-1</bit>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <bulb_border>3</bulb_border>
+    <bulb_border_color>
+      <color red="150" green="150" blue="150" />
+    </bulb_border_color>
     <data_type>0</data_type>
-    <y>158</y>
+    <effect_3d>true</effect_3d>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
       <color red="192" green="192" blue="192" />
     </foreground_color>
-    <font>
-      <opifont.name fontName="Tahoma" height="12" style="0">Default</opifont.name>
-    </font>
+    <height>20</height>
+    <name>LED_2</name>
+    <off_color>
+      <color red="100" green="100" blue="0" />
+    </off_color>
     <off_label>OFF</off_label>
+    <on_color>
+      <color red="255" green="255" blue="0" />
+    </on_color>
+    <on_label>ON</on_label>
+    <pv_name>$(mrf_evr_prefix)RX:EventFIFOStopped</pv_name>
+    <pv_value />
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>true</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <show_boolean_label>false</show_boolean_label>
+    <square_led>false</square_led>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>LED</widget_type>
+    <width>20</width>
+    <wuid>-3a15dff4:14e25e56121:-75d9</wuid>
+    <x>170</x>
+    <y>158</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <auto_size>false</auto_size>
+    <background_color>
+      <color red="255" green="255" blue="255" />
+    </background_color>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Label_15</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <text>Firmware ID:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Label</widget_type>
+    <width>139</width>
+    <wrap_words>false</wrap_words>
+    <wuid>6cc8c4ef:18779ac65a1:-4a6f</wuid>
+    <x>18</x>
+    <y>420</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <alarm_pulsing>false</alarm_pulsing>
+    <auto_size>false</auto_size>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="255" green="255" blue="255" />
+    </background_color>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <format_type>3</format_type>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Text Update_3</name>
+    <precision>0</precision>
+    <precision_from_pv>true</precision_from_pv>
+    <pv_name>$(mrf_evr_prefix)Firmware:FirmwareID</pv_name>
+    <pv_value />
+    <rotation_angle>0.0</rotation_angle>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <show_units>true</show_units>
+    <text>######</text>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <transparent>false</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Text Update</widget_type>
+    <width>120</width>
+    <wrap_words>false</wrap_words>
+    <wuid>6cc8c4ef:18779ac65a1:-4a6e</wuid>
+    <x>169</x>
+    <y>420</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <auto_size>false</auto_size>
+    <background_color>
+      <color red="255" green="255" blue="255" />
+    </background_color>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Label_16</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <text>Revision ID:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Label</widget_type>
+    <width>139</width>
+    <wrap_words>false</wrap_words>
+    <wuid>6cc8c4ef:18779ac65a1:-4a6d</wuid>
+    <x>18</x>
+    <y>450</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <alarm_pulsing>false</alarm_pulsing>
+    <auto_size>false</auto_size>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="255" green="255" blue="255" />
+    </background_color>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <format_type>3</format_type>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Text Update_4</name>
+    <precision>0</precision>
+    <precision_from_pv>true</precision_from_pv>
+    <pv_name>$(mrf_evr_prefix)Firmware:RevisionID</pv_name>
+    <pv_value />
+    <rotation_angle>0.0</rotation_angle>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <show_units>true</show_units>
+    <text>######</text>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <transparent>false</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Text Update</widget_type>
+    <width>120</width>
+    <wrap_words>false</wrap_words>
+    <wuid>6cc8c4ef:18779ac65a1:-4a6c</wuid>
+    <x>169</x>
+    <y>450</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <auto_size>false</auto_size>
+    <background_color>
+      <color red="255" green="255" blue="255" />
+    </background_color>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Label_17</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <text>Subrelease ID:</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Label</widget_type>
+    <width>139</width>
+    <wrap_words>false</wrap_words>
+    <wuid>6cc8c4ef:18779ac65a1:-4a6b</wuid>
+    <x>18</x>
+    <y>480</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <alarm_pulsing>false</alarm_pulsing>
+    <auto_size>false</auto_size>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="255" green="255" blue="255" />
+    </background_color>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <format_type>3</format_type>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Text Update_5</name>
+    <precision>0</precision>
+    <precision_from_pv>true</precision_from_pv>
+    <pv_name>$(mrf_evr_prefix)Firmware:SubreleaseID</pv_name>
+    <pv_value />
+    <rotation_angle>0.0</rotation_angle>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <show_units>true</show_units>
+    <text>######</text>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <transparent>false</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Text Update</widget_type>
+    <width>120</width>
+    <wrap_words>false</wrap_words>
+    <wuid>6cc8c4ef:18779ac65a1:-4a6a</wuid>
+    <x>169</x>
+    <y>480</y>
   </widget>
 </display>

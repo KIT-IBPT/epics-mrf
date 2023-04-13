@@ -508,11 +508,33 @@ record(mbbi, "$(P)$(R)Firmware:FormFactor") {
   field(EIST, "mTCA")
 }
 
-record(longin, "$(P)$(R)Firmware:Version") {
-  field(DESC, "Firmware version ID")
+record(longin, "$(P)$(R)Firmware:SubreleaseID") {
+  field(DESC, "FW version subrelease ID")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) 0x002c[23:16] uint32")
+  field(PINI, "YES")
+}
+
+record(longin, "$(P)$(R)Firmware:FirmwareID") {
+  field(DESC, "FW version firmware ID")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) 0x002c[15:8] uint32")
+  field(PINI, "YES")
+}
+
+record(longin, "$(P)$(R)Firmware:RevisionID") {
+  field(DESC, "FW version revision ID")
   field(DTYP, "MRF Memory")
   field(INP,  "@$(DEVICE) 0x002c[7:0] uint32")
+  field(FLNK, "$(P)$(R)Firmware:Version")
   field(PINI, "YES")
+}
+
+# This is only provided for compatibility with older versions of the device
+# support and will be removed in a future version.
+record(longin, "$(P)$(R)Firmware:Version") {
+  field(DESC, "Firmware version ID")
+  field(INP,  "$(P)$(R)Firmware:RevisionID MSS")
 }
 
 # Event counter clock prescaler register.

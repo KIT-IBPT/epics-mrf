@@ -1031,16 +1031,28 @@ For some hardware revisions, there are additional PVs directly representing the 
 <td>EVR master enable. 1 if the EVR shall be enabled, 0 if it shall be disabled. This can be used to ensure that the EVR only starts operating after being configured completely.</td>
 </tr>
 <tr>
+<td>Firmware:FirmwareID</td>
+<td>Firmware ID (read-only). The firmware ID as a number.</td>
+</tr>
+<tr>
 <td>Firmware:FormFactor</td>
 <td>Form factor of the device (read-only). The form factor is provided as an enum, so that it contains a human-readable string identifying the hardware platform.</td>
 </tr>
 <tr>
+<td>Firmware:RevisionID</td>
+<td>Firmware revision ID (read-only). The firmware revision ID as a number.</td>
+</tr>
+<tr>
+<td>Firmware:SubreleaseID</td>
+<td>Firmware subrelease ID (read-only). The firmware subrelease ID as a number.</td>
+</tr>
+<tr>
 <td>Firmware:Version</td>
-<td>Firmware version (read-only). The firmware revision as a number.</td>
+<td>Firmware revision ID (read-only). The firmware revision ID as a number. This is an alias for <code>Firmware:RevisionID</code> and is only provided for backwards compatibility with older versions of this device support. It is going to be removed in version 2.x of this device support.</td>
 </tr>
 <tr>
 <td>Firmware:Version:Complete</td>
-<td>Complete firmware version (read-only). The complete content of the firmware version register as a number. This does not just include the actual version number, but also includes the form factor and potentially other information.</td>
+<td>Complete firmware version (read-only). The complete content of the firmware version register as a number. This includes the form factor, subrelease ID, firmware ID, and release ID.</td>
 </tr>
 <tr>
 <td>RX:EventFIFOStopped</td>
