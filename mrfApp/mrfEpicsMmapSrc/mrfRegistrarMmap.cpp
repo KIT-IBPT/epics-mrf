@@ -247,9 +247,9 @@ static void iocshMrfMmapRegularEvgDeviceFunc(const iocshArgBuf *args) noexcept {
  */
 static void iocshMrfMmapRegularEvrDeviceFunc(const iocshArgBuf *args) noexcept {
 #if EPICS_VERSION_INT >= VERSION_INT(7,0,3,1)
-  iocshSetError(iocshMrfMmapDeviceFunc(args, 0x00008000));
+  iocshSetError(iocshMrfMmapDeviceFunc(args, 0x00008400));
 #else // EPICS_VERSION_INT >= VERSION_INT(7,0,3,1)
-  iocshMrfMmapDeviceFunc(args, 0x00008000);
+  iocshMrfMmapDeviceFunc(args, 0x00008400);
 #endif // EPICS_VERSION_INT >= VERSION_INT(7,0,3,1)
 }
 
