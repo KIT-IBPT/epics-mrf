@@ -254,10 +254,14 @@ static void iocshMrfMmapRegularEvrDeviceFunc(const iocshArgBuf *args) noexcept {
 }
 
 /**
- * Implementation of the iocsh function used for the cPCI-EVRTG-300 (larger
- * memory size).
+ * Implementation of the iocsh function used for EVRs with GTX outputs
+ * (cPCI-EVRTG-300, MTCA-EVR-300). This maps a larger address space because the
+ * pattern memory for the GTX outputs is added at the end. We always map the
+ * address space for up to eight GTX outputs, because mapping for devices with
+ * fewer GTX outputs, mapping the memory does not really hurt (it only consumes
+ * a few more kilobytes of RAM than absolutely necessary).
  */
-static void iocshMrfMmapCpciEvrtg300DeviceFunc(const iocshArgBuf *args)
+static void iocshMrfMmapEvrWithGtxDeviceFunc(const iocshArgBuf *args)
     noexcept {
 #if EPICS_VERSION_INT >= VERSION_INT(7,0,3,1)
   iocshSetError(iocshMrfMmapDeviceFunc(args, 0x00040000));
@@ -285,9 +289,9 @@ static void mrfRegistrarMmap() {
   iocshRegister(&iocshMrfMmapCpciEvr300DeviceFuncDef,
       iocshMrfMmapRegularEvrDeviceFunc);
   iocshRegister(&iocshMrfMmapCpciEvrtg300DeviceFuncDef,
-      iocshMrfMmapCpciEvrtg300DeviceFunc);
+      iocshMrfMmapEvrWithGtxDeviceFunc);
   iocshRegister(&iocshMrfMmapMtcaEvr300DeviceFuncDef,
-      iocshMrfMmapRegularEvrDeviceFunc);
+      iocshMrfMmapEvrWithGtxDeviceFunc);
   iocshRegister(&iocshMrfMmapPcieEvr300DeviceFuncDef,
       iocshMrfMmapRegularEvrDeviceFunc);
   iocshRegister(&iocshMrfMmapPmcEvr230DeviceFuncDef,
