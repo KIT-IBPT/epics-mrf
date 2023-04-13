@@ -8,7 +8,7 @@ dependencies.
 Requirements
 ------------
 
-- EPICS Base (3.14 or newer)
+- EPICS Base (3.16 or newer)
 - C++ 11 compliant compiler and standard library
 
 
@@ -19,7 +19,7 @@ Create the file `configure/RELEASE.local` and add the path to your EPICS Base
 installation. Example:
 
 ```
-EPICS_BASE = /path/to/my/epics/base-3.15.5
+EPICS_BASE = /path/to/my/epics/base-7.0.6
 ```
 
 Depending on your default compiler options, you might also have to create the

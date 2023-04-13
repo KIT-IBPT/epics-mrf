@@ -1,0 +1,2 @@
+$(P)$(R)@OUTPUT_NAME@:Map.VAL
+$(P)$(R)@OUTPUT_NAME@:Map2.VAL

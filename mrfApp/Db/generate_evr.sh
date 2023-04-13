@@ -39,6 +39,21 @@ case "${mode}" in
     ;;
 esac
 
+bp_output() {
+  local param_gen2=""
+  if [ "$1" = "--gen2" ]; then
+    param_gen2="$1"
+    shift
+  fi
+  local bp_out_num="$1"
+  local bp_out_description="$1"
+  if [ $# -ge 2 ]; then
+    bp_out_description="$2"
+  fi
+  local bp_out_addr=$( decimal_to_hex $(( $( hex_to_decimal 0x04C0 ) + 2 * ${bp_out_num} )) 4 )
+  output ${param_gen2} "BPOut${bp_out_num}" "Backplane output ${bp_out_description}" ${bp_out_addr}
+}
+
 dbus_bits_to_pulse_gens() {
   local dbus_bit_to_pulse_gen_num_pulse_gen="$1"
   local dbus_bit_to_pulse_gen_base_addr=$( hex_to_decimal 0x0180 )
@@ -68,9 +83,14 @@ fp_input() {
 }
 
 fp_output() {
+  local param_gen2=""
+  if [ "$1" = "--gen2" ]; then
+    param_gen2="$1"
+    shift
+  fi
   local fp_out_num="$1"
   local fp_out_addr=$( decimal_to_hex $(( $( hex_to_decimal 0x0400 ) + 2 * ${fp_out_num} )) 4 )
-  output "FPOut${fp_out_num}" "Front panel output ${fp_out_num}" ${fp_out_addr}
+  output ${param_gen2} "FPOut${fp_out_num}" "Front panel output ${fp_out_num}" ${fp_out_addr}
 }
 
 map_ram() {
@@ -84,6 +104,11 @@ map_ram() {
 }
 
 output() {
+  local template_name="evr-template-output"
+  if [ "$1" = "--gen2" ]; then
+    template_name="evr-template-output-gen2"
+    shift
+  fi
   local output_name="$1"
   local output_description="$2"
   local output_addr="$3"
@@ -93,11 +118,48 @@ output() {
     output_installed_macro="$4"
     output_installed_description="$5"
   fi
-  cat "${db_dir}/evr-template-output.inc.${extension}" | substitute_template_variables OUTPUT_NAME="${output_name}" OUTPUT_DESCRIPTION="${output_description}" OUTPUT_ADDR="${output_addr}"
+  cat "${db_dir}/${template_name}.inc.${extension}" | substitute_template_variables OUTPUT_NAME="${output_name}" OUTPUT_DESCRIPTION="${output_description}" OUTPUT_ADDR="${output_addr}"
   if [ -n "${output_installed_macro}" ]; then
     cat "${db_dir}/evr-template-output-installed.inc.${extension}" | substitute_template_variables OUTPUT_NAME="${output_name}" OUTPUT_INSTALLED_MACRO="${output_installed_macro}" OUTPUT_INSTALLED_DESCRIPTION="${output_installed_description}"
   fi
   description "\$(P)\$(R)${output_name}:Description" "Description for ${output_description}"
+}
+
+output_gtx_logic() {
+  local output_name="$1"
+  local output_description="$2"
+  local output_gtx_logic_block_index="$3"
+  local output_gtx_base_addr=$(( $( hex_to_decimal 0x0600 ) + $( hex_to_decimal 0x0020 ) * ${output_gtx_logic_block_index} ))
+  local output_gtx_samples_base_addr=$(( $( hex_to_decimal 0x20000 ) + $( hex_to_decimal 0x4000 ) * ${output_gtx_logic_block_index} ))
+  local output_gtx_ctrl_addr=$( decimal_to_hex $(( ${output_gtx_base_addr} + 16 )) 4 )
+  local output_gtx_hp_addr=$( decimal_to_hex $(( ${output_gtx_base_addr} + 20 )) 4 )
+  local output_gtx_lp_addr=$( decimal_to_hex $(( ${output_gtx_base_addr} + 22 )) 4 )
+  local output_gtx_samples_count_addr=$( decimal_to_hex $(( ${output_gtx_base_addr} + 24 )) 4 )
+  local output_gtx_samples_00_lword_addr=$( decimal_to_hex ${output_gtx_samples_base_addr} 5 )
+  local output_gtx_samples_00_hword_addr=$( decimal_to_hex $(( ${output_gtx_samples_base_addr} + 4 )) 5 )
+  local output_gtx_samples_01_lword_addr=$( decimal_to_hex $(( ${output_gtx_samples_base_addr} + 8 )) 5 )
+  local output_gtx_samples_01_hword_addr=$( decimal_to_hex $(( ${output_gtx_samples_base_addr} + 12 )) 5 )
+  local output_gtx_samples_10_lword_addr=$( decimal_to_hex $(( ${output_gtx_samples_base_addr} + 16 )) 5 )
+  local output_gtx_samples_10_hword_addr=$( decimal_to_hex $(( ${output_gtx_samples_base_addr} + 20 )) 5 )
+  local output_gtx_samples_11_lword_addr=$( decimal_to_hex $(( ${output_gtx_samples_base_addr} + 24 )) 5 )
+  local output_gtx_samples_11_hword_addr=$( decimal_to_hex $(( ${output_gtx_samples_base_addr} + 28 )) 5 )
+  local output_gtx_samples_exclusive_addr=$( decimal_to_hex $(( ${output_gtx_samples_base_addr} + 32 )) 5 )
+  cat "${db_dir}/evr-template-output-gtx.inc.${extension}" | substitute_template_variables \
+    OUTPUT_NAME="${output_name}" \
+    OUTPUT_DESCRIPTION="${output_description}" \
+    OUTPUT_GTX_CTRL_ADDR="${output_gtx_ctrl_addr}" \
+    OUTPUT_GTX_HP_ADDR="${output_gtx_hp_addr}" \
+    OUTPUT_GTX_LP_ADDR="${output_gtx_lp_addr}" \
+    OUTPUT_GTX_SAMPLES_COUNT_ADDR="${output_gtx_samples_count_addr}" \
+    OUTPUT_GTX_SAMPLES_00_LWORD_ADDR="${output_gtx_samples_00_lword_addr}" \
+    OUTPUT_GTX_SAMPLES_00_HWORD_ADDR="${output_gtx_samples_00_hword_addr}" \
+    OUTPUT_GTX_SAMPLES_01_LWORD_ADDR="${output_gtx_samples_01_lword_addr}" \
+    OUTPUT_GTX_SAMPLES_01_HWORD_ADDR="${output_gtx_samples_01_hword_addr}" \
+    OUTPUT_GTX_SAMPLES_10_LWORD_ADDR="${output_gtx_samples_10_lword_addr}" \
+    OUTPUT_GTX_SAMPLES_10_HWORD_ADDR="${output_gtx_samples_10_hword_addr}" \
+    OUTPUT_GTX_SAMPLES_11_LWORD_ADDR="${output_gtx_samples_11_lword_addr}" \
+    OUTPUT_GTX_SAMPLES_11_HWORD_ADDR="${output_gtx_samples_11_hword_addr}" \
+    OUTPUT_GTX_SAMPLES_EXCLUSIVE_ADDR="${output_gtx_samples_exclusive_addr}"
 }
 
 prescaler() {
@@ -226,9 +288,31 @@ if [ "${form_factor}" = "mtca" -a "${series}" = "300" ]; then
     write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:PulseGen${i}")
   done
   for i in `seq 0 3`; do
-    fp_output ${i}
+    fp_output --gen2 ${i}
     write_all_pvs+=("\$(P)\$(R)FPOut${i}:Map")
+    write_all_pvs+=("\$(P)\$(R)FPOut${i}:Map2")
   done
+  i=0
+  for name in RX17 TX17 RX18 TX18 RX19 TX19 RX20 TX20; do
+    bp_output --gen2 ${i} ${name}
+    write_all_pvs+=("\$(P)\$(R)BPOut${i}:Map")
+    write_all_pvs+=("\$(P)\$(R)BPOut${i}:Map2")
+    i=$(( ${i} + 1 ))
+  done
+  # Two of the backplane outputs are special because they are mapped from the
+  # registers usually reserved for univ. outputs 16 and 17. They actually are
+  # GTX outputs, so we also need to add the records for the GTX logic blocks 0
+  # and 1.
+  output --gen2 "BPOut8" "Backplane output TCLKA" "0x0460"
+  write_all_pvs+=("\$(P)\$(R)BPOut8:Map")
+  write_all_pvs+=("\$(P)\$(R)BPOut8:Map2")
+  output_gtx_logic "BPOut8" "Bp. out. TCLKA" "0"
+  write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:BPOut8:GTX")
+  output --gen2 "BPOut9" "Backplane output TCLKB" "0x0462"
+  write_all_pvs+=("\$(P)\$(R)BPOut9:Map")
+  write_all_pvs+=("\$(P)\$(R)BPOut9:Map2")
+  output_gtx_logic "BPOut9" "Bp. out. TCLKB" "1"
+  write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:BPOut9:GTX")
   for i in `seq 0 1`; do
     fp_input ${i} true
     write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:"FPIn${i})

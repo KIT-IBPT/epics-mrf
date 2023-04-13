@@ -1318,7 +1318,8 @@ Front-panel outputs use the PV prefix `FPOut#`, where # is the number of the
 output (starting at zero). Front-panel universal outputs use the PV prefix
 `UnivOut#`, where # is the number of the output (starting at zero).
 Transition-board universal outputs use the PV prefix `TBOut#`, where # is the
-number of the output (starting at zero).
+number of the output (starting at zero). Backplane outputs use the PV prefix
+`BPOut#`, where # is the number of the output (starting at zero).
 
 In the following table, all PVs are listed with the generic PV prefix `Out`,
 which has to be replaced with the output-specific prefix.
@@ -1338,7 +1339,11 @@ which has to be replaced with the output-specific prefix.
 </tr>
 <tr>
 <td>Out:Map</td>
-<td>Mapping used for the output. A value of 0 to 31 specifies that the corresponding pulse generator shall be used. A value of 32 to 39 specifies that one of the distributed bus bits (32 meaning distributed bus bit 0 and 39 meaning distributed bus bit 7) shall be used. A value of 40 to 42 specifies that one of the prescalers (40 meaning prescaler 0 and 42 meaning prescaler 2) shall be used. A value of 62 specified that the output shall be set to constant hight. A value of 63 specifies that the output shall be set to constant low.</td>
+<td>Mapping used for the output. A value of 0 to 31 specifies that the corresponding pulse generator shall be used. A value of 32 to 39 specifies that one of the distributed bus bits (32 meaning distributed bus bit 0 and 39 meaning distributed bus bit 7) shall be used. A value of 40 to 42 specifies that one of the prescalers (40 meaning prescaler 0 and 42 meaning prescaler 2) shall be used. A value of 48 to 55 means that one of the flip-flops shall be used (48 meaning flip-flop 0 and 55 meaning flip-flop 7). A value of 61 means that the output shall be put in a tri-state (only for outputs that can also act as inputs and thus support a tri-state). A value of 62 specified that the output shall be set to constant hight. A value of 63 specifies that the output shall be set to constant low.</td>
+</tr>
+<tr>
+<td>Out:Map2</td>
+<td>Second mapping used for the output. The possible values and their meanings are the same as for <code>Out:Map</code>. The two mapping sources are combined using a logical order, meaning that the output is high when either of the mapping sources is high. Mapping a second source to an output is only possible in recent firmware versions. For this reason, this process variable does not exist for the VME-EVR-230 and VME-EVR-230 RF.</td>
 </tr>
 </table>
 
@@ -1409,6 +1414,96 @@ operation:
 <tr>
 <td>Out:PulseMode:Rising</td>
 <td>Pattern used in pulse mode for the rising edge state. This is a bit-set where only the lower 20 bits are used. Those bits represent the 20 states that are used for the output at the CML clock rate (20 times the event clock rate) when a rising edge condition is detected. A rising edge condition is detected when the signal mapped to the output was low during the last event clock cycle and is high during the current event clock cycle.</td>
+</tr>
+<tr>
+<td>Out:Reset</td>
+<td>Output reset flag. If 1, the output is forced to be reset. If 0, the output shall operate normally.</td>
+</tr>
+</table>
+
+For GTX outputs, there is a number of additional PVs that configure the GTX
+operation:
+
+<table>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>Out:Enabled</td>
+<td>Output enable flag. If 1, the output is enabled. If 0, the output is disabled.</td>
+</tr>
+<tr>
+<td>Out:FreqMode:HighPeriod</td>
+<td>High period for the frequency mode. This specifies the number of GTX clock cycles (event clock mutiplied by fourty) for which the output is pulled high. Must be between 40 and 65535.</td>
+</tr>
+<tr>
+<td>Out:FreqMode:LowPeriod</td>
+<td>Low period for the frequency mode. This specifies the number of GTX clock cycles (event clock mutiplied by fourty) for which the output is pulled low. Must be between 40 and 65535.</td>
+</tr>
+<tr>
+<td>Out:FreqMode:TrigLevel</td>
+<td>Output level when output is triggered. If 0, the output starts in the low state when triggered and later switches to the high state. If 1, the output starts in the high state when triggered and later switches to the low state.</td>
+</tr>
+<tr>
+<td>Out:FreqMode:TrigPosition</td>
+<td>Offset period when output is triggered (in GTX clock cycles). The counter measuring the time the output has been in a certain state is initialized to this value when the output is triggered. This effectively changes the phase of the generated signal, because the switch to the oppositve output state will happen earlier when this value is not zero.</td>
+</tr>
+<tr>
+<td>Out:Mode</td>
+<td>Output mode select. 0 for pulse mode, 1 for frequency mode, and 2 for pattern mode.</td>
+</tr>
+<tr>
+<td>Out:PatternMode:NumberOfSamples</td>
+<td>Number of samples that shall be used in pattern mode. Only the specified number of entries (max. 2048) from the <code>Out:PatternMode:Samples</code> array are used for generating the output signal. However, an entry in the array consists of two consecutive indices (due to each entry having 40 bits and thus not fitting into a single array element). For this reason, the number of elements in the array that are used is twice the number of samples specified here.</td>
+</tr>
+<tr>
+<td>Out:PatternMode:Recycle</td>
+<td>Pattern recycle flag. If enabled (1), the output again starts with the first sample when the specified number of samples has been used. If disabled (0), the output stays in the state specified by the last sample until the output is triggered again.</td>
+</tr>
+<tr>
+<td>Out:PatternMode:Samples</td>
+<td>Samples for the pattern mode. This is an array of 4096 elements. The pattern memory consists of 40 bit words, so the lower 32 bits of each word are stored at an even index, and the remaining upper 8 bits are stored at the next (odd) index. The remaining 24 bits at each odd index are ignored. The GTX output uses the bits at a rate of 40 times the event clock, thus resulting in one sample (up to 40 different states) being output with each event clock cycle. When modifying this array, only changed elements are actually sent to the hardware.</td>
+</tr>
+<tr>
+<td>Out:PatternMode:Samples:WriteAll</td>
+<td>Writing to this record causes all elements of the <code>Out:PatternMode:Samples</code> array to be written to the hardware.</td>
+</tr>
+<tr>
+<td>Out:PowerDown</td>
+<td>Output power down flag. If 0, the output is powered up. If 1, the output is powered down (and thus disabled).</td>
+</tr>
+<tr>
+<td>Out:PulseMode:Falling:HWord</td>
+<td>Pattern used in pulse mode for the falling edge state (upper 8 bits). This is a bitset that represents 8 of the 40 states that are used for the output at the GTX clock rate (40 times the event clock rate) when a falling edge condition is detected. A falling edge condition is detected when the signal mapped to the output was high during the last event clock cycle and is low during the current event clock cycle. For the remaining 32 bits, see <code>Out:PulseMode:Falling:LWord</code>.</td>
+</tr>
+<tr>
+<td>Out:PulseMode:Falling:LWord</td>
+<td>Pattern used in pulse mode for the falling edge state (lower 32 bits). This is a bitset that represents 32 of the 40 states that are used for the output at the GTX clock rate (40 times the event clock rate) when a falling edge condition is detected. A falling edge condition is detected when the signal mapped to the output was high during the last event clock cycle and is low during the current event clock cycle. For the remaining 8 bits, see <code>Out:PulseMode:Falling:HWord</code>.</td>
+</tr>
+<tr>
+<td>Out:PulseMode:High:HWord</td>
+<td>Pattern used in pulse mode for the high state (upper 8 bits). This is a bitset that represents 8 of the 40 states that are used for the output at the GTX clock rate (40 times the event clock rate) when a high condition is detected. A high condition is detected when the signal mapped to the output was high during the last event clock cycle and is also high during the current event clock cycle. For the remaining 32 bits, see <code>Out:PulseMode:High:LWord</code>.</td>
+</tr>
+<tr>
+<td>Out:PulseMode:High:LWord</td>
+<td>Pattern used in pulse mode for the high state (lower 32 bits). This is a bitset that represents 32 of the 40 states that are used for the output at the GTX clock rate (40 times the event clock rate) when a high condition is detected. A high condition is detected when the signal mapped to the output was high during the last event clock cycle and is also high during the current event clock cycle. For the remaining 8 bits, see <code>Out:PulseMode:High:HWord</code>.</td>
+</tr>
+<tr>
+<td>Out:PulseMode:Low:HWord</td>
+<td>Pattern used in pulse mode for the low state (upper 8 bits). This is a bitset that represents 8 of the 40 states that are used for the output at the GTX clock rate (40 times the event clock rate) when a low condition is detected. A low condition is detected when the signal mapped to the output was low during the last event clock cycle and is also low during the current event clock cycle. For the remaining 32 bits, see <code>Out:PulseMode:Low:LWord</code>.</td>
+</tr>
+<tr>
+<td>Out:PulseMode:Low:LWord</td>
+<td>Pattern used in pulse mode for the low state (lower 32 bits). This is a bitset that represents 32 of the 40 states that are used for the output at the GTX clock rate (40 times the event clock rate) when a low condition is detected. A low condition is detected when the signal mapped to the output was low during the last event clock cycle and is also low during the current event clock cycle. For the remaining 8 bits, see <code>Out:PulseMode:Low:HWord</code>.</td>
+</tr>
+<tr>
+<td>Out:PulseMode:Rising:HWord</td>
+<td>Pattern used in pulse mode for the rising edge state (upper 8 bits). This is a bitset that represents 8 of the 40 states that are used for the output at the GTX clock rate (40 times the event clock rate) when a rising edge condition is detected. A rising edge condition is detected when the signal mapped to the output was low during the last event clock cycle and is high during the current event clock cycle. For the remaining 32 bits, see <code>Out:PulseMode:Rising:LWord</code>.</td>
+</tr>
+<tr>
+<td>Out:PulseMode:Rising:LWord</td>
+<td>Pattern used in pulse mode for the rising edge state (lower 32 bits). This is a bitset that represents 32 of the 40 states that are used for the output at the GTX clock rate (40 times the event clock rate) when a rising edge condition is detected. A rising edge condition is detected when the signal mapped to the output was low during the last event clock cycle and is high during the current event clock cycle. For the remaining 8 bits, see <code>Out:PulseMode:Rising:HWord</code>.</td>
 </tr>
 <tr>
 <td>Out:Reset</td>

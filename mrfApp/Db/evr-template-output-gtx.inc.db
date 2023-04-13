@@ -1,0 +1,311 @@
+# GTX @OUTPUT_DESCRIPTION@ pattern registers.
+
+record(longout, "$(P)$(R)@OUTPUT_NAME@:PulseMode:Low:LWord") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ low state bit pattern")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_SAMPLES_00_LWORD_ADDR@ uint32")
+  field(SDIS, "$(P)$(R)@OUTPUT_NAME@:Mode")
+  field(DISV, "2")
+}
+
+record(longout, "$(P)$(R)@OUTPUT_NAME@:PulseMode:Low:HWord") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ low state bit pattern")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_SAMPLES_00_HWORD_ADDR@ uint32")
+  field(SDIS, "$(P)$(R)@OUTPUT_NAME@:Mode")
+  field(DISV, "2")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(longout, "$(P)$(R)@OUTPUT_NAME@:PulseMode:Rising:LWord") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ rising edge bit pattern")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_SAMPLES_01_LWORD_ADDR@ uint32")
+  field(SDIS, "$(P)$(R)@OUTPUT_NAME@:Mode")
+  field(DISV, "2")
+}
+
+record(longout, "$(P)$(R)@OUTPUT_NAME@:PulseMode:Rising:HWord") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ rising edge bit pattern")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_SAMPLES_01_HWORD_ADDR@ uint32")
+  field(SDIS, "$(P)$(R)@OUTPUT_NAME@:Mode")
+  field(DISV, "2")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(longout, "$(P)$(R)@OUTPUT_NAME@:PulseMode:Falling:LWord") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ falling edge bit pattern")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_SAMPLES_10_LWORD_ADDR@ uint32")
+  field(SDIS, "$(P)$(R)@OUTPUT_NAME@:Mode")
+  field(DISV, "2")
+}
+
+record(longout, "$(P)$(R)@OUTPUT_NAME@:PulseMode:Falling:HWord") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ falling edge bit pattern")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_SAMPLES_10_HWORD_ADDR@ uint32")
+  field(SDIS, "$(P)$(R)@OUTPUT_NAME@:Mode")
+  field(DISV, "2")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(longout, "$(P)$(R)@OUTPUT_NAME@:PulseMode:High:LWord") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ high state bit pattern")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_SAMPLES_11_LWORD_ADDR@ uint32")
+  field(SDIS, "$(P)$(R)@OUTPUT_NAME@:Mode")
+  field(DISV, "2")
+}
+
+record(longout, "$(P)$(R)@OUTPUT_NAME@:PulseMode:High:HWord") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ high state bit pattern")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_SAMPLES_11_HWORD_ADDR@ uint32")
+  field(SDIS, "$(P)$(R)@OUTPUT_NAME@:Mode")
+  field(DISV, "2")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(fanout, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PulseMode:WriteAll") {
+  field(LNK0, "$(P)$(R)@OUTPUT_NAME@:PulseMode:Falling:HWord")
+  field(LNK1, "$(P)$(R)@OUTPUT_NAME@:PulseMode:Falling:LWord")
+  field(LNK2, "$(P)$(R)@OUTPUT_NAME@:PulseMode:High:HWord")
+  field(LNK3, "$(P)$(R)@OUTPUT_NAME@:PulseMode:High:LWord")
+  field(LNK4, "$(P)$(R)@OUTPUT_NAME@:PulseMode:Low:HWord")
+  field(LNK5, "$(P)$(R)@OUTPUT_NAME@:PulseMode:Low:LWord")
+  field(LNK6, "$(P)$(R)@OUTPUT_NAME@:PulseMode:Rising:HWord")
+  field(LNK7, "$(P)$(R)@OUTPUT_NAME@:PulseMode:Rising:LWord")
+}
+
+record(fanout, "$(P)$(R)")
+
+# GTX @OUTPUT_DESCRIPTION@ control register.
+
+record(longout, "$(P)$(R)@OUTPUT_NAME@:FreqMode:TrigPosition") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ freq. mode trig. position")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_CTRL_ADDR@[31:16] uint32")
+  field(DRVL, "0")
+  field(DRVH, "65535")
+  field(LOPR, "0")
+  field(HOPR, "65535")
+}
+
+record(bo, "$(P)$(R)@OUTPUT_NAME@:PatternMode:Recycle") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ recycle bit pattern?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_CTRL_ADDR@[7] uint32")
+  field(ZNAM, "Single")
+  field(ONAM, "Recycle")
+}
+
+record(bo, "$(P)$(R)@OUTPUT_NAME@:FreqMode:TrigLevel") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ freq. mode trig. level")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_CTRL_ADDR@[6] uint32")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(mbbo, "$(P)$(R)@OUTPUT_NAME@:Mode") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ mode select")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_CTRL_ADDR@[5:4] uint32")
+  field(FLNK, "$(P)$(R)Intrnl:@OUTPUT_NAME@:Mode:Processed")
+  field(ZRVL, "0")
+  field(ZRST, "Pulse mode")
+  field(ONVL, "1")
+  field(ONST, "Frequency mode")
+  field(TWVL, "2")
+  field(TWST, "Pattern mode")
+}
+
+# Some of the pattern memory is shared between pulsed and pattern mode, so we
+# want to write the associated memory When the mode is changed, because the
+# memory might have been changed while operating in a different mode.
+record(fanout, "$(P)$(R)Intrnl:@OUTPUT_NAME@:Mode:Processed") {
+  field(SELL, "$(P)$(R)@OUTPUT_NAME@:Mode")
+  field(SELM, "Specified")
+  field(LNK0, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PulseMode:WriteAll")
+  field(LNK2, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:RestoreShared")
+}
+
+record(bo, "$(P)$(R)@OUTPUT_NAME@:Reset") {
+  field(DESC, "Reset @OUTPUT_DESCRIPTION@?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_CTRL_ADDR@[2] uint32")
+  field(ZNAM, "Normal oper.")
+  field(ONAM, "Reset")
+}
+
+record(bo, "$(P)$(R)@OUTPUT_NAME@:PowerDown") {
+  field(DESC, "Power down @OUTPUT_DESCRIPTION@?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_CTRL_ADDR@[1] uint32")
+  field(ZNAM, "Power up")
+  field(ONAM, "Power down")
+}
+
+record(bo, "$(P)$(R)@OUTPUT_NAME@:Enabled") {
+  field(DESC, "Enable @OUTPUT_DESCRIPTION@?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_CTRL_ADDR@[0] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+# GTX @OUTPUT_DESCRIPTION@ high period count.
+
+record(longout, "$(P)$(R)@OUTPUT_NAME@:FreqMode:HighPeriod") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ freq. mode high period")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_HP_ADDR@ uint16")
+  field(DRVL, "40")
+  field(DRVH, "65535")
+  field(LOPR, "0")
+  field(HOPR, "65535")
+}
+
+# GTX @OUTPUT_DESCRIPTION@ low period count.
+
+record(longout, "$(P)$(R)@OUTPUT_NAME@:FreqMode:LowPeriod") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ freq. mode low period")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_LP_ADDR@ uint16")
+  field(DRVL, "40")
+  field(DRVH, "65535")
+  field(LOPR, "0")
+  field(HOPR, "65535")
+}
+
+# GTX @OUTPUT_DESCRIPTION@ number of 40-bit word patterns.
+
+record(longout, "$(P)$(R)@OUTPUT_NAME@:PatternMode:NumberOfSamples") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ patt. mode no. of samples")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_GTX_SAMPLES_COUNT_ADDR@ uint32")
+  field(DRVL, "0")
+  field(DRVH, "2048")
+  field(LOPR, "0")
+  field(HOPR, "2048")
+}
+
+# GTX @OUTPUT_DESCRIPTION@ pattern memory.
+
+record(waveform, "$(P)$(R)@OUTPUT_NAME@:PatternMode:Samples") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ pattern mode samples")
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @OUTPUT_GTX_SAMPLES_00_LWORD_ADDR@ uint32 changed_elements_only")
+  field(FTVL, "ULONG")
+  field(NELM, "4096")
+  field(SDIS, "$(P)$(R)@OUTPUT_NAME@:Mode")
+  field(DISV, "0")
+}
+
+# Typically, we only write changed elements. However, sometimes we might want to
+# write all elements when something got out of sync.
+record(bo, "$(P)$(R)@OUTPUT_NAME@:PatternMode:Samples:WriteAll") {
+  field(DESC, "Send all samples to the device")
+  field(FLNK, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:Copy")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+
+# We split the array in a part where the memory is shared with the pulse mode
+# and a part that is used exclusively. We do not write the shared part when
+# operating in pulse mode.
+record(fanout, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:Copy") {
+  field(LNK1, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:Copy:Shared")
+  field(LNK2, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:Copy:Exclusive")
+}
+
+# When the mode is switched to pattern mode, we want to restore the shared part
+# of the memory and write all changes to the exclusive memory that might not
+# have been written because the record was disabled.
+record(fanout, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:RestoreShared") {
+  field(LNK1, "$(P)$(R)@OUTPUT_NAME@:PatternMode:Samples")
+  field(LNK2, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:Copy:Shared")
+}
+
+record(aSub, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:Copy:Shared") {
+  field(SNAM, "mrfArraySubSequenceCopy")
+  field(EFLG, "NEVER")
+  field(FTA, "ULONG")
+  field(FTB, "LONG")
+  field(FTC, "LONG")
+  field(NOA, "4096")
+  field(INPA, "$(P)$(R)@OUTPUT_NAME@:PatternMode:Samples")
+  field(INPB, "0")
+  field(INPC, "8")
+  field(FTVA,  "ULONG")
+  field(NOVA,  "8")
+  field(OUTA, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:WriteAll:Shared NPP")
+  field(FLNK, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:WriteAll:Shared")
+  field(SDIS, "$(P)$(R)@OUTPUT_NAME@:Mode")
+  field(DISV, "0")
+}
+
+record(aSub, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:Copy:Exclusive") {
+  field(SNAM, "mrfArraySubSequenceCopy")
+  field(EFLG, "NEVER")
+  field(FTA, "ULONG")
+  field(FTB, "LONG")
+  field(FTC, "LONG")
+  field(NOA, "4096")
+  field(INPA, "$(P)$(R)@OUTPUT_NAME@:PatternMode:Samples")
+  field(INPB, "8")
+  field(INPC, "4088")
+  field(FTVA,  "ULONG")
+  field(NOVA,  "4088")
+  field(OUTA, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:WriteAll:Exclusive NPP")
+  field(FLNK, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:WriteAll:Exclusive")
+}
+
+record(waveform, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:WriteAll:Shared") {
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @OUTPUT_GTX_SAMPLES_00_LWORD_ADDR@ uint32 no_read_on_init")
+  field(FTVL, "ULONG")
+  field(NELM, "8")
+}
+
+record(waveform, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PatternMode:Samples:WriteAll:Exclusive") {
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @OUTPUT_GTX_SAMPLES_EXCLUSIVE_ADDR@ uint32 no_read_on_init")
+  field(FTVL, "ULONG")
+  field(NELM, "4088")
+}
+
+# GTX @OUTPUT_DESCRIPTION@ - write all settings to the hardware.
+
+record(fanout, "$(P)$(R)Intrnl:WriteAll:@OUTPUT_NAME@:GTX") {
+  field(LNK1, "$(P)$(R)@OUTPUT_NAME@:Enabled")
+  field(LNK2, "$(P)$(R)@OUTPUT_NAME@:FreqMode:HighPeriod")
+  field(LNK3, "$(P)$(R)@OUTPUT_NAME@:FreqMode:LowPeriod")
+  field(LNK4, "$(P)$(R)@OUTPUT_NAME@:FreqMode:TrigLevel")
+  field(LNK5, "$(P)$(R)@OUTPUT_NAME@:FreqMode:TrigPosition")
+  field(LNK6, "$(P)$(R)@OUTPUT_NAME@:Mode")
+  field(FLNK, "$(P)$(R)Intrnl:WriteAll:@OUTPUT_NAME@:GTX:Fout1")
+}
+
+record(fanout, "$(P)$(R)Intrnl:WriteAll:@OUTPUT_NAME@:GTX:Fout1") {
+  field(LNK1, "$(P)$(R)@OUTPUT_NAME@:PatternMode:NumberOfSamples")
+  field(LNK2, "$(P)$(R)@OUTPUT_NAME@:PatternMode:Recycle")
+  field(LNK3, "$(P)$(R)@OUTPUT_NAME@:PatternMode:Samples:WriteAll")
+  field(LNK4, "$(P)$(R)@OUTPUT_NAME@:PowerDown")
+  field(LNK5, "$(P)$(R)Intrnl:@OUTPUT_NAME@:PulseMode:WriteAll")
+  field(LNK6, "$(P)$(R)@OUTPUT_NAME@:Reset")
+}
