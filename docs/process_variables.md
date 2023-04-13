@@ -735,6 +735,7 @@ EVR
 ---
 
 - [Data buffer](#data-buffer-1)
+- [Delay compensation](#delay-compensation)
 - [Distributed bus](#distributed-bus-1)
 - [Event FIFO](#event-fifo)
 - [Event log](#event-log)
@@ -816,6 +817,53 @@ EVR
 </table>
 
 
+### Delay compensation
+
+Delay compensation is only available in modern versions of the EVR when used in
+combination with a recent firmware version that supports it. For this reason,
+the process variables related to delay compensation are not available for the
+VME-EVR-230 and VME-EVR-230RF.
+
+<table>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>DelayComp:Enabled</td>
+<td>Delay compensation enabled flag. If enabled (1), the delay compensation is active. This will only work correctly when the EVR is connected to an upstream EVM. If disabled (0), the path delay is discarded and
+the event FIFO is adjusted so that the internal delay matches the target delay. The latter mode must be selected when using an EVR in a legacy environment without delay compensation.</td>
+</tr>
+<tr>
+<td>DelayComp:InternalDelay</td>
+<td>Delay compensation internal delay (read-only). This is the delay caused by the event FIFO in the EVR. It is adjusted by the delay compensation logic in order to match the target delay.</td>
+</tr>
+<tr>
+<td>DelayComp:Locked</td>
+<td>Delay compensation event FIFO locked flag (read-only). This is 1 if the event FIFO has been locked to the specified delay.</td>
+</tr>
+<tr>
+<td>DelayComp:PathDelay</td>
+<td>Delay compensation path delay (read-only). This is the delay from the master EVM to the EVR as is has been received from the EVM. It is used for adjusting the internal delay in order to match the target delay.</td>
+</tr>
+<tr>
+<td>DelayComp:PathDelay:Valid</td>
+<td>Delay compensation path-delay status information (read-only). This is 0 if no valid path delay is available, 1 if the path delay is valid and has coarse precision (quick acquisition), 2 if the path delay is valid has medium prevision (slow acquisition), and 3 if the path delay is valid and has fine precision (slow acquisition).</td>
+</tr>
+<tr>
+<td>DelayComp:TargetDelay</td>
+<td>Delay compensation target delay. The delay compensation logic in the EVR will try to adjust the internal delay so that the total delay (path delay plus internal delay) matches the specified delay.</td>
+</tr>
+<tr>
+<td>DelayComp:TargetDelay:TooLong</td>
+<td>Delay compensation target delay too-long flag (read-only). This is 1 if the specified target delay is too long (the path delay is so short that the internal delay cannot be adjusted to match the target delay). Otherwise, this is 0.</td>
+</tr>
+<tr>
+<td>DelayComp:TargetDelay:TooShort</td>
+<td>Delay compensation target delay too-short flag (read-only). This is 1 if the specified target delay is too short (the path delay is so long that the internal delay cannot be adjusted to match the target delay, e.g. because the internal would have to be negative in order to match the target delay). Otherwise, this is 0.</td>
+</tr>
+</table>
+
 ### Distributed bus
 
 <table>
@@ -829,11 +877,11 @@ EVR
 </tr>
 <tr>
 <td>DBus:SharedRX</td>
-<td>Bandwidth share flag for the receiver side. If enabled (1), the upstream distributed bus bandwidth is halfed in order to be able to receive data into the data buffer. If disabled (0), the full distributed bus bandwidth is available and data reception is disabled.</td>
+<td>Bandwidth share flag for the receiver side. If enabled (1), the upstream distributed bus bandwidth is halfed in order to be able to receive data into the data buffer. If disabled (0), the full distributed bus bandwidth is available and data reception is disabled. Please note that for firmware versions that support delay compensation, this is always enabled and disabling it is not possible (the write operation will fail).</td>
 </tr>
 <tr>
 <td>DBus:SharedTX</td>
-<td>Bandwidth share flag for the transmission side. If enabled (1), the downstream distributed bus bandwidth is halfed in order to be able to send data from the data buffer. If disabled (0), the full distributed bus bandwidth is available and data transmissions are disabled.</td>
+<td>Bandwidth share flag for the transmission side. If enabled (1), the downstream distributed bus bandwidth is halfed in order to be able to send data from the data buffer. If disabled (0), the full distributed bus bandwidth is available and data transmissions are disabled. Please note that for firmware versions that support delay compensation, this is always enabled and disabling it is not possible (the write operation will fail).</td>
 </tr>
 <tr>
 <td>DBus:Status</td>

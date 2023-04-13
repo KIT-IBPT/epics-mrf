@@ -35,13 +35,6 @@ record(mbbo, "$(P)$(R)EventClock:ClkCleanerPLL:BandwidthSel") {
   field(FRST, "ML")
 }
 
-# TODO: Delay compensation registers are missing here because no complete
-# documentation is available yet. The four delay compensation registers are:
-# - Delay Compensation Target Value (0x00b0)
-# - Delay Compensation Transmission Path Delay Value (0x00b4)
-# - Delay Compensation Internal Delay Value (0x00b8)
-# - Delay Compensation Status Register (0x00bc)
-
 # Data buffer segment interrupt enable registers.
 
 # Each bit of the four records enables the data buffer interrupt for one 16 byte
