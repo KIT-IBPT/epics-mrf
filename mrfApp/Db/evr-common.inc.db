@@ -509,9 +509,9 @@ record(mbbi, "$(P)$(R)Firmware:FormFactor") {
 }
 
 record(longin, "$(P)$(R)Firmware:Version") {
-  field(DESC, "Complete FPGA firmware version number")
+  field(DESC, "Firmware version ID")
   field(DTYP, "MRF Memory")
-  field(INP,  "@$(DEVICE) 0x002c[15:0] uint32")
+  field(INP,  "@$(DEVICE) 0x002c[7:0] uint32")
   field(PINI, "YES")
 }
 
