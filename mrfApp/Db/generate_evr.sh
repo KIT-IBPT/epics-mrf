@@ -270,7 +270,7 @@ for i in `seq 0 1`; do
 done
 
 if [ "${form_factor}" = "mtca" -a "${series}" = "300" ]; then
-  cat "${db_dir}/evr-interrupts-mmap.${extension}"
+  cat "${db_dir}/evr-interrupts-mmap.inc.${extension}"
   write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:IRQ")
   cat "${db_dir}/evr-mtca-300.inc.${extension}"
   for i in `seq 0 7`; do
@@ -320,7 +320,7 @@ if [ "${form_factor}" = "mtca" -a "${series}" = "300" ]; then
 fi
 
 if [ "${form_factor}" = "vme" -a "${series}" = "230" ]; then
-  cat "${db_dir}/evr-interrupts-udp-ip.${extension}"
+  cat "${db_dir}/evr-interrupts-udp-ip.inc.${extension}"
   write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:IRQ")
   cat "${db_dir}/evr-vme-230-common.inc.${extension}"
   for i in `seq 0 2`; do
