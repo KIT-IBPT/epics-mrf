@@ -10,7 +10,7 @@
   <background_color>
     <color red="240" green="240" blue="240" />
   </background_color>
-  <boy_version>5.1.0.202009030828</boy_version>
+  <boy_version>5.1.0.202302222212</boy_version>
   <foreground_color>
     <color red="192" green="192" blue="192" />
   </foreground_color>
@@ -45,7 +45,7 @@
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="19" style="1" pixels="false">Header 1</opifont.name>
+      <opifont.name fontName="Noto Sans" height="25" style="1" pixels="false">Header 1</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -96,7 +96,7 @@
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -142,7 +142,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -186,7 +186,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -236,7 +236,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -289,7 +289,7 @@ $(pv_value)</tooltip>
     <effect_3d>true</effect_3d>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -338,7 +338,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -378,7 +378,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -420,7 +420,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>false</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -481,7 +481,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -534,7 +534,7 @@ $(pv_value)</tooltip>
     <effect_3d>true</effect_3d>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -583,7 +583,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -623,7 +623,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -665,7 +665,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>false</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -726,7 +726,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -779,7 +779,7 @@ $(pv_value)</tooltip>
     <effect_3d>true</effect_3d>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -828,7 +828,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -868,7 +868,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -910,7 +910,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>false</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -971,7 +971,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1024,7 +1024,7 @@ $(pv_value)</tooltip>
     <effect_3d>true</effect_3d>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1073,7 +1073,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1113,7 +1113,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1155,7 +1155,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>false</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1216,7 +1216,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1269,7 +1269,7 @@ $(pv_value)</tooltip>
     <effect_3d>true</effect_3d>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1318,7 +1318,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1358,7 +1358,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1400,7 +1400,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>false</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1461,7 +1461,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1514,7 +1514,7 @@ $(pv_value)</tooltip>
     <effect_3d>true</effect_3d>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1563,7 +1563,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1603,7 +1603,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1645,7 +1645,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>false</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1706,7 +1706,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1759,7 +1759,7 @@ $(pv_value)</tooltip>
     <effect_3d>true</effect_3d>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1808,7 +1808,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1848,7 +1848,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1890,7 +1890,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>false</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -1941,7 +1941,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1983,13 +1983,13 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName="Ubuntu" height="9" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Noto Sans" height="12" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
       <color red="0" green="0" blue="0" />
     </foreground_color>
-    <height>32</height>
+    <height>26</height>
     <items>
       <s>Pulse Generator 0</s>
       <s>Pulse Generator 1</s>
@@ -2018,6 +2018,19 @@ $(pv_value)</tooltip>
       <s>Prescaler 0</s>
       <s>Prescaler 1</s>
       <s>Prescaler 2</s>
+      <s>Prescaler 3</s>
+      <s>Prescaler 4</s>
+      <s>Prescaler 5</s>
+      <s>Prescaler 6</s>
+      <s>Prescaler 7</s>
+      <s>Flip-Flop 0</s>
+      <s>Flip-Flop 1</s>
+      <s>Flip-Flop 2</s>
+      <s>Flip-Flop 3</s>
+      <s>Flip-Flop 4</s>
+      <s>Flip-Flop 5</s>
+      <s>Flip-Flop 6</s>
+      <s>Flip-Flop 7</s>
       <s>Force High</s>
       <s>Force Low</s>
     </items>
@@ -2092,54 +2105,6 @@ case 14:
 case 15:
   mappingString = "Pulse Generator 15";
   break;
-case 16:
-  mappingString = "Pulse Generator 16";
-  break;
-case 17:
-  mappingString = "Pulse Generator 17";
-  break;
-case 18:
-  mappingString = "Pulse Generator 18";
-  break;
-case 19:
-  mappingString = "Pulse Generator 19";
-  break;
-case 20:
-  mappingString = "Pulse Generator 20";
-  break;
-case 21:
-  mappingString = "Pulse Generator 21";
-  break;
-case 22:
-  mappingString = "Pulse Generator 22";
-  break;
-case 23:
-  mappingString = "Pulse Generator 23";
-  break;
-case 24:
-  mappingString = "Pulse Generator 24";
-  break;
-case 25:
-  mappingString = "Pulse Generator 25";
-  break;
-case 26:
-  mappingString = "Pulse Generator 26";
-  break;
-case 27:
-  mappingString = "Pulse Generator 27";
-  break;
-case 28:
-  mappingString = "Pulse Generator 28";
-  break;
-case 29:
-  mappingString = "Pulse Generator 29";
-  break;
-case 30:
-  mappingString = "Pulse Generator 30";
-  break;
-case 31:
-  mappingString = "Pulse Generator 31";
-  break;
 case 32:
   mappingString = "Dist. Bus Bit 0";
   break;
@@ -2172,6 +2137,45 @@ case 41:
   break;
 case 42:
   mappingString = "Prescaler 2";
+  break;
+case 43:
+  mappingString = "Prescaler 3";
+  break;
+case 44:
+  mappingString = "Prescaler 4";
+  break;
+case 45:
+  mappingString = "Prescaler 5";
+  break;
+case 46:
+  mappingString = "Prescaler 6";
+  break;
+case 47:
+  mappingString = "Prescaler 7";
+  break;
+case 48:
+  mappingString = "Flip-Flop 0";
+  break;
+case 49:
+  mappingString = "Flip-Flop 1";
+  break;
+case 50:
+  mappingString = "Flip-Flop 2";
+  break;
+case 51:
+  mappingString = "Flip-Flop 3";
+  break;
+case 52:
+  mappingString = "Flip-Flop 4";
+  break;
+case 53:
+  mappingString = "Flip-Flop 5";
+  break;
+case 54:
+  mappingString = "Flip-Flop 6";
+  break;
+case 55:
+  mappingString = "Flip-Flop 7";
   break;
 case 62:
   mappingString = "Force High";
@@ -2230,38 +2234,6 @@ if (mappingString == "Pulse Generator 0") {
   mappingCode = 14;
 } else if (mappingString == "Pulse Generator 15") {
   mappingCode = 15;
-} else if (mappingString == "Pulse Generator 16") {
-  mappingCode = 16;
-} else if (mappingString == "Pulse Generator 17") {
-  mappingCode = 17;
-} else if (mappingString == "Pulse Generator 18") {
-  mappingCode = 18;
-} else if (mappingString == "Pulse Generator 19") {
-  mappingCode = 19;
-} else if (mappingString == "Pulse Generator 20") {
-  mappingCode = 20;
-} else if (mappingString == "Pulse Generator 21") {
-  mappingCode = 21;
-} else if (mappingString == "Pulse Generator 22") {
-  mappingCode = 22;
-} else if (mappingString == "Pulse Generator 23") {
-  mappingCode = 23;
-} else if (mappingString == "Pulse Generator 24") {
-  mappingCode = 24;
-} else if (mappingString == "Pulse Generator 25") {
-  mappingCode = 25;
-} else if (mappingString == "Pulse Generator 26") {
-  mappingCode = 26;
-} else if (mappingString == "Pulse Generator 27") {
-  mappingCode = 27;
-} else if (mappingString == "Pulse Generator 28") {
-  mappingCode = 28;
-} else if (mappingString == "Pulse Generator 29") {
-  mappingCode = 29;
-} else if (mappingString == "Pulse Generator 30") {
-  mappingCode = 30;
-} else if (mappingString == "Pulse Generator 31") {
-  mappingCode = 31;
 } else if (mappingString == "Dist. Bus Bit 0") {
   mappingCode = 32;
 } else if (mappingString == "Dist. Bus Bit 1") {
@@ -2284,6 +2256,32 @@ if (mappingString == "Pulse Generator 0") {
   mappingCode = 41;
 } else if (mappingString == "Prescaler 2") {
   mappingCode = 42;
+} else if (mappingString == "Prescaler 3") {
+  mappingCode = 43;
+} else if (mappingString == "Prescaler 4") {
+  mappingCode = 44;
+} else if (mappingString == "Prescaler 5") {
+  mappingCode = 45;
+} else if (mappingString == "Prescaler 6") {
+  mappingCode = 46;
+} else if (mappingString == "Prescaler 7") {
+  mappingCode = 47;
+} else if (mappingString == "Flip-Flop 0") {
+  mappingCode = 48;
+} else if (mappingString == "Flip-Flop 1") {
+  mappingCode = 49;
+} else if (mappingString == "Flip-Flop 2") {
+  mappingCode = 50;
+} else if (mappingString == "Flip-Flop 3") {
+  mappingCode = 51;
+} else if (mappingString == "Flip-Flop 4") {
+  mappingCode = 52;
+} else if (mappingString == "Flip-Flop 5") {
+  mappingCode = 53;
+} else if (mappingString == "Flip-Flop 6") {
+  mappingCode = 54;
+} else if (mappingString == "Flip-Flop 7") {
+  mappingCode = 55;
 } else if (mappingString == "Force High") {
   mappingCode = 62;
 } else if (mappingString == "Force Low") {

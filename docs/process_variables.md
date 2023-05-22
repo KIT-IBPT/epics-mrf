@@ -1339,7 +1339,7 @@ which has to be replaced with the output-specific prefix.
 </tr>
 <tr>
 <td>Out:Map</td>
-<td>Mapping used for the output. A value of 0 to 31 specifies that the corresponding pulse generator shall be used. A value of 32 to 39 specifies that one of the distributed bus bits (32 meaning distributed bus bit 0 and 39 meaning distributed bus bit 7) shall be used. A value of 40 to 42 specifies that one of the prescalers (40 meaning prescaler 0 and 42 meaning prescaler 2) shall be used. A value of 48 to 55 means that one of the flip-flops shall be used (48 meaning flip-flop 0 and 55 meaning flip-flop 7). A value of 61 means that the output shall be put in a tri-state (only for outputs that can also act as inputs and thus support a tri-state). A value of 62 specified that the output shall be set to constant hight. A value of 63 specifies that the output shall be set to constant low.</td>
+<td>Mapping used for the output. A value of 0 to 31 specifies that the corresponding pulse generator shall be used. A value of 32 to 39 specifies that one of the distributed bus bits (32 meaning distributed bus bit 0 and 39 meaning distributed bus bit 7) shall be used. A value of 40 to 47 specifies that one of the prescalers (40 meaning prescaler 0 and 47 meaning prescaler 7) shall be used. A value of 48 to 55 means that one of the flip-flops shall be used (48 meaning flip-flop 0 and 55 meaning flip-flop 7). A value of 61 means that the output shall be put in a tri-state (only for outputs that can also act as inputs and thus support a tri-state). A value of 62 specified that the output shall be set to constant hight. A value of 63 specifies that the output shall be set to constant low.</td>
 </tr>
 <tr>
 <td>Out:Map2</td>
