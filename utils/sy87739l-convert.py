@@ -97,7 +97,7 @@ def freq_to_cw(freq):
     for i in range(min_post_div_sel, max_post_div_sel + 1):
         try_div_sel = int(((freq * table_post_div_sel[i]) / ref_osc) + 0.8)
         for try_qp in range(1, 32):
-            for try_qpm1 in range(0, 32):
+            for try_qpm1 in range(0, 32 - try_qp):
                 for try_m in range(0, 8):
                     for try_n in range(0, 8):
                         if (not ((try_m <= 18 and try_n >= 31)
