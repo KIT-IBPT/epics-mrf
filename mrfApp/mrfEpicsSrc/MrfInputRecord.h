@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2016 aquenos GmbH.
- * Copyright 2015-2016 Karlsruhe Institute of Technology.
+ * Copyright 2015-2024 aquenos GmbH.
+ * Copyright 2015-2024 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -30,6 +30,7 @@
 #ifndef ANKA_MRF_EPICS_INPUT_RECORD_H
 #define ANKA_MRF_EPICS_INPUT_RECORD_H
 
+#include <stdexcept>
 #include <string>
 
 #include <alarm.h>

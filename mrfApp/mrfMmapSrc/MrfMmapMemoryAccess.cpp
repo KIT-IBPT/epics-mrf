@@ -1,6 +1,6 @@
 /*
- * Copyright 2016 aquenos GmbH.
- * Copyright 2016 Karlsruhe Institute of Technology.
+ * Copyright 2016-2024 aquenos GmbH.
+ * Copyright 2016-2024 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -29,6 +29,7 @@
 
 #include <atomic>
 #include <mutex>
+#include <stdexcept>
 #include <system_error>
 
 extern "C" {

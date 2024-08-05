@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2022 aquenos GmbH.
- * Copyright 2015-2022 Karlsruhe Institute of Technology.
+ * Copyright 2015-2024 aquenos GmbH.
+ * Copyright 2015-2024 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -29,6 +29,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <stdexcept>
 
 #include <alarm.h>
 #include <dbFldTypes.h>
