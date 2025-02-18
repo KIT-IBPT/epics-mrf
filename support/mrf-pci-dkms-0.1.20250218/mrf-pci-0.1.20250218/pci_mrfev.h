@@ -66,6 +66,17 @@
 #define HAVE_UNLOCKED_IOCTL 1
 #endif
 
+/*
+  In old kernel versions, class_create takes two arguments. Starting with
+  kernel 6.4, it only takes a single argument.
+*/
+#if KERNEL_VERSION(6, 4, 0) <= LINUX_VERSION_CODE
+#define mrf_class_create(module_info, device_name) class_create(device_name)
+#else
+#define mrf_class_create(module_info, device_name) \
+  class_create(module_info, device_name)
+#endif
+
 /* Define the maximum number of words in EEPROM */
 #define EEPROM_MAX_WORDS            256
 

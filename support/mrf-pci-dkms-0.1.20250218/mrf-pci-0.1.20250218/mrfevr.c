@@ -125,6 +125,10 @@ static struct pci_device_id evr_ids[] = {
     .device = PCI_DEVICE_ID_KINTEX7,
     .subvendor = PCI_VENDOR_ID_MRF,
     .subdevice = PCI_DEVICE_ID_MRF_PCIEEVR300},
+  { .vendor = PCI_VENDOR_ID_XILINX,
+    .device = PCI_DEVICE_ID_KINTEX7,
+    .subvendor = PCI_VENDOR_ID_MRF,
+    .subdevice = PCI_DEVICE_ID_MRF_PXIEEVR300},
   { 0, }};
 MODULE_DEVICE_TABLE(pci, evr_ids);
 
@@ -277,10 +281,18 @@ static int pci_evr_probe(struct pci_dev *pcidev, const struct pci_device_id *dev
       ev_device->pEv = ev_device->BAR_mmapped[2];
       break;
 
-    case PCI_DEVICE_ID_ZOMOJO_Z1:
     case PCI_DEVICE_ID_MRF_PXIEEVR300:
-      ev_device->devtype = MRF_DEVTYPE_V5_PCIE;
-      ev_device->pEv = ev_device->BAR_mmapped[0];
+      if (ev_device->device_id == PCI_DEVICE_ID_ZOMOJO_Z1 ||
+	  ev_device->device_id == PCI_DEVICE_ID_0505)
+	{
+	  ev_device->devtype = MRF_DEVTYPE_V5_PCIE;
+	  ev_device->pEv = ev_device->BAR_mmapped[0];
+	}
+      else
+	{
+	  ev_device->devtype = MRF_DEVTYPE_K7_PCIE;
+	  ev_device->pEv = ev_device->BAR_mmapped[0];
+	}
       break;
 
     case PCI_DEVICE_ID_KINTEX7:
@@ -397,7 +409,7 @@ static int __init pci_evr_init(void)
   memset(mrf_devices, 0, sizeof(struct mrf_dev)*MAX_MRF_DEVICES);
 
   printk(KERN_ALERT "Event Receiver PCI/PCIe driver init.\n");
-  mrf_evr_class = class_create(THIS_MODULE, DEVICE_NAME);
+  mrf_evr_class = mrf_class_create(THIS_MODULE, DEVICE_NAME);
   if (IS_ERR(mrf_evr_class))
     printk(KERN_WARNING DEVICE_NAME ": cannot register device class.\n");
   return pci_register_driver(&evr_driver);    
