@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2021 aquenos GmbH.
- * Copyright 2015-2021 Karlsruhe Institute of Technology.
+ * Copyright 2015-2025 aquenos GmbH.
+ * Copyright 2015-2025 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -262,7 +262,7 @@ void createUdpIpEvrDevice(const std::string& deviceId,
     const std::string &hostName, const MrfTime &delayBetweenPackets,
     const MrfTime &udpTimeout, int maximumNumberOfTries) {
   createUdpIpDevice(deviceId, hostName,
-      MrfUdpIpMemoryAccess::baseAddressVmeEvrRegister, delayBetweenPackets,
+      MrfUdpIpMemoryAccess::baseAddressVmeEvr230Register, delayBetweenPackets,
       udpTimeout, maximumNumberOfTries, preheatCacheVmeEvr230Rf);
 }
 
