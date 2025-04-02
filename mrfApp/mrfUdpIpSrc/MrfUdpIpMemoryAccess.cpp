@@ -38,7 +38,6 @@ namespace anka {
 namespace mrf {
 
 namespace {
-
 std::pair<
     MrfMemoryAccess::ErrorCode, std::string> exceptionToErrorCodeAndMessage(
     std::exception_ptr exception) {
@@ -75,8 +74,12 @@ MrfMemoryAccess::ErrorCode statusToErrorCode(std::int8_t status) {
 // will complain about missing symbols when they are used by reference).
 constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvgCrCsr;
 constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvgRegister;
-constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvrCrCsr;
-constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvrRegister;
+constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvmCrCsr;
+constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvmRegister;
+constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvr230CrCsr;
+constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvr230Register;
+constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvr300CrCsr;
+constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvr300Register;
 
 MrfUdpIpMemoryAccess::MrfUdpIpMemoryAccess(
     const std::string &hostName, std::uint32_t baseAddress) :

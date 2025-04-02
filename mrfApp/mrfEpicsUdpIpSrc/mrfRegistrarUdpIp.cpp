@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2021 aquenos GmbH.
- * Copyright 2015-2021 Karlsruhe Institute of Technology.
+ * Copyright 2015-2025 aquenos GmbH.
+ * Copyright 2015-2025 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -273,7 +273,7 @@ void createUdpIpEvrDevice(
   createUdpIpDevice(
     deviceId,
     hostName,
-    MrfUdpIpMemoryAccess::baseAddressVmeEvrRegister,
+    MrfUdpIpMemoryAccess::baseAddressVmeEvr230Register,
     queueTimeout,
     requestTimeout,
     preheatCacheVmeEvr230Rf);

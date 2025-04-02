@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2021 aquenos GmbH.
- * Copyright 2015-2021 Karlsruhe Institute of Technology.
+ * Copyright 2015-2025 aquenos GmbH.
+ * Copyright 2015-2025 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -60,14 +60,34 @@ public:
   static constexpr std::uint32_t baseAddressVmeEvgRegister = 0x80000000;
 
   /**
+   * Base address of the CR/CSR space in the VME-EVM-300.
+   */
+  static constexpr std::uint32_t baseAddressVmeEvmCrCsr = 0x00000000;
+
+  /**
+   * Base address of the EVM registers space in the VME-EVM-300.
+   */
+  static constexpr std::uint32_t baseAddressVmeEvmRegister = 0x80000000;
+
+  /**
    * Base address of the CR/CSR space in the VME-EVR-230(RF).
    */
-  static constexpr std::uint32_t baseAddressVmeEvrCrCsr = 0x78000000;
+  static constexpr std::uint32_t baseAddressVmeEvr230CrCsr = 0x78000000;
 
   /**
    * Base address of the EVR registers space in the VME-EVR-230(RF).
    */
-  static constexpr std::uint32_t baseAddressVmeEvrRegister = 0x7a000000;
+  static constexpr std::uint32_t baseAddressVmeEvr230Register = 0x7a000000;
+
+  /**
+   * Base address of the CR/CSR space in the VME-EVR-300.
+   */
+  static constexpr std::uint32_t baseAddressVmeEvr300CrCsr = 0x00000000;
+
+  /**
+   * Base address of the EVR registers space in the VME-EVR-300.
+   */
+  static constexpr std::uint32_t baseAddressVmeEvr300Register = 0x80000000;
 
   /**
    * Creates a memory-access object for an MRF device that can be controlled
