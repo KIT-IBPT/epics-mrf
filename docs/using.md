@@ -16,10 +16,20 @@ The IOC has to be linked against the following libraries:
 
 
 ### Table of contents
+
 - [IOC startup configuration](#ioc-startup-configuration)
   - [VME-EVG-230](#vme-evg-230)
   - [VME-EVR-230 and VME-EVR-230RF](#vme-evr-230-and-vme-evr-230rf)
   - [MTCA-EVR-300](#mtca-evr-300)
+  - [Supplemental database files](#supplemental-database-files)
+  - [Optional arguments to IOC shell functions](
+    #optional-arguments-to-ioc-shell-functions)
+  - [MTCA-EVR-300](#mtca-evr-300)
+  - [VME-EVG-230](#vme-evg-230)
+  - [VME-EVM-300](#vme-evm-300)
+  - [VME-EVR-230](#vme-evr-230)
+  - [VME-EVR-230RF](#vme-evr-230rf)
+  - [VME-EVR-300](#vme-evr-300)
   - [Supplemental database files](#supplemental-database-files)
   - [Optional arguments to IOC shell functions](
     #optional-arguments-to-ioc-shell-functions)
@@ -35,171 +45,6 @@ IOC startup configuration
 
 The IOC startup script has to connect to the device(s) and load the
 corresponding database files. Both parts depend on the type of the device.
-
-
-### VME-EVG-230
-
-```
-mrfUdpIpEvgDevice("EVG01", "evg.example.com")
-
-dbLoadRecords("${MRF}/db/vme-evg-230.db", "P=TEST:EVG:,R=01:,DEVICE=EVG01,UNIV_OUT_0_1_INSTALLED=0,UNIV_OUT_2_3_INSTALLED=0,UNIV_IN_0_1_INSTALLED=0,UNIV_IN_2_3_INSTALLED=0,TB_UNIV_IN_0_1_INSTALLED=0,TB_UNIV_IN_2_3_INSTALLED=0,TB_UNIV_IN_4_5_INSTALLED=0,TB_UNIV_IN_6_7_INSTALLED=0,TB_UNIV_IN_8_9_INSTALLED=0,TB_UNIV_IN_10_11_INSTALLED=0,TB_UNIV_IN_12_13_INSTALLED=0,TB_UNIV_IN_14_15_INSTALLED=0")
-```
-
-The following parameters have to be passed to `dbLoadRecords`:
-
-<table>
-<tr>
-<th>Parameter Name</th>
-<th>Description</th>
-</tr>
-<tr>
-<td><code>P</code></td>
-<td>First part of the prefix for all EPICS PVs.</td>
-</tr>
-<tr>
-<td><code>R</code></td>
-<td>Second part of the prefix for all EPICS PVs (e.g. device number).</td>
-</tr>
-<tr>
-<td><code>DEVICE</code></td>
-<td>Name of the device (must be the name that is specified when calling <code>mrfUdpIpEvgDevice</code>).</td>
-</tr>
-</table>
-
-The following parameters are optional. If they are not specified, the respective
-default values are used.
-
-<table>
-<tr>
-<th>Parameter Name</th>
-<th>Description</th>
-<th>Default Value</th>
-</tr>
-<tr>
-<td><code>CLK_GEN_CW_x</code></td>
-<td>Configuration word for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
-<td>Depends on <code>x</code>.</td>
-</tr>
-<tr>
-<td><code>CLK_GEN_F_x</code></td>
-<td>Frequency for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
-<td>Depends on <code>x</code>.</td>
-</tr>
-<tr>
-<td><code>UNIV_OUT_INSTALLED</code></td>
-<td>Default value for <code>UNIV_OUT_x_y_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
-<td><code>0</code></td>
-</tr>
-<tr>
-<td><code>UNIV_OUT_x_y_INSTALLED</code></td>
-<td><code>0</code> if the corresponding universal output module is not installed, <code>1</code> if it is installed.</td>
-<td><code>$(UNIV_OUT_INSTALLED)</code></td>
-</tr>
-<tr>
-<td><code>UNIV_IN_INSTALLED</code></td>
-<td>Default value for <code>UNIV_IN_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
-<td><code>0</code></td>
-</tr>
-<tr>
-<td><code>UNIV_IN_x_y_INSTALLED</code></td>
-<td><code>0</code> if the corresponding universal input module (front panel) is not installed, <code>1</code> if it is installed.</td>
-<td><code>$(UNIV_IN_INSTALLED)</code></td>
-</tr>
-<tr>
-<td><code>TB_UNIV_OUT_INSTALLED</code></td>
-<td>Default value for <code>TB_UNIV_OUT_x_y_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
-<td><code>0</code></td>
-</tr>
-<tr>
-<td><code>TB_UNIV_IN_x_y_INSTALLED</code></td>
-<td><code>0</code> if the corresponding universal input module (transition board) is not installed, <code>1</code> if it is installed.</td>
-<td><code>$(TB_UNIV_IN_INSTALLED)</code></td>
-</tr>
-</table>
-
-
-### VME-EVR-230 and VME-EVR-230RF
-
-```
-mrfUdpIpEvrDevice("EVR01", "evr.example.com")
-
-dbLoadRecords("${MRF}/db/vme-evr-230rf.db","P=TEST:EVR:,R=01:,DEVICE=EVR01,UNIV_OUT_0_1_INSTALLED=0,UNIV_OUT_2_3_INSTALLED=0,UNIV_OUT_0_1_FD_AVAILABLE=0,UNIV_OUT_2_3_FD_AVAILABLE=0,TB_UNIV_OUT_0_1_INSTALLED=0,TB_UNIV_OUT_2_3_INSTALLED=0,TB_UNIV_OUT_4_5_INSTALLED=0,TB_UNIV_OUT_6_7_INSTALLED=0,TB_UNIV_OUT_8_9_INSTALLED=0,TB_UNIV_OUT_10_11_INSTALLED=0,TB_UNIV_OUT_12_13_INSTALLED=0,TB_UNIV_OUT_14_15_INSTALLED=0")
-```
-
-For a VME-EVR-230, the file `vme-evr-230.db` has to be loaded instead of
-`vme-evr-230rf.db`.
-
-The following parameters have to be passed to `dbLoadRecords`:
-
-<table>
-<tr>
-<th>Parameter Name</th>
-<th>Description</th>
-</tr>
-<tr>
-<td><code>P</code></td>
-<td>First part of the prefix for all EPICS PVs.</td>
-</tr>
-<tr>
-<td><code>R</code></td>
-<td>Second part of the prefix for all EPICS PVs (e.g. device number).</td>
-</tr>
-<tr>
-<td><code>DEVICE</code></td>
-<td>Name of the device (must be the name that is specified when calling <code>mrfUdpIpEvrDevice</code>).</td>
-</tr>
-</table>
-
-The following parameters are optional. If they are not specified, the respective
-default values are used.
-
-<table>
-<tr>
-<th>Parameter Name</th>
-<th>Description</th>
-<th>Default Value</th>
-</tr>
-<tr>
-<td><code>CLK_GEN_CW_x</code></td>
-<td>Configuration word for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
-<td>Depends on <code>x</code>.</td>
-</tr>
-<tr>
-<td><code>CLK_GEN_F_x</code></td>
-<td>Frequency for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
-<td>Depends on <code>x</code>.</td>
-</tr>
-<tr>
-<td><code>UNIV_OUT_INSTALLED</code></td>
-<td>Default value for <code>UNIV_OUT_x_y_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
-<td><code>0</code></td>
-</tr>
-<tr>
-<td><code>UNIV_OUT_x_y_INSTALLED</code></td>
-<td><code>0</code> if the corresponding universal output module (front panel) is not installed, <code>1</code> if it is installed.</td>
-<td><code>$(UNIV_OUT_INSTALLED)</code></td>
-</tr>
-<tr>
-<td><code>UNIV_OUT_FD_AVAILABLE</code></td>
-<td>Default value for <code>UNIV_OUT_x_y_FD_AVAILABLE</code> (<code>0</code> or <code>1</code>).</td>
-<td><code>0</code></td>
-</tr>
-<tr>
-<td><code>UNIV_OUT_x_y_FD_AVAILABLE</code></td>
-<td><code>0</code> if the corresponding universal output module (front panel) is not installed or does not allow specifying a fine delay, <code>1</code> if it is installed and allows specifying a fine delay.</td>
-<td><code>$(UNIV_OUT_FD_AVAILABLE)</code></td>
-</tr>
-<tr>
-<td><code>TB_UNIV_OUT_INSTALLED</code></td>
-<td>Default value for <code>TB_UNIV_OUT_x_y_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
-<td><code>0</code></td>
-</tr>
-<tr>
-<td><code>TB_UNIV_OUT_x_y_INSTALLED</code></td>
-<td><code>0</code> if the corresponding universal output module (transition board) is not installed, <code>1</code> if it is installed.</td>
-<td><code>$(TB_UNIV_OUT_INSTALLED)</code></td>
-</tr>
-</table>
 
 
 ### MTCA-EVR-300
@@ -256,6 +101,381 @@ default values are used.
 </table>
 
 
+### VME-EVG-230
+
+```
+mrfUdpIpVmeEvg230Device("EVG01", "evg.example.com")
+
+dbLoadRecords("${MRF}/db/vme-evg-230.db", "P=TEST:EVG:,R=01:,DEVICE=EVG01,UNIV_OUT_0_1_INSTALLED=0,UNIV_OUT_2_3_INSTALLED=0,UNIV_IN_0_1_INSTALLED=0,UNIV_IN_2_3_INSTALLED=0,TB_UNIV_IN_0_1_INSTALLED=0,TB_UNIV_IN_2_3_INSTALLED=0,TB_UNIV_IN_4_5_INSTALLED=0,TB_UNIV_IN_6_7_INSTALLED=0,TB_UNIV_IN_8_9_INSTALLED=0,TB_UNIV_IN_10_11_INSTALLED=0,TB_UNIV_IN_12_13_INSTALLED=0,TB_UNIV_IN_14_15_INSTALLED=0")
+```
+
+The following parameters have to be passed to `dbLoadRecords`:
+
+<table>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td>First part of the prefix for all EPICS PVs.</td>
+</tr>
+<tr>
+<td><code>R</code></td>
+<td>Second part of the prefix for all EPICS PVs (e.g. device number).</td>
+</tr>
+<tr>
+<td><code>DEVICE</code></td>
+<td>Name of the device (must be the name that is specified when calling <code>mrfUdpIpVmeEvg230Device</code>).</td>
+</tr>
+</table>
+
+The following parameters are optional. If they are not specified, the respective
+default values are used.
+
+<table>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+<tr>
+<td><code>CLK_GEN_CW_x</code></td>
+<td>Configuration word for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
+<td>Depends on <code>x</code>.</td>
+</tr>
+<tr>
+<td><code>CLK_GEN_F_x</code></td>
+<td>Frequency for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
+<td>Depends on <code>x</code>.</td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_INSTALLED</code></td>
+<td>Default value for <code>UNIV_OUT_x_y_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_x_y_INSTALLED</code></td>
+<td><code>0</code> if the corresponding universal output module is not installed, <code>1</code> if it is installed.</td>
+<td><code>$(UNIV_OUT_INSTALLED)</code></td>
+</tr>
+<tr>
+<td><code>UNIV_IN_INSTALLED</code></td>
+<td>Default value for <code>UNIV_IN_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>UNIV_IN_x_y_INSTALLED</code></td>
+<td><code>0</code> if the corresponding universal input module (front panel) is not installed, <code>1</code> if it is installed.</td>
+<td><code>$(UNIV_IN_INSTALLED)</code></td>
+</tr>
+<tr>
+<td><code>TB_UNIV_IN_x_y_INSTALLED</code></td>
+<td><code>0</code> if the corresponding universal input module (transition board) is not installed, <code>1</code> if it is installed.</td>
+<td><code>$(TB_UNIV_IN_INSTALLED)</code></td>
+</tr>
+</table>
+
+
+### VME-EVM-300
+
+```
+mrfUdpIpVmeEvm300Device("EVM01", "evm.example.com")
+
+dbLoadRecords("${MRF}/db/vme-evm-300.db", "P=TEST:EVM:,R=01:,DEVICE=EVM01,TB_UNIV_IN_0_1_INSTALLED=0,TB_UNIV_IN_2_3_INSTALLED=0,TB_UNIV_IN_4_5_INSTALLED=0,TB_UNIV_IN_6_7_INSTALLED=0,TB_UNIV_IN_8_9_INSTALLED=0,TB_UNIV_IN_10_11_INSTALLED=0,TB_UNIV_IN_12_13_INSTALLED=0,TB_UNIV_IN_14_15_INSTALLED=0")
+```
+
+The following parameters have to be passed to `dbLoadRecords`:
+
+<table>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td>First part of the prefix for all EPICS PVs.</td>
+</tr>
+<tr>
+<td><code>R</code></td>
+<td>Second part of the prefix for all EPICS PVs (e.g. device number).</td>
+</tr>
+<tr>
+<td><code>DEVICE</code></td>
+<td>Name of the device (must be the name that is specified when calling <code>mrfUdpIpVmeEvm300Device</code>).</td>
+</tr>
+</table>
+
+The following parameters are optional. If they are not specified, the respective
+default values are used.
+
+<table>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+<tr>
+<td><code>CLK_GEN_CW_x</code></td>
+<td>Configuration word for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
+<td>Depends on <code>x</code>.</td>
+</tr>
+<tr>
+<td><code>CLK_GEN_F_x</code></td>
+<td>Frequency for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
+<td>Depends on <code>x</code>.</td>
+</tr>
+<tr>
+<td><code>TB_UNIV_IN_x_y_INSTALLED</code></td>
+<td><code>0</code> if the corresponding universal input module (transition board) is not installed, <code>1</code> if it is installed.</td>
+<td><code>$(TB_UNIV_IN_INSTALLED)</code></td>
+</tr>
+</table>
+
+
+### VME-EVR-230
+
+```
+mrfUdpIpVmeEvr230Device("EVR01", "evr.example.com")
+
+dbLoadRecords("${MRF}/db/vme-evr-230.db","P=TEST:EVR:,R=01:,DEVICE=EVR01,UNIV_OUT_0_1_INSTALLED=0,UNIV_OUT_2_3_INSTALLED=0,UNIV_OUT_0_1_FD_AVAILABLE=0,UNIV_OUT_2_3_FD_AVAILABLE=0,TB_UNIV_OUT_0_1_INSTALLED=0,TB_UNIV_OUT_2_3_INSTALLED=0,TB_UNIV_OUT_4_5_INSTALLED=0,TB_UNIV_OUT_6_7_INSTALLED=0,TB_UNIV_OUT_8_9_INSTALLED=0,TB_UNIV_OUT_10_11_INSTALLED=0,TB_UNIV_OUT_12_13_INSTALLED=0,TB_UNIV_OUT_14_15_INSTALLED=0")
+```
+
+The following parameters have to be passed to `dbLoadRecords`:
+
+<table>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td>First part of the prefix for all EPICS PVs.</td>
+</tr>
+<tr>
+<td><code>R</code></td>
+<td>Second part of the prefix for all EPICS PVs (e.g. device number).</td>
+</tr>
+<tr>
+<td><code>DEVICE</code></td>
+<td>Name of the device (must be the name that is specified when calling <code>mrfUdpIpVmeEvr230Device</code>).</td>
+</tr>
+</table>
+
+The following parameters are optional. If they are not specified, the respective
+default values are used.
+
+<table>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+<tr>
+<td><code>CLK_GEN_CW_x</code></td>
+<td>Configuration word for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
+<td>Depends on <code>x</code>.</td>
+</tr>
+<tr>
+<td><code>CLK_GEN_F_x</code></td>
+<td>Frequency for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
+<td>Depends on <code>x</code>.</td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_INSTALLED</code></td>
+<td>Default value for <code>UNIV_OUT_x_y_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_x_y_INSTALLED</code></td>
+<td><code>0</code> if the corresponding universal output module (front panel) is not installed, <code>1</code> if it is installed.</td>
+<td><code>$(UNIV_OUT_INSTALLED)</code></td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_FD_AVAILABLE</code></td>
+<td>Default value for <code>UNIV_OUT_x_y_FD_AVAILABLE</code> (<code>0</code> or <code>1</code>).</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_x_y_FD_AVAILABLE</code></td>
+<td><code>0</code> if the corresponding universal output module (front panel) is not installed or does not allow specifying a fine delay, <code>1</code> if it is installed and allows specifying a fine delay.</td>
+<td><code>$(UNIV_OUT_FD_AVAILABLE)</code></td>
+</tr>
+<tr>
+<td><code>TB_UNIV_OUT_INSTALLED</code></td>
+<td>Default value for <code>TB_UNIV_OUT_x_y_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>TB_UNIV_OUT_x_y_INSTALLED</code></td>
+<td><code>0</code> if the corresponding universal output module (transition board) is not installed, <code>1</code> if it is installed.</td>
+<td><code>$(TB_UNIV_OUT_INSTALLED)</code></td>
+</tr>
+</table>
+
+
+### VME-EVR-230RF
+
+```
+mrfUdpIpVmeEvr230RfDevice("EVR01", "evr.example.com")
+
+dbLoadRecords("${MRF}/db/vme-evr-230rf.db","P=TEST:EVR:,R=01:,DEVICE=EVR01,UNIV_OUT_0_1_INSTALLED=0,UNIV_OUT_2_3_INSTALLED=0,UNIV_OUT_0_1_FD_AVAILABLE=0,UNIV_OUT_2_3_FD_AVAILABLE=0,TB_UNIV_OUT_0_1_INSTALLED=0,TB_UNIV_OUT_2_3_INSTALLED=0,TB_UNIV_OUT_4_5_INSTALLED=0,TB_UNIV_OUT_6_7_INSTALLED=0,TB_UNIV_OUT_8_9_INSTALLED=0,TB_UNIV_OUT_10_11_INSTALLED=0,TB_UNIV_OUT_12_13_INSTALLED=0,TB_UNIV_OUT_14_15_INSTALLED=0")
+```
+
+The following parameters have to be passed to `dbLoadRecords`:
+
+<table>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td>First part of the prefix for all EPICS PVs.</td>
+</tr>
+<tr>
+<td><code>R</code></td>
+<td>Second part of the prefix for all EPICS PVs (e.g. device number).</td>
+</tr>
+<tr>
+<td><code>DEVICE</code></td>
+<td>Name of the device (must be the name that is specified when calling <code>mrfUdpIpVmeEvr230RfDevice</code>).</td>
+</tr>
+</table>
+
+The following parameters are optional. If they are not specified, the respective
+default values are used.
+
+<table>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+<tr>
+<td><code>CLK_GEN_CW_x</code></td>
+<td>Configuration word for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
+<td>Depends on <code>x</code>.</td>
+</tr>
+<tr>
+<td><code>CLK_GEN_F_x</code></td>
+<td>Frequency for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
+<td>Depends on <code>x</code>.</td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_INSTALLED</code></td>
+<td>Default value for <code>UNIV_OUT_x_y_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_x_y_INSTALLED</code></td>
+<td><code>0</code> if the corresponding universal output module (front panel) is not installed, <code>1</code> if it is installed.</td>
+<td><code>$(UNIV_OUT_INSTALLED)</code></td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_FD_AVAILABLE</code></td>
+<td>Default value for <code>UNIV_OUT_x_y_FD_AVAILABLE</code> (<code>0</code> or <code>1</code>).</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_x_y_FD_AVAILABLE</code></td>
+<td><code>0</code> if the corresponding universal output module (front panel) is not installed or does not allow specifying a fine delay, <code>1</code> if it is installed and allows specifying a fine delay.</td>
+<td><code>$(UNIV_OUT_FD_AVAILABLE)</code></td>
+</tr>
+<tr>
+<td><code>TB_UNIV_OUT_INSTALLED</code></td>
+<td>Default value for <code>TB_UNIV_OUT_x_y_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>TB_UNIV_OUT_x_y_INSTALLED</code></td>
+<td><code>0</code> if the corresponding universal output module (transition board) is not installed, <code>1</code> if it is installed.</td>
+<td><code>$(TB_UNIV_OUT_INSTALLED)</code></td>
+</tr>
+</table>
+
+
+### VME-EVR-300
+
+```
+mrfUdpIpVmeEvr300Device("EVR01", "evr.example.com")
+
+dbLoadRecords("${MRF}/db/vme-evr-300.db","P=TEST:EVR:,R=01:,DEVICE=EVR01,UNIV_OUT_0_1_INSTALLED=0,UNIV_OUT_2_3_INSTALLED=0,UNIV_OUT_0_1_FD_AVAILABLE=0,UNIV_OUT_2_3_FD_AVAILABLE=0,UNIV_OUT_4_5_INSTALLED=0,UNIV_OUT_6_7_INSTALLED=0,TB_UNIV_OUT_0_1_INSTALLED=0,TB_UNIV_OUT_2_3_INSTALLED=0,TB_UNIV_OUT_4_5_INSTALLED=0,TB_UNIV_OUT_6_7_INSTALLED=0,TB_UNIV_OUT_8_9_INSTALLED=0,TB_UNIV_OUT_10_11_INSTALLED=0,TB_UNIV_OUT_12_13_INSTALLED=0,TB_UNIV_OUT_14_15_INSTALLED=0")
+```
+
+The following parameters have to be passed to `dbLoadRecords`:
+
+<table>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td>First part of the prefix for all EPICS PVs.</td>
+</tr>
+<tr>
+<td><code>R</code></td>
+<td>Second part of the prefix for all EPICS PVs (e.g. device number).</td>
+</tr>
+<tr>
+<td><code>DEVICE</code></td>
+<td>Name of the device (must be the name that is specified when calling <code>mrfUdpIpVmeEvr300Device</code>).</td>
+</tr>
+</table>
+
+The following parameters are optional. If they are not specified, the respective
+default values are used.
+
+<table>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+<tr>
+<td><code>CLK_GEN_CW_x</code></td>
+<td>Configuration word for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
+<td>Depends on <code>x</code>.</td>
+</tr>
+<tr>
+<td><code>CLK_GEN_F_x</code></td>
+<td>Frequency for the internal clock generator. See <a href="#clock-generator-configuration">Clock generator configuration</a> for details.</td>
+<td>Depends on <code>x</code>.</td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_INSTALLED</code></td>
+<td>Default value for <code>UNIV_OUT_x_y_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_x_y_INSTALLED</code></td>
+<td><code>0</code> if the corresponding universal output module (front panel) is not installed, <code>1</code> if it is installed.</td>
+<td><code>$(UNIV_OUT_INSTALLED)</code></td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_FD_AVAILABLE</code></td>
+<td>Default value for <code>UNIV_OUT_x_y_FD_AVAILABLE</code> (<code>0</code> or <code>1</code>).</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>UNIV_OUT_x_y_FD_AVAILABLE</code></td>
+<td><code>0</code> if the corresponding universal output module (front panel) is not installed or does not allow specifying a fine delay, <code>1</code> if it is installed and allows specifying a fine delay.</td>
+<td><code>$(UNIV_OUT_FD_AVAILABLE)</code></td>
+</tr>
+<tr>
+<td><code>TB_UNIV_OUT_INSTALLED</code></td>
+<td>Default value for <code>TB_UNIV_OUT_x_y_INSTALLED</code> (<code>0</code> or <code>1</code>).</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>TB_UNIV_OUT_x_y_INSTALLED</code></td>
+<td><code>0</code> if the corresponding universal output module (transition board) is not installed, <code>1</code> if it is installed.</td>
+<td><code>$(TB_UNIV_OUT_INSTALLED)</code></td>
+</tr>
+</table>
+
+
 ### Supplemental database files
 
 There are two additional database files that can be used for each device,
@@ -291,8 +511,10 @@ device.
 ### Optional arguments to IOC shell functions
 
 In addition to the two mandatory arguments, the IOC shell functions for the
-devices which are controlled via UDP/IP (`mrfUdpIpEvgDevice` and
- `mrfUdpIpEvrDevice`) accept two optional arguments.
+devices which are controlled via UDP/IP (`mrfUdpIpVmeEvg230Device`,
+`mrfUdpIpVmeEvm300Device`, `mrfUdpIpVmeEvr230Device`,
+`mrfUdpIpVmeEvr230RfDevice`, and `mrfUdpIpVmeEvr300Device`) accept two optional
+arguments.
 
 The argument order is:
 

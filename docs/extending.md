@@ -79,16 +79,19 @@ support (only the record files and panels are missing):
 - PXIe-EVR-300 (`mrfMmapPxieEvr300Device`)
 
 In fact, all these functions are simply aliases for the
-`mrfMmapMtcaEVR300Device` function. For a device that is controlled via UDP/IP,
-you can most likely simply use the existing `mrfUdpIpEvgDevice` or
-`mrfUdpIpEvrDevice` functions. The only difference between these two functions
-is the memory offset used when addressing registers inside the device.
+`mrfMmapMtcaEVR300Device` function.
 
-If your want to add support for a different device, you might have to an an IOC
-shell function definition to `mrfApp/mrfEpicsMmapSrc/mrfRegistrarMmap.cpp` (for
-a device using the Linux kernel driver) or
+If your want to add support for a new device, you might have to an an IOC shell
+function definition to `mrfApp/mrfEpicsMmapSrc/mrfRegistrarMmap.cpp` (for a
+device using the Linux kernel driver) or
 `mrfApp/mrfEpicsUdpIpSrc/mrfRegistrarUdpIp.cpp` (for a device using the UDP/IP
 based protocol).
+
+For a device that is controlled via UDP/IP, you can start by copying one of the
+`mrfUdpIp…Device` functions. The only difference between these functions is the
+memory offset used when addressing registers inside the device and the address
+areas that are read when “preheating” the memory cache during initialization
+(which is purely done to improve performance).
 
 Last but not least, you will have to extend the panels to accommodate for the
 new device. Depending on how this device differs from other devices, this might

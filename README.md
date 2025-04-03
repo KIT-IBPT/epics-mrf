@@ -8,9 +8,11 @@ event receiver (EVR) devices that are part of the timing system from
 At the moment, the following devices are directly supported:
 
 - MTCA-EVR-300
+- VME-EVM-300
 - VME-EVG-230
 - VME-EVR-230
 - VME-EVR-230RF
+- VME-EVR-300
 
 This device support implements an abstraction layer, that allows it to control
 devices either via PCI(e) (using the MRF linux kernel driver) or via Ethernet,
@@ -24,6 +26,11 @@ map) firmware, not with devices using the legacy firmware.
 Ready-to-use panels for Control System Studio for the aforementioned devices are
 supplied with this device support.
 
+For the VME-EVM-300 and VME-EVR-300, please ensure that the newest firmware is
+installed on the SAM3X microcontroller. This is needed in order to support the
+UDP/IP based protocol. You can download the firmware and installation
+instructions from the [respective GitHub repository](
+https://github.com/jpietari/VME-SAM3X).
 
 Documentation
 -------------
@@ -39,8 +46,8 @@ Documentation
 Breaking changes in version 2.x
 -------------------------------
 
-The signature of the IOC shell functions for configuring UDP/IP communication
-with devices has changed in version 2.x. Please refer to the
+The names and signature of the IOC shell functions for configuring UDP/IP
+communication with devices has changed in version 2.x. Please refer to the
 [upgrade instructions](docs/upgrading.md) for details.
 
 Copyright / License
