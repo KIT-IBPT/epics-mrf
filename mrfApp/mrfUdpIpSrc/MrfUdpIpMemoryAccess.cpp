@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2024 aquenos GmbH.
- * Copyright 2015-2024 Karlsruhe Institute of Technology.
+ * Copyright 2015-2025 aquenos GmbH.
+ * Copyright 2015-2025 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -121,6 +121,20 @@ MrfUdpIpMemoryAccess::MrfUdpIpMemoryAccess(const std::string &hostName,
     throw systemErrorForErrNo("Could not put socket into non-blocking mode",
         savedErrorNumber);
   }
+#ifdef __APPLE__
+  // Unlike Linux, macOS may generate a SIGPIPE for a datagram socket, if it is
+  // connected (Linux only does this for stream sockets). Such a signal would
+  // kill the whole process, so we set a flag that keeps the operating system
+  // from generating such a signal. The SO_NOSIGPIPE option is only supported
+  // on macOS and some variants of BSD, so we cannot apply it everywhere.
+  int socketOptNoSigPipe = 1;
+  ::setsockopt(
+    this->socketDescriptor,
+    SOL_SOCKET,
+    SO_NOSIGPIPE,
+    &socketOptNoSigPipe,
+    sizeof(socketOptNoSigPipe));
+#endif // __APPLE__
   socketAddress.sin_port = htons(2000);
   if (::connect(this->socketDescriptor,
       reinterpret_cast<sockaddr *>(&socketAddress), sizeof(sockaddr_in))) {
