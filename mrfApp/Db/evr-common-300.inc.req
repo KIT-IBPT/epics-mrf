@@ -1,0 +1,5 @@
+$(P)$(R)EventClock:ClkCleanerPLL:BandwidthSel
+$(P)$(R)IRQ:DataBuffer:Enabled:000To1FF
+$(P)$(R)IRQ:DataBuffer:Enabled:200To3FF
+$(P)$(R)IRQ:DataBuffer:Enabled:400To5FF
+$(P)$(R)IRQ:DataBuffer:Enabled:600To7FF
