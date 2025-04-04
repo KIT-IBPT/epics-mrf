@@ -19,6 +19,10 @@ case "${device_type}" in
     form_factor="vme"
     series="230"
     ;;
+  vme-evr-300)
+    form_factor="vme"
+    series="300"
+    ;;
   *)
     echo "Unsupported device type: ${device_type}" >&2
     exit 1
@@ -257,7 +261,7 @@ write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:Common")
 # Only some EVRs support delay compensation, so we only add the respective
 # records for those devices.
 case "${device_type}" in
-  mtca-evr-300)
+  mtca-evr-300|vme-evr-300)
     cat "${db_dir}/evr-delay-compensation.inc.${extension}"
     write_all_pvs+=("\$(P)\$(R)DelayComp:Enabled")
     write_all_pvs+=("\$(P)\$(R)DelayComp:TargetDelay")
@@ -272,6 +276,7 @@ done
 if [ "${form_factor}" = "mtca" -a "${series}" = "300" ]; then
   cat "${db_dir}/evr-interrupts-mmap.inc.${extension}"
   write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:IRQ")
+  cat "${db_dir}/evr-common-300.inc.${extension}"
   cat "${db_dir}/evr-mtca-300.inc.${extension}"
   for i in `seq 0 7`; do
     prescaler ${i} 32 16
@@ -362,6 +367,52 @@ if [ "${device_type}" = "vme-evr-230" ]; then
 elif [ "${device_type}" = "vme-evr-230rf" ]; then
   cat "${db_dir}/evr-vme-230rf.inc.${extension}"
   write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:FPOut:CML")
+fi
+
+if [ "${form_factor}" = "vme" -a "${series}" = "300" ]; then
+  cat "${db_dir}/evr-interrupts-udp-ip.inc.${extension}"
+  write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:IRQ")
+  cat "${db_dir}/evr-common-300.inc.${extension}"
+  cat "${db_dir}/evr-vme-300.inc.${extension}"
+  for i in `seq 0 7`; do
+    prescaler ${i} 32 16
+    write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:Prescaler${i}")
+  done
+  dbus_bits_to_pulse_gens 16
+  pulse_gens_header 16
+  for i in `seq 0 3`; do
+    pulse_gen ${i} 16 32 32
+    write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:PulseGen${i}")
+  done
+  for i in `seq 4 15`; do
+    pulse_gen ${i} 0 32 16
+    write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:PulseGen${i}")
+  done
+  for i in `seq 0 1`; do
+    fp_output --gen2 ${i}
+    write_all_pvs+=("\$(P)\$(R)FPOut${i}:Map")
+    write_all_pvs+=("\$(P)\$(R)FPOut${i}:Map2")
+  done
+  for i in `seq 0 7`; do
+    univ_output --gen2 ${i}
+    write_all_pvs+=("\$(P)\$(R)UnivOut${i}:Map")
+  done
+  for i in `seq 0 15`; do
+    tb_output --gen2 ${i}
+    write_all_pvs+=("\$(P)\$(R)TBOut${i}:Map")
+  done
+  output_gtx_logic "UnivOut6" "Univ. output 6" "0"
+  write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:UnivOut6:GTX")
+  output_gtx_logic "UnivOut7" "Univ. output 7" "1"
+  write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:UnivOut6:GTX")
+  output_gtx_logic "FPOut0" "FP output 0" "2"
+  write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:FPOut0:GTX")
+  output_gtx_logic "FPOut1" "FP output 0" "3"
+  write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:FPOut1:GTX")
+  for i in `seq 0 1`; do
+    fp_input ${i} true
+    write_all_pvs+=("\$(P)\$(R)Intrnl:WriteAll:"FPIn${i})
+  done
 fi
 
 # EVRs only have a single SFP module, so we use the empty string for the number.
