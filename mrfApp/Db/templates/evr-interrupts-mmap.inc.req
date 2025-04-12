@@ -1,0 +1,9 @@
+@PV_PREFIX@IRQ:DataBuffer:Enabled.VAL
+@PV_PREFIX@IRQ:Enabled.VAL
+@PV_PREFIX@IRQ:Event:Enabled.VAL
+@PV_PREFIX@IRQ:EventFIFOFull:Enabled.VAL
+@PV_PREFIX@IRQ:Hardware:Enabled.VAL
+@PV_PREFIX@IRQ:Hardware:Map.VAL
+@PV_PREFIX@IRQ:Heartbeat:Enabled.VAL
+@PV_PREFIX@IRQ:LinkStateChange:Enabled.VAL
+@PV_PREFIX@IRQ:RXViolation:Enabled.VAL

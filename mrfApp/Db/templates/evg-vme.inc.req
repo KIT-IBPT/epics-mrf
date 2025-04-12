@@ -1,0 +1,9 @@
+@PV_PREFIX@IRQ:DataBuffer:Enabled.VAL
+@PV_PREFIX@IRQ:Enabled.VAL
+@PV_PREFIX@IRQ:EventFIFOFull:Enabled.VAL
+@PV_PREFIX@IRQ:External:Enabled.VAL
+@PV_PREFIX@IRQ:RXViolation:Enabled.VAL
+@PV_PREFIX@IRQ:SeqRAM0Start:Enabled.VAL
+@PV_PREFIX@IRQ:SeqRAM1Start:Enabled.VAL
+@PV_PREFIX@IRQ:SeqRAM0Stop:Enabled.VAL
+@PV_PREFIX@IRQ:SeqRAM1Stop:Enabled.VAL

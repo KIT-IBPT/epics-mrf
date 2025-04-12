@@ -1,0 +1,188 @@
+# @INPUT_DESCRIPTION@ mapping register.
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:ExtIRQ") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to ext. IRQ?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[24] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB7") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to d.bus bit 7?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[23] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB6") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to d.bus bit 6?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[22] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB5") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to d.bus bit 5?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[21] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB4") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to d.bus bit 4?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[20] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB3") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to d.bus bit 3?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[19] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB2") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to d.bus bit 2?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[18] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB1") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to d.bus bit 1?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[17] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB0") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to d.bus bit 0?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[16] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:SeqRAMTrig1") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to seq. RAM trig. 1?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[9] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:SeqRAMTrig0") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to seq. RAM trig. 0?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[8] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig7") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to event trigger 7?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[7] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig6") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to event trigger 6?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[6] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig5") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to event trigger 5?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[5] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig4") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to event trigger 4?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[4] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig3") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to event trigger 3?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[3] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig2") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to event trigger 2?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[2] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig1") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to event trigger 1?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[1] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig0") {
+  field(DESC, "Map @INPUT_DESCRIPTION@ to event trigger 0?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @INPUT_ADDR@[0] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:@INPUT_NAME@") {
+  field(LNK1, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB0")
+  field(LNK2, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB1")
+  field(LNK3, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB2")
+  field(LNK4, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB3")
+  field(LNK5, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB4")
+  field(LNK6, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB5")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:@INPUT_NAME@:Fout1")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:@INPUT_NAME@:Fout1") {
+  field(LNK1, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB6")
+  field(LNK2, "@PV_PREFIX@@INPUT_NAME@:MapTo:DBusB7")
+  field(LNK3, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig0")
+  field(LNK4, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig1")
+  field(LNK5, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig2")
+  field(LNK6, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig3")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:@INPUT_NAME@:Fout2")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:@INPUT_NAME@:Fout2") {
+  field(LNK1, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig4")
+  field(LNK2, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig5")
+  field(LNK3, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig6")
+  field(LNK4, "@PV_PREFIX@@INPUT_NAME@:MapTo:EvTrig7")
+  field(LNK5, "@PV_PREFIX@@INPUT_NAME@:MapTo:ExtIRQ")
+  field(LNK6, "@PV_PREFIX@@INPUT_NAME@:MapTo:SeqRAMTrig0")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:@INPUT_NAME@:Fout3")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:@INPUT_NAME@:Fout3") {
+  field(LNK1, "@PV_PREFIX@@INPUT_NAME@:MapTo:SeqRAMTrig1")
+}
+
