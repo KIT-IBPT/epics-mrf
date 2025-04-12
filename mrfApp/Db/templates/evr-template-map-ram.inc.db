@@ -1,0 +1,148 @@
+# Event mapping RAM @MAP_RAM_NUM@.
+
+record(waveform, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:InternalFunctions") {
+  field(DESC, "Mapping RAM @MAP_RAM_NUM@ int. function mappings")
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @MAP_RAM_INT_FUNCS_ADDR@ uint32 changed_elements_only element_distance=12")
+  field(FTVL, "ULONG")
+  field(NELM, "256")
+}
+
+record(waveform, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:TrigPulseGens") {
+  field(DESC, "Mapping RAM @MAP_RAM_NUM@ trig. pulse gen. mappings")
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @MAP_RAM_TRIG_PULSE_GENS_ADDR@ uint32 changed_elements_only element_distance=12")
+  field(FTVL, "ULONG")
+  field(NELM, "256")
+}
+
+record(waveform, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:SetPulseGens") {
+  field(DESC, "Mapping RAM @MAP_RAM_NUM@ set pulse gen. mappings")
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @MAP_RAM_SET_PULSE_GENS_ADDR@ uint32 changed_elements_only element_distance=12")
+  field(FTVL, "ULONG")
+  field(NELM, "256")
+}
+
+record(waveform, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:ResetPulseGens") {
+  field(DESC, "Mapping RAM @MAP_RAM_NUM@ reset pulse gen. mappings")
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @MAP_RAM_RESET_PULSE_GENS_ADDR@ uint32 changed_elements_only element_distance=12")
+  field(FTVL, "ULONG")
+  field(NELM, "256")
+}
+
+# Typically, we only write changed elements. However, sometimes we might want to
+# write all elements when something got out of sync.
+record(fanout, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:WriteAll") {
+  field(DESC, "Write all elements to the device.")
+  field(LNK1, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:InternalFunctions:WriteAll")
+  field(LNK2, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:TrigPulseGens:WriteAll")
+  field(LNK3, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:SetPulseGens:WriteAll")
+  field(LNK4, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:ResetPulseGens:WriteAll")
+}
+
+record(bo, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:InternalFunctions:WriteAll") {
+  field(DESC, "Send all int.f. mappings to the device.")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:InternalFunctions:Copy")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+
+record(bo, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:TrigPulseGens:WriteAll") {
+  field(DESC, "Send all t. p. mappings to the device.")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:TrigPulseGens:Copy")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+
+record(bo, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:SetPulseGens:WriteAll") {
+  field(DESC, "Send all s. p. mappings to the device.")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:SetPulseGens:Copy")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+
+record(bo, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:ResetPulseGens:WriteAll") {
+  field(DESC, "Send all r. p. mappings to the device.")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:ResetPulseGens:Copy")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+
+record(aSub, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:InternalFunctions:Copy") {
+  field(SNAM, "mrfArrayCopy")
+  field(EFLG, "NEVER")
+  field(FTA, "ULONG")
+  field(NOA, "256")
+  field(INPA, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:InternalFunctions")
+  field(FTVA,  "ULONG")
+  field(NOVA,  "256")
+  field(OUTA, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:InternalFunctions:WriteAll NPP")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:InternalFunctions:WriteAll")
+}
+
+record(aSub, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:TrigPulseGens:Copy") {
+  field(SNAM, "mrfArrayCopy")
+  field(EFLG, "NEVER")
+  field(FTA, "ULONG")
+  field(NOA, "256")
+  field(INPA, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:TrigPulseGens")
+  field(FTVA,  "ULONG")
+  field(NOVA,  "256")
+  field(OUTA, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:TrigPulseGens:WriteAll NPP")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:TrigPulseGens:WriteAll")
+}
+
+record(aSub, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:SetPulseGens:Copy") {
+  field(SNAM, "mrfArrayCopy")
+  field(EFLG, "NEVER")
+  field(FTA, "ULONG")
+  field(NOA, "256")
+  field(INPA, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:SetPulseGens")
+  field(FTVA,  "ULONG")
+  field(NOVA,  "256")
+  field(OUTA, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:SetPulseGens:WriteAll NPP")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:SetPulseGens:WriteAll")
+}
+
+record(aSub, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:ResetPulseGens:Copy") {
+  field(SNAM, "mrfArrayCopy")
+  field(EFLG, "NEVER")
+  field(FTA, "ULONG")
+  field(NOA, "256")
+  field(INPA, "@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:ResetPulseGens")
+  field(FTVA,  "ULONG")
+  field(NOVA,  "256")
+  field(OUTA, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:ResetPulseGens:WriteAll NPP")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:ResetPulseGens:WriteAll")
+}
+
+record(waveform, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:InternalFunctions:WriteAll") {
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @MAP_RAM_INT_FUNCS_ADDR@ uint32 no_read_on_init element_distance=12")
+  field(FTVL, "ULONG")
+  field(NELM, "256")
+}
+
+record(waveform, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:TrigPulseGens:WriteAll") {
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @MAP_RAM_TRIG_PULSE_GENS_ADDR@ uint32 no_read_on_init element_distance=12")
+  field(FTVL, "ULONG")
+  field(NELM, "256")
+}
+
+record(waveform, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:SetPulseGens:WriteAll") {
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @MAP_RAM_SET_PULSE_GENS_ADDR@ uint32 no_read_on_init element_distance=12")
+  field(FTVL, "ULONG")
+  field(NELM, "256")
+}
+
+record(waveform, "@PV_PREFIX@Intrnl:Event:MapRAM@MAP_RAM_NUM@:ResetPulseGens:WriteAll") {
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @MAP_RAM_RESET_PULSE_GENS_ADDR@ uint32 no_read_on_init element_distance=12")
+  field(FTVL, "ULONG")
+  field(NELM, "256")
+}
+

@@ -1,0 +1,10 @@
+# Prescaler @PRESCALER_NUM@ pulse generator trigger register (bit for pulse generator @PULSE_GEN_NUM@).
+
+record(bo, "@PV_PREFIX@Prescaler@PRESCALER_NUM@:MapTo:TrigPulseGen@PULSE_GEN_NUM@") {
+  field(DESC, "Prescaler @PRESCALER_NUM@ to pulse gen. @PULSE_GEN_NUM@ mapping")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @PRESCALER_TO_PULSE_GEN_ADDR@[@PULSE_GEN_NUM@] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+

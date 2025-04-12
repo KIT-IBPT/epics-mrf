@@ -10,6 +10,7 @@ Requirements
 
 - EPICS Base (3.16 or newer)
 - C++ 11 compliant compiler and standard library
+- Python 3.8 (or newer, only while building)
 
 
 Compiling

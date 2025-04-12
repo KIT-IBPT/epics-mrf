@@ -1,0 +1,4 @@
+@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:InternalFunctions.VAL
+@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:ResetPulseGens.VAL
+@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:SetPulseGens.VAL
+@PV_PREFIX@Event:MapRAM@MAP_RAM_NUM@:TrigPulseGens.VAL

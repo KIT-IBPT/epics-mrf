@@ -1,0 +1,12 @@
+# @OUTPUT_DESCRIPTION@ mapping register.
+
+record(longout, "@PV_PREFIX@@OUTPUT_NAME@:Map") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ mapping")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_ADDR@[7:0] uint16")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+

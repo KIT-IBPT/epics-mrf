@@ -1,9 +1,0 @@
-# Pulse @PULSE_GEN_NUM@ delay register.
-
-record(longout, "$(P)$(R)PulseGen@PULSE_GEN_NUM@:Delay") {
-  field(DESC, "Pulse gen. @PULSE_GEN_NUM@ delay")
-  field(DTYP, "MRF Memory")
-  field(OUT,  "@$(DEVICE) @PULSE_GEN_DELAY_ADDR@ uint32")
-  field(EGU,  "cycles")
-}
-

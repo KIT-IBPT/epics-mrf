@@ -1,0 +1,775 @@
+record(fanout, "@PV_PREFIX@@SFP_NAME@:ScanDiag") {
+  field(DESC, "Triggers scanning of diag. records")
+  field(SCAN, "1 second")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanDiag:Fout1")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanDiag:Fout1") {
+  field(LNK1, "@PV_PREFIX@Intrnl:@SFP_NAME@:Temp")
+  field(LNK2, "@PV_PREFIX@@SFP_NAME@:VCC")
+  field(LNK3, "@PV_PREFIX@@SFP_NAME@:TXBiasCurrent")
+  field(LNK4, "@PV_PREFIX@@SFP_NAME@:TXPower")
+  field(LNK5, "@PV_PREFIX@@SFP_NAME@:RXPower")
+  field(LNK6, "@PV_PREFIX@Intrnl:@SFP_NAME@:Status")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanDiag:Fout2")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanDiag:Fout2") {
+  field(LNK1, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags")
+}
+
+record(fanout, "@PV_PREFIX@@SFP_NAME@:ScanInfo") {
+  field(DESC, "Triggers scanning of inform. records")
+  field(PINI, "YES")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanInfo:Fout1")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanInfo:Fout1") {
+  field(LNK1, "@PV_PREFIX@@SFP_NAME@:NominalBitRate")
+  field(LNK2, "@PV_PREFIX@@SFP_NAME@:Vendor:Name")
+  field(LNK3, "@PV_PREFIX@@SFP_NAME@:Vendor:Id")
+  field(LNK4, "@PV_PREFIX@@SFP_NAME@:Vendor:PartNumber")
+  field(LNK5, "@PV_PREFIX@@SFP_NAME@:Vendor:PartNumberRevision")
+  field(LNK6, "@PV_PREFIX@@SFP_NAME@:Vendor:SerialNumber")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanInfo:Fout2")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanInfo:Fout2") {
+  field(LNK1, "@PV_PREFIX@@SFP_NAME@:Vendor:DateCode")
+  field(LNK2, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempHAlarm")
+  field(LNK3, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempLAlarm")
+  field(LNK4, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempHWarning")
+  field(LNK5, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempLWarning")
+  field(LNK6, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCHAlarm")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanInfo:Fout3")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanInfo:Fout3") {
+  field(LNK1, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCLAlarm")
+  field(LNK2, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempHWarning")
+  field(LNK3, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempLWarning")
+  field(LNK4, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasHAlarm")
+  field(LNK5, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasLAlarm")
+  field(LNK6, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasHWarning")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanInfo:Fout4")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanInfo:Fout4") {
+  field(LNK1, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasLWarning")
+  field(LNK2, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerHAlarm")
+  field(LNK3, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerLAlarm")
+  field(LNK4, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerHWarning")
+  field(LNK5, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerLWarning")
+  field(LNK6, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerHAlarm")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanInfo:Fout5")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:@SFP_NAME@:ScanInfo:Fout5") {
+  field(LNK1, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerLAlarm")
+  field(LNK2, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerHWarning")
+  field(LNK3, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerLWarning")
+}
+
+record(ai, "@PV_PREFIX@@SFP_NAME@:NominalBitRate") {
+  field(DESC, "SFP module nominal bit rate")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x000c)@[15:8] uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0")
+  field(ESLO, "0.1")
+  field(EGU,  "Gbps")
+  field(PREC, "1")
+}
+
+record(stringin, "@PV_PREFIX@@SFP_NAME@:Vendor:Name") {
+  field(DESC, "SFP module vendor name")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0014)@ uint32 string_length=16")
+}
+
+record(longin, "@PV_PREFIX@@SFP_NAME@:Vendor:Id") {
+  field(DESC, "SFP module vendor IEEE company ID")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0024)@[23:0] uint32")
+}
+
+record(stringin, "@PV_PREFIX@@SFP_NAME@:Vendor:PartNumber") {
+  field(DESC, "SFP module vendor-assigned part number")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0028)@ uint32 string_length=16")
+}
+
+record(stringin, "@PV_PREFIX@@SFP_NAME@:Vendor:PartNumberRevision") {
+  field(DESC, "SFP module rev. for part number")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0038)@ uint32 string_length=4")
+}
+
+record(stringin, "@PV_PREFIX@@SFP_NAME@:Vendor:SerialNumber") {
+  field(DESC, "SFP mod. vendor-assigned serial number")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0044)@ uint32 string_length=16")
+}
+
+record(stringin, "@PV_PREFIX@@SFP_NAME@:Vendor:DateCode") {
+  field(DESC, "SFP module manufacturing date code")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0054)@ uint32 string_length=8")
+}
+
+record(longin, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempHAlarm") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0100)@ uint16")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempHAlarm:Calc")
+}
+
+record(calcout, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempHAlarm:Calc") {
+  field(CALC, "(A<0x8000)?(A/256):((A-0x10000)/256)")
+  field(INPA, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempHAlarm")
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:Temperature.HIHI")
+}
+
+record(longin, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempLAlarm") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0102)@ uint16")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempLAlarm:Calc")
+}
+
+record(calcout, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempLAlarm:Calc") {
+  field(CALC, "(A<0x8000)?(A/256):((A-0x10000)/256)")
+  field(INPA, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempLAlarm")
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:Temperature.LOLO")
+}
+
+record(longin, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempHWarning") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0104)@ uint16")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempHWarning:Calc")
+}
+
+record(calcout, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempHWarning:Calc") {
+  field(CALC, "(A<0x8000)?(A/256):((A-0x10000)/256)")
+  field(INPA, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempHWarning")
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:Temperature.HIGH")
+}
+
+record(longin, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempLWarning") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0106)@ uint16")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempLWarning:Calc")
+}
+
+record(calcout, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempLWarning:Calc") {
+  field(CALC, "(A<0x8000)?(A/256):((A-0x10000)/256)")
+  field(INPA, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempLWarning")
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:Temperature.LOW")
+}
+
+record(longin, "@PV_PREFIX@Intrnl:@SFP_NAME@:Temp") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0160)@ uint16")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:Temp:Calc")
+}
+
+record(calc, "@PV_PREFIX@Intrnl:@SFP_NAME@:Temp:Calc") {
+  field(CALC, "(A<0x8000)?(A/256):((A-0x10000)/256)")
+  field(INPA, "@PV_PREFIX@Intrnl:@SFP_NAME@:Temp")
+  field(FLNK,  "@PV_PREFIX@@SFP_NAME@:Temperature")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCHAlarm") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0108)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.0001")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCHAlarm:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCHAlarm:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:VCC.HIHI")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCHAlarm")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCLAlarm") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x010a)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.0001")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCLAlarm:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCLAlarm:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:VCC.LOLO")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCLAlarm")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCHWarning") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x010c)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.0001")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCHWarning:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCHWarning:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:VCC.HIGH")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCHWarning")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCLWarning") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x010e)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.0001")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCLWarning:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCLWarning:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:VCC.LOW")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCLWarning")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasHAlarm") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0110)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.002")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasHAlarm:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasHAlarm:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:TXBias.HIHI")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasHAlarm")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasLAlarm") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0112)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.002")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasLAlarm:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasLAlarm:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:TXBias.LOLO")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasLAlarm")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasHWarning") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0114)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.002")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasHWarning:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasHWarning:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:TXBias.HIGH")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasHWarning")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasLWarning") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0116)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.002")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasLWarning:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasLWarning:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:TXBias.LOW")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasLWarning")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerHAlarm") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0118)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerHAlarm:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerHAlarm:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:TXPower.HIHI")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerHAlarm")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerLAlarm") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x011a)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerLAlarm:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerLAlarm:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:TXPower.LOLO")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerLAlarm")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerHWarning") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x011c)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerHWarning:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerHWarning:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:TXPower.HIGH")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerHWarning")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerLWarning") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x011e)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerLWarning:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerLWarning:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:TXPower.LOW")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerLWarning")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerHAlarm") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0120)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerHAlarm:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerHAlarm:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:RXPower.HIHI")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerHAlarm")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerLAlarm") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0122)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerLAlarm:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerLAlarm:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:RXPower.LOLO")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerLAlarm")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerHWarning") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0124)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerHWarning:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerHWarning:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:RXPower.HIGH")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerHWarning")
+}
+
+record(ai, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerLWarning") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0126)@ uint16")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerLWarning:Copy")
+}
+
+record(ao, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerLWarning:Copy") {
+  field(OUT,  "@PV_PREFIX@@SFP_NAME@:RXPower.LOW")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerLWarning")
+}
+
+# Unfortunately, some SFP modules report invalid alarm limits, so simply
+# comparing analog values with their respective limits would lead to alarms
+# where we do not want them. Instead, we use the alarm flags that are also
+# provided by the SFP module. From these flags, we generate the appropriate
+# alarms in a calc record and merge these alarms into the record with the
+# analog value through the SDIS link. By setting DISV to 3 (a value that the
+# calc record will never have), we have the effect that the analog record is
+# never disabled, but we still get the alarms that we want.
+
+record(calc, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempAlarm") {
+  field(CALC, "A?2:(B?-2:(C?1:(D?-1:0)))")
+  field(INPA, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TempH MSI")
+  field(INPB, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TempL MSI")
+  field(INPC, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TempH MSI")
+  field(INPD, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TempL MSI")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCAlarm")
+  field(HIHI, "2")
+  field(HIGH, "1")
+  field(LOLO, "-2")
+  field(LOW,  "-1")
+  field(HHSV, "MAJOR")
+  field(LLSV, "MAJOR")
+  field(HSV,  "MINOR")
+  field(LSV,  "MINOR")
+}
+
+record(calc, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCAlarm") {
+  field(CALC, "A?2:(B?-2:(C?1:(D?-1:0)))")
+  field(INPA, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:VCCH MSI")
+  field(INPB, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:VCCL MSI")
+  field(INPC, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:VCCH MSI")
+  field(INPD, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:VCCL MSI")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasAlarm")
+  field(HIHI, "2")
+  field(HIGH, "1")
+  field(LOLO, "-2")
+  field(LOW,  "-1")
+  field(HHSV, "MAJOR")
+  field(LLSV, "MAJOR")
+  field(HSV,  "MINOR")
+  field(LSV,  "MINOR")
+}
+
+record(calc, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasAlarm") {
+  field(CALC, "A?2:(B?-2:(C?1:(D?-1:0)))")
+  field(INPA, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TXBiasH MSI")
+  field(INPB, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TXBiasL MSI")
+  field(INPC, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TXBiasH MSI")
+  field(INPD, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TXBiasL MSI")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerAlarm")
+  field(HIHI, "2")
+  field(HIGH, "1")
+  field(LOLO, "-2")
+  field(LOW,  "-1")
+  field(HHSV, "MAJOR")
+  field(LLSV, "MAJOR")
+  field(HSV,  "MINOR")
+  field(LSV,  "MINOR")
+}
+
+record(calc, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerAlarm") {
+  field(CALC, "A?2:(B?-2:(C?1:(D?-1:0)))")
+  field(INPA, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TXPowerH MSI")
+  field(INPB, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TXPowerL MSI")
+  field(INPC, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TXPowerH MSI")
+  field(INPD, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TXPowerL MSI")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerAlarm")
+  field(HIHI, "2")
+  field(HIGH, "1")
+  field(LOLO, "-2")
+  field(LOW,  "-1")
+  field(HHSV, "MAJOR")
+  field(LLSV, "MAJOR")
+  field(HSV,  "MINOR")
+  field(LSV,  "MINOR")
+}
+
+record(calc, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerAlarm") {
+  field(CALC, "A?2:(B?-2:(C?1:(D?-1:0)))")
+  field(INPA, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:RXPowerH MSI")
+  field(INPB, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:RXPowerL MSI")
+  field(INPC, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:RXPowerH MSI")
+  field(INPD, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:RXPowerL MSI")
+  field(HIHI, "2")
+  field(HIGH, "1")
+  field(LOLO, "-2")
+  field(LOW,  "-1")
+  field(HHSV, "MAJOR")
+  field(LLSV, "MAJOR")
+  field(HSV,  "MINOR")
+  field(LSV,  "MINOR")
+}
+
+record(ai, "@PV_PREFIX@@SFP_NAME@:Temperature") {
+  field(DESC, "SFP module real-time temperature")
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:Temp:Calc MSS")
+  field(SDIS, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempAlarm CP MSS")
+  field(DISV, "3")
+  field(EGU,  "°C")
+  # In theory, there are three significant fractional digits, but it seems
+  # unlikely that any temperate sensor actually in use will have a better
+  # resolution than 0.1 °C.
+  field(PREC, "1")
+  field(LOPR, "0")
+  field(HOPR, "100")
+}
+
+record(ai, "@PV_PREFIX@@SFP_NAME@:VCC") {
+  field(DESC, "SFP module power supply voltage")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0162)@ uint16")
+  field(SDIS, "@PV_PREFIX@Intrnl:@SFP_NAME@:VCCAlarm CP MSS")
+  field(DISV, "3")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.0001")
+  field(EGU,  "V")
+  field(PREC, "4")
+  field(LOPR, "0")
+  field(HOPR, "5")
+}
+
+record(ai, "@PV_PREFIX@@SFP_NAME@:TXBiasCurrent") {
+  field(DESC, "SFP module TX laser diode bias current")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0164)@ uint16")
+  field(SDIS, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXBiasAlarm CP MSS")
+  field(DISV, "3")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.002")
+  field(EGU,  "mA")
+  field(PREC, "3")
+  field(LOPR, "0")
+  field(HOPR, "50")
+}
+
+record(ai, "@PV_PREFIX@@SFP_NAME@:TXPower") {
+  field(DESC, "SFP module TX power")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0166)@ uint16")
+  field(SDIS, "@PV_PREFIX@Intrnl:@SFP_NAME@:TXPowerAlarm CP MSS")
+  field(DISV, "3")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.1")
+  field(EGU,  "µW")
+  field(PREC, "1")
+  field(LOPR, "0")
+  field(HOPR, "50000")
+}
+
+record(ai, "@PV_PREFIX@@SFP_NAME@:RXPower") {
+  field(DESC, "SFP module RX power")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0168)@ uint16")
+  field(SDIS, "@PV_PREFIX@Intrnl:@SFP_NAME@:RXPowerAlarm CP MSS")
+  field(DISV, "3")
+  field(LINR, "SLOPE")
+  field(EOFF, "0.0")
+  field(ESLO, "0.1")
+  field(EGU,  "µW")
+  field(PREC, "1")
+  field(LOPR, "0")
+  field(HOPR, "50000")
+}
+
+record(mbbiDirect, "@PV_PREFIX@Intrnl:@SFP_NAME@:Status") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x016e)@[15:8] uint16")
+  field(FLNK, "@PV_PREFIX@@SFP_NAME@:Status:TXDisabled")
+}
+
+record(bi, "@PV_PREFIX@@SFP_NAME@:Status:TXDisabled") {
+  field(DESC, "SFP module TX disable status")
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:Status.B7 MSS")
+  field(FLNK, "@PV_PREFIX@@SFP_NAME@:Status:TXFault")
+  field(ZNAM, "TX enabled")
+  field(ONAM, "TX disabled")
+}
+
+record(bi, "@PV_PREFIX@@SFP_NAME@:Status:TXFault") {
+  field(DESC, "SFP module TX fault status")
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:Status.B2 MSS")
+  field(FLNK, "@PV_PREFIX@@SFP_NAME@:Status:RXLossOfSignal")
+  field(ZNAM, "OK")
+  field(ONAM, "Fault")
+}
+
+record(bi, "@PV_PREFIX@@SFP_NAME@:Status:RXLossOfSignal") {
+  field(DESC, "SFP module RX loss of signal status")
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:Status.B1 MSS")
+  field(FLNK, "@PV_PREFIX@@SFP_NAME@:Status:DataNotReady")
+  field(ZNAM, "OK")
+  field(ONAM, "Loss of signal")
+}
+
+record(bi, "@PV_PREFIX@@SFP_NAME@:Status:DataNotReady") {
+  field(DESC, "SFP module analog diag. not yet ready")
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:Status.B0 MSS")
+  field(ZNAM, "Ready")
+  field(ONAM, "Not ready")
+}
+
+record(mbbiDirect, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0170)@ uint16")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TempH")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TempH") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags.BF MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TempL")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TempL") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags.BE MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:VCCH")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:VCCH") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags.BD MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:VCCL")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:VCCL") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags.BC MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TXBiasH")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TXBiasH") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags.BB MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TXBiasL")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TXBiasL") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags.BA MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TXPowerH")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TXPowerH") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags.B9 MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TXPowerL")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:TXPowerL") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags.B8 MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:RXPowerH")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:RXPowerH") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags.B7 MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:RXPowerL")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags:RXPowerL") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:AlarmFlags.B6 MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags")
+}
+
+record(mbbiDirect, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @SFP_ADDR(0x0174)@ uint16")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TempH")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TempH") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags.BF MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TempL")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TempL") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags.BE MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:VCCH")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:VCCH") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags.BD MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:VCCL")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:VCCL") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags.BC MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TXBiasH")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TXBiasH") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags.BB MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TXBiasL")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TXBiasL") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags.BA MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TXPowerH")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TXPowerH") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags.B9 MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TXPowerL")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:TXPowerL") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags.B8 MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:RXPowerH")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:RXPowerH") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags.B7 MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:RXPowerL")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags:RXPowerL") {
+  field(INP,  "@PV_PREFIX@Intrnl:@SFP_NAME@:WarningFlags.B6 MSS")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(FLNK, "@PV_PREFIX@Intrnl:@SFP_NAME@:TempAlarm")
+}
+

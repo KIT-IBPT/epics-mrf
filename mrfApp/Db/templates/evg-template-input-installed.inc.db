@@ -1,0 +1,8 @@
+record(bi, "@PV_PREFIX@@INPUT_NAME@:Installed") {
+  field(DESC, "@INPUT_INSTALLED_DESCRIPTION@ installed?")
+  field(PINI, "YES")
+  field(VAL,  "$(@INPUT_INSTALLED_MACRO@)")
+  field(ZNAM, "Not installed")
+  field(ONAM, "Installed")
+}
+

@@ -1,0 +1,10 @@
+# Control register (device-specific options).
+
+record(bo, "@PV_PREFIX@IFB300:Enabled") {
+  field(DESC, "Enable IFB300?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[27] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+

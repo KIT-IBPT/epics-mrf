@@ -1,0 +1,5 @@
+@PV_PREFIX@EventClock:ClkCleanerPLL:BandwidthSel
+@PV_PREFIX@IRQ:DataBuffer:Enabled:000To1FF
+@PV_PREFIX@IRQ:DataBuffer:Enabled:200To3FF
+@PV_PREFIX@IRQ:DataBuffer:Enabled:400To5FF
+@PV_PREFIX@IRQ:DataBuffer:Enabled:600To7FF

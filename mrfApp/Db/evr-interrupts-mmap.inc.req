@@ -1,9 +1,0 @@
-$(P)$(R)IRQ:DataBuffer:Enabled.VAL
-$(P)$(R)IRQ:Enabled.VAL
-$(P)$(R)IRQ:Event:Enabled.VAL
-$(P)$(R)IRQ:EventFIFOFull:Enabled.VAL
-$(P)$(R)IRQ:Hardware:Enabled.VAL
-$(P)$(R)IRQ:Hardware:Map.VAL
-$(P)$(R)IRQ:Heartbeat:Enabled.VAL
-$(P)$(R)IRQ:LinkStateChange:Enabled.VAL
-$(P)$(R)IRQ:RXViolation:Enabled.VAL

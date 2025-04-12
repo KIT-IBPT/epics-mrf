@@ -1,0 +1,376 @@
+# Interrupt handling depends on how the device is accessed. This file is used
+# when a device is accessed using the UDP/IP protocol. In this case, there is no
+# direct interrupt handling because the UDP/IP protocol does not provide a way
+# for generating interrupts. Instead, we poll the interrupt flags periodically.
+# There is also a record which can be used to trigger an immediate update of the
+# interrupt flags.
+
+# Interrupt flag register.
+
+# Inside the device, the interrupt flags are not masked. This means that flags
+# might be set even though the corresponding interrupt is not enabled. In order
+# to get behavior that resembles the behavior when accessing a device via mmap()
+# (in this case we can have direct interrupt handling), we internall calculate
+# the interrupt mask and apply it to the flags read from the register. This way,
+# flags will never be activated when the corresponding interrupt is not enabled
+# (or interrupts are globally disabled).
+#
+# Even though we immediately reset interrupt flags in the hardware, we keep them
+# set in the respective records until they are reset by the user. Otherwise,
+# they would only be visible for a short period of time (until the register is
+# read again).
+#
+# The bits in the interrupt flag register are:
+#    6: Link state change interrupt flag
+#    5: Data buffer flag
+#    4: Hardware interrupt flag
+#    3: Event interrupt flag
+#    2: Heartbeat interrupt flag
+#    1: Event FIFO full flag
+#    0: Receiver violation flag
+record(longin, "@PV_PREFIX@Intrnl:IRQStatus") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0008)@ uint32")
+  field(FLNK, "@PV_PREFIX@Intrnl:IRQStatusReset")
+}
+
+record(bo, "@PV_PREFIX@IRQ:Status:Update") {
+  field(DESC, "Trigger update of the interrupt flags")
+  field(FLNK, "@PV_PREFIX@Intrnl:IRQStatus")
+  field(ZNAM, "Update")
+  field(ONAM, "Update")
+}
+
+# We use a default scan rate of 1 Hz, but the user can change this as needed.
+record(fanout, "@PV_PREFIX@IRQ:Status:Scan") {
+  field(DESC, "Periodically updates the IRQ flags")
+  field(SCAN, "1 second")
+  field(FLNK, "@PV_PREFIX@IRQ:Status:Update")
+}
+
+# Interrupt flags are reset by writing one to them. We write to all bits that
+# were present in the status. This way, there is no risk of a race condition in
+# which we would reset a flag indicating a condition that occurred after reading
+# the flags.
+record(longout, "@PV_PREFIX@Intrnl:IRQStatusReset") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0008)@ uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:IRQStatus")
+  field(FLNK, "@PV_PREFIX@Intrnl:IRQStatusUpdateMask")
+}
+
+record(seq, "@PV_PREFIX@Intrnl:IRQStatusUpdateMask") {
+  field(DOL1, "@PV_PREFIX@IRQ:LinkStateChange:Enabled")
+  field(LNK1, "@PV_PREFIX@Intrnl:IRQStatusMask.B6")
+  field(DOL2, "@PV_PREFIX@IRQ:DataBuffer:Enabled")
+  field(LNK2, "@PV_PREFIX@Intrnl:IRQStatusMask.B5")
+  field(DOL3, "@PV_PREFIX@IRQ:Hardware:Enabled")
+  field(LNK3, "@PV_PREFIX@Intrnl:IRQStatusMask.B4")
+  field(DOL4, "@PV_PREFIX@IRQ:Event:Enabled")
+  field(LNK4, "@PV_PREFIX@Intrnl:IRQStatusMask.B3")
+  field(DOL5, "@PV_PREFIX@IRQ:Heartbeat:Enabled")
+  field(LNK5, "@PV_PREFIX@Intrnl:IRQStatusMask.B2")
+  field(DOL6, "@PV_PREFIX@IRQ:EventFIFOFull:Enabled")
+  field(LNK6, "@PV_PREFIX@Intrnl:IRQStatusMask.B1")
+  field(DOL7, "@PV_PREFIX@IRQ:RXViolation:Enabled")
+  field(LNK7, "@PV_PREFIX@Intrnl:IRQStatusMask.B0")
+  field(FLNK, "@PV_PREFIX@Intrnl:IRQStatusMask")
+}
+
+record(mbboDirect, "@PV_PREFIX@Intrnl:IRQStatusMask") {
+  field(DTYP, "Raw Soft Channel")
+  field(FLNK, "@PV_PREFIX@Intrnl:IRQStatusCalc")
+}
+
+record(calc, "@PV_PREFIX@Intrnl:IRQStatusCalc") {
+  field(CALC, "C?(A&B):0")
+  field(INPA, "@PV_PREFIX@Intrnl:IRQStatus MSS")
+  field(INPB, "@PV_PREFIX@Intrnl:IRQStatusMask.RVAL")
+  field(INPC, "@PV_PREFIX@IRQ:Enabled")
+  field(FLNK, "@PV_PREFIX@IRQ:Status")
+}
+
+record(mbbiDirect, "@PV_PREFIX@IRQ:Status") {
+  field(DESC, "Interrupt flags")
+  field(DTYP, "Raw Soft Channel")
+  field(INP,  "@PV_PREFIX@Intrnl:IRQStatusCalc MSS")
+  field(FLNK, "@PV_PREFIX@Intrnl:IRQUpdateLinkStateChange")
+}
+
+record(calcout, "@PV_PREFIX@Intrnl:IRQUpdateLinkStateChange") {
+  field(CALC, "A || B")
+  field(INPA, "@PV_PREFIX@IRQ:Status.B6 MSS")
+  field(INPB, "@PV_PREFIX@IRQ:LinkStateChange:Status")
+  field(OUT,  "@PV_PREFIX@IRQ:LinkStateChange:Status MSS PP")
+  field(FLNK, "@PV_PREFIX@Intrnl:IRQUpdateDataBuffer")
+}
+
+record(calcout, "@PV_PREFIX@Intrnl:IRQUpdateDataBuffer") {
+  field(CALC, "A || B")
+  field(INPA, "@PV_PREFIX@IRQ:Status.B5 MSS")
+  field(INPB, "@PV_PREFIX@IRQ:DataBuffer:Status")
+  field(OUT,  "@PV_PREFIX@IRQ:DataBuffer:Status MSS PP")
+  field(FLNK, "@PV_PREFIX@Intrnl:IRQUpdateHardware")
+}
+
+record(calcout, "@PV_PREFIX@Intrnl:IRQUpdateHardware") {
+  field(CALC, "A || B")
+  field(INPA, "@PV_PREFIX@IRQ:Status.B4 MSS")
+  field(INPB, "@PV_PREFIX@IRQ:Hardware:Status")
+  field(OUT,  "@PV_PREFIX@IRQ:Hardware:Status MSS PP")
+  field(FLNK, "@PV_PREFIX@Intrnl:IRQUpdateEvent")
+}
+
+record(calcout, "@PV_PREFIX@Intrnl:IRQUpdateEvent") {
+  field(CALC, "A || B")
+  field(INPA, "@PV_PREFIX@IRQ:Status.B3 MSS")
+  field(INPB, "@PV_PREFIX@IRQ:Event:Status")
+  field(OUT,  "@PV_PREFIX@IRQ:Event:Status MSS PP")
+  field(FLNK, "@PV_PREFIX@Intrnl:IRQUpdateHeartbeat")
+}
+
+record(calcout, "@PV_PREFIX@Intrnl:IRQUpdateHeartbeat") {
+  field(CALC, "A || B")
+  field(INPA, "@PV_PREFIX@IRQ:Status.B2 MSS")
+  field(INPB, "@PV_PREFIX@IRQ:Heartbeat:Status")
+  field(OUT,  "@PV_PREFIX@IRQ:Heartbeat:Status MSS PP")
+  field(FLNK, "@PV_PREFIX@Intrnl:IRQUpdateEventFIFOFull")
+}
+
+record(calcout, "@PV_PREFIX@Intrnl:IRQUpdateEventFIFOFull") {
+  field(CALC, "A || B")
+  field(INPA, "@PV_PREFIX@IRQ:Status.B1 MSS")
+  field(INPB, "@PV_PREFIX@IRQ:EventFIFOFull:Status")
+  field(OUT,  "@PV_PREFIX@IRQ:EventFIFOFull:Status MSS PP")
+  field(FLNK, "@PV_PREFIX@Intrnl:IRQUpdateRXViolation")
+}
+
+record(calcout, "@PV_PREFIX@Intrnl:IRQUpdateRXViolation") {
+  field(CALC, "A || B")
+  field(INPA, "@PV_PREFIX@IRQ:Status.B0 MSS")
+  field(INPB, "@PV_PREFIX@IRQ:RXViolation:Status")
+  field(OUT,  "@PV_PREFIX@IRQ:RXViolation:Status MS PP")
+}
+
+record(bi, "@PV_PREFIX@IRQ:LinkStateChange:Status") {
+  field(DESC, "Link state change flag")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@IRQ:DataBuffer:Status") {
+  field(DESC, "Data buffer flag")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@IRQ:Hardware:Status") {
+  field(DESC, "Hardware flag")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@IRQ:Event:Status") {
+  field(DESC, "Event flag")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@IRQ:Heartbeat:Status") {
+  field(DESC, "Heartbeat flag")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@IRQ:EventFIFOFull:Status") {
+  field(DESC, "Event FIFO full flag")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@IRQ:RXViolation:Status") {
+  field(DESC, "Receiver violation flag")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bo, "@PV_PREFIX@IRQ:LinkStateChange:Status:Reset") {
+  field(DESC, "Clear the link state change flag")
+  field(OUT,  "@PV_PREFIX@IRQ:LinkStateChange:Status PP")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:False")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@IRQ:DataBuffer:Status:Reset") {
+  field(DESC, "Clear the databuffer flag")
+  field(OUT,  "@PV_PREFIX@IRQ:DataBuffer:Status PP")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:False")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@IRQ:Hardware:Status:Reset") {
+  field(DESC, "Clear the hardware flag")
+  field(OUT,  "@PV_PREFIX@IRQ:Hardware:Status PP")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:False")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@IRQ:Event:Status:Reset") {
+  field(DESC, "Clear the event flag")
+  field(OUT,  "@PV_PREFIX@IRQ:Event:Status PP")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:False")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@IRQ:Heartbeat:Status:Reset") {
+  field(DESC, "Clear the heartbeat flag")
+  field(OUT,  "@PV_PREFIX@IRQ:Heartbeat:Status PP")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:False")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@IRQ:EventFIFOFull:Status:Reset") {
+  field(DESC, "Clear the event FIFO full flag")
+  field(OUT,  "@PV_PREFIX@IRQ:EventFIFOFull:Status PP")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:False")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@IRQ:RXViolation:Status:Reset") {
+  field(DESC, "Clear the receiver violation flag")
+  field(OUT,  "@PV_PREFIX@IRQ:RXViolation:Status PP")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:False")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+# Interrupt enable register.
+
+# When using the UDP/IP-based protocol, enabling or disabling interrupts has not
+# much of an effect because there is no interrupt handler. However, we use this
+# information in order to determine which bits in the interrupt flag register
+# should be masked. We also apply the settings to the hardware, just in case
+# there is an unknown side effect of enabling or disabling interrupts.
+
+record(bo, "@PV_PREFIX@IRQ:Enabled") {
+  field(DESC, "Enable interrupts?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x000c)@[31] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@IRQ:LinkStateChange:Enabled") {
+  field(DESC, "Enable link state change IRQ?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x000c)@[6] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@IRQ:DataBuffer:Enabled") {
+  field(DESC, "Enable data buffer IRQ?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x000c)@[5] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@IRQ:Hardware:Enabled") {
+  field(DESC, "Enable hardware IRQ?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x000c)@[4] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@IRQ:Event:Enabled") {
+  field(DESC, "Enable event IRQ?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x000c)@[3] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@IRQ:Heartbeat:Enabled") {
+  field(DESC, "Enable heartbeat IRQ?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x000c)@[2] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@IRQ:EventFIFOFull:Enabled") {
+  field(DESC, "Enable event FIFO full IRQ?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x000c)@[1] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@IRQ:RXViolation:Enabled") {
+  field(DESC, "Enable receiver violation IRQ?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x000c)@[0] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+# This record represents an enum, but we cannot use mbbo, because there are more
+# than 16 possible states and the allowed states depend on the hardware
+# configuration.
+#
+# The meaning of the number is the same as for all the other places where such a
+# mapping is specified:
+#
+#   0 to N-1: Pulse generator output (number of pulse generators N depends on
+#             the hardware and firmware version)
+#   n to 31:  (Reserved)
+#   32 to 39: Distributed bus bit 0 to 7
+#   40 to 42: Prescaler 0 to 2
+#   43 to 61: (Reserved)
+#   62:       Force output high (logic 1)
+#   63:       Force output low (logic 0)
+#
+# The mapping codes used for the all outputs have the same meaning as the ones
+# for the hardware interrupt mapping.
+record(longout, "@PV_PREFIX@IRQ:Hardware:Map") {
+  field(DESC, "Hardware interrupt mapping")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0010)@[7:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:IRQ") {
+  field(LNK1, "@PV_PREFIX@IRQ:DataBuffer:Enabled")
+  field(LNK2, "@PV_PREFIX@IRQ:Enabled")
+  field(LNK3, "@PV_PREFIX@IRQ:Event:Enabled")
+  field(LNK4, "@PV_PREFIX@IRQ:EventFIFOFull:Enabled")
+  field(LNK5, "@PV_PREFIX@IRQ:Hardware:Enabled")
+  field(LNK6, "@PV_PREFIX@IRQ:Hardware:Map")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:IRQ:Fout1")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:IRQ:Fout1") {
+  field(LNK1, "@PV_PREFIX@IRQ:Heartbeat:Enabled")
+  field(LNK2, "@PV_PREFIX@IRQ:LinkStateChange:Enabled")
+  field(LNK3, "@PV_PREFIX@IRQ:RXViolation:Enabled")
+}
+

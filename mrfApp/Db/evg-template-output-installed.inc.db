@@ -1,8 +1,0 @@
-record(bi, "$(P)$(R)@OUTPUT_NAME@:Installed") {
-  field(DESC, "@OUTPUT_INSTALLED_DESCRIPTION@ installed?")
-  field(PINI, "YES")
-  field(VAL,  "$(@OUTPUT_INSTALLED_MACRO@)")
-  field(ZNAM, "Not installed")
-  field(ONAM, "Installed")
-}
-
