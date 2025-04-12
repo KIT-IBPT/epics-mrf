@@ -1,0 +1,7 @@
+record(waveform, "@PV_PREFIX@@PV_NAME@") {
+  field(DESC, "@DESCRIPTION@")
+  field(FTVL, "CHAR")
+  field(NELM, "256")
+  field(PINI, "YES")
+}
+

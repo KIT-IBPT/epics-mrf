@@ -1,0 +1,5 @@
+@PV_PREFIX@PulseGen@PULSE_GEN_NUM@:Enabled.VAL
+@PV_PREFIX@PulseGen@PULSE_GEN_NUM@:MapResetEnabled.VAL
+@PV_PREFIX@PulseGen@PULSE_GEN_NUM@:MapSetEnabled.VAL
+@PV_PREFIX@PulseGen@PULSE_GEN_NUM@:MapTrigEnabled.VAL
+@PV_PREFIX@PulseGen@PULSE_GEN_NUM@:Polarity.VAL

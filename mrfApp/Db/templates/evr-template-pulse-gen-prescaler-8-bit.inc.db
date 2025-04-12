@@ -1,0 +1,12 @@
+# Pulse @PULSE_GEN_NUM@ prescaler register.
+
+record(longout, "@PV_PREFIX@PulseGen@PULSE_GEN_NUM@:Prescaler") {
+  field(DESC, "Pulse gen. @PULSE_GEN_NUM@ prescaler")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @PULSE_GEN_PRESCALER_ADDR@ uint32")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+

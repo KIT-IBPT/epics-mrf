@@ -1,0 +1,112 @@
+# Multiplexed counter @MXC_NUM@ register.
+
+# Applications should process this record on demand. Scanning it does not make
+# sense because the rate at which the value changes depends on the environment.
+record(bi, "@PV_PREFIX@MXC@MXC_NUM@:Status") {
+  field(DESC, "MXC @MXC_NUM@ output status?")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @MXC_ADDR@[31] uint32")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bo, "@PV_PREFIX@MXC@MXC_NUM@:ResetState") {
+  field(DESC, "MXC @MXC_NUM@ reset state")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @MXC_ADDR@[30] uint32")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bo, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig7") {
+  field(DESC, "Map MXC @MXC_NUM@ rising edge to ev. trigger 7?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @MXC_ADDR@[7] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig6") {
+  field(DESC, "Map MXC @MXC_NUM@ rising edge to ev. trigger 6?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @MXC_ADDR@[6] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig5") {
+  field(DESC, "Map MXC @MXC_NUM@ rising edge to ev. trigger 5?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @MXC_ADDR@[5] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig4") {
+  field(DESC, "Map MXC @MXC_NUM@ rising edge to ev. trigger 4?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @MXC_ADDR@[4] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig3") {
+  field(DESC, "Map MXC @MXC_NUM@ rising edge to ev. trigger 3?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @MXC_ADDR@[3] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig2") {
+  field(DESC, "Map MXC @MXC_NUM@ rising edge to ev. trigger 2?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @MXC_ADDR@[2] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig1") {
+  field(DESC, "Map MXC @MXC_NUM@ rising edge to ev. trigger 1?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @MXC_ADDR@[1] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig0") {
+  field(DESC, "Map MXC @MXC_NUM@ rising edge to ev. trigger 0?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @MXC_ADDR@[0] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+# The values zero and one are not allowed for the prescaler. However, there is
+# no way of forbidding these values because the longout record uses a signed
+# integer and thus we would have to forbid negative values (which are mapped
+# to values starting at 2^31), too. Using the ao record is no viable alternative
+# either, because values above 2^31 are not mapped correctly.
+record(ao, "@PV_PREFIX@MXC@MXC_NUM@:Prescaler") {
+  field(DESC, "MXC @MXC_NUM@ prescaler divider")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @MXC_PRESCALER_ADDR@ uint32")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:MXC@MXC_NUM@") {
+  field(LNK1, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig0")
+  field(LNK2, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig1")
+  field(LNK3, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig2")
+  field(LNK4, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig3")
+  field(LNK5, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig4")
+  field(LNK6, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig5")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:MXC@MXC_NUM@:Fout1")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:MXC@MXC_NUM@:Fout1") {
+  field(LNK1, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig6")
+  field(LNK2, "@PV_PREFIX@MXC@MXC_NUM@:MapTo:EvTrig7")
+  field(LNK3, "@PV_PREFIX@MXC@MXC_NUM@:Prescaler")
+  field(LNK4, "@PV_PREFIX@MXC@MXC_NUM@:ResetState")
+}
+

@@ -1,0 +1,15 @@
+@PV_PREFIX@DBus:SharedRX.VAL
+@PV_PREFIX@DBus:SharedTX.VAL
+@PV_PREFIX@DataBuffer:TX:Enabled.VAL
+@PV_PREFIX@DataBuffer:TX:TransferSize.VAL
+@PV_PREFIX@DataBuffer:TX:TransmitData.VAL
+@PV_PREFIX@Enabled.VAL
+@PV_PREFIX@Event:Log:StopEventEnabled.VAL
+@PV_PREFIX@Event:MapRAM:Enabled.VAL
+@PV_PREFIX@Event:MapRAM:Select.VAL
+@PV_PREFIX@EventClock:Freq.VAL
+@PV_PREFIX@EventClock:Gen:Freq.VAL
+@PV_PREFIX@RX:Loopback.VAL
+@PV_PREFIX@TX:Loopback.VAL
+@PV_PREFIX@TimeStamp:EventCounterPrescaler.VAL
+@PV_PREFIX@TimeStamp:EventCounterSource.VAL

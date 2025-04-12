@@ -1,8 +1,0 @@
-# Prescaler @PRESCALER_NUM@ register.
-
-record(longout, "$(P)$(R)Prescaler@PRESCALER_NUM@") {
-  field(DESC, "Prescaler @PRESCALER_NUM@")
-  field(DTYP, "MRF Memory")
-  field(OUT,  "@$(DEVICE) @PRESCALER_ADDR@ uint32")
-}
-
