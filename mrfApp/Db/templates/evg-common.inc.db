@@ -1,0 +1,1586 @@
+# Internal general purpose records.
+
+record(bi, "@PV_PREFIX@Intrnl:True") {
+  field(PINI, "YES")
+  field(VAL,  "1")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:False") {
+  field(PINI, "YES")
+  field(VAL,  "0")
+}
+
+# Write all settings to the hardware (the target record is generated)
+# dynamically.
+
+record(bo, "@PV_PREFIX@WriteAll") {
+  field(DESC, "Send all settings to the hardware")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+
+# Status register.
+
+# Polling the status register with a pre-defined rate does not make sense,
+# because typically its bits change frequently. The lower eight bits are the
+# bits sent over the distributed bus and the higher eight bits are the bits
+# received over the distributed bus.
+record(mbbiDirect, "@PV_PREFIX@DBus:Status") {
+  field(DESC, "Distributed bus bits")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0000)@[31:16] uint32")
+  field(FLNK, "@PV_PREFIX@DBus:B7:RX:Status")
+}
+
+record(bi, "@PV_PREFIX@DBus:B7:RX:Status") {
+  field(DESC, "Distributed bus RX bit 7")
+  field(INP,  "@PV_PREFIX@DBus:Status.BF MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B6:RX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B6:RX:Status") {
+  field(DESC, "Distributed bus RX bit 6")
+  field(INP,  "@PV_PREFIX@DBus:Status.BE MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B5:RX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B5:RX:Status") {
+  field(DESC, "Distributed bus RX bit 5")
+  field(INP,  "@PV_PREFIX@DBus:Status.BD MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B4:RX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B4:RX:Status") {
+  field(DESC, "Distributed bus RX bit 4")
+  field(INP,  "@PV_PREFIX@DBus:Status.BC MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B3:RX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B3:RX:Status") {
+  field(DESC, "Distributed bus RX bit 3")
+  field(INP,  "@PV_PREFIX@DBus:Status.BB MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B2:RX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B2:RX:Status") {
+  field(DESC, "Distributed bus RX bit 2")
+  field(INP,  "@PV_PREFIX@DBus:Status.BA MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B1:RX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B1:RX:Status") {
+  field(DESC, "Distributed bus RX bit 1")
+  field(INP,  "@PV_PREFIX@DBus:Status.B9 MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B0:RX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B0:RX:Status") {
+  field(DESC, "Distributed bus RX bit 0")
+  field(INP,  "@PV_PREFIX@DBus:Status.B8 MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B7:TX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B7:TX:Status") {
+  field(DESC, "Distributed bus TX bit 7")
+  field(INP,  "@PV_PREFIX@DBus:Status.B7 MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B6:TX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B6:TX:Status") {
+  field(DESC, "Distributed bus TX bit 6")
+  field(INP,  "@PV_PREFIX@DBus:Status.B6 MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B5:TX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B5:TX:Status") {
+  field(DESC, "Distributed bus TX bit 5")
+  field(INP,  "@PV_PREFIX@DBus:Status.B5 MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B4:TX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B4:TX:Status") {
+  field(DESC, "Distributed bus TX bit 4")
+  field(INP,  "@PV_PREFIX@DBus:Status.B4 MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B3:TX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B3:TX:Status") {
+  field(DESC, "Distributed bus TX bit 3")
+  field(INP,  "@PV_PREFIX@DBus:Status.B3 MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B2:TX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B2:TX:Status") {
+  field(DESC, "Distributed bus TX bit 2")
+  field(INP,  "@PV_PREFIX@DBus:Status.B2 MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B1:TX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B1:TX:Status") {
+  field(DESC, "Distributed bus TX bit 1")
+  field(INP,  "@PV_PREFIX@DBus:Status.B1 MSS")
+  field(FLNK, "@PV_PREFIX@DBus:B0:TX:Status")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+record(bi, "@PV_PREFIX@DBus:B0:TX:Status") {
+  field(DESC, "Distributed bus TX bit 0")
+  field(INP,  "@PV_PREFIX@DBus:Status.B0 MSS")
+  field(ZNAM, "Not set")
+  field(ONAM, "Set")
+}
+
+# Control register.
+
+record(bo, "@PV_PREFIX@Enabled") {
+  field(DESC, "Enable EVG?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[31] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@RX:Disabled") {
+  field(DESC, "Disable Event Reception?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[30] uint32")
+  field(ZNAM, "Enable RX")
+  field(ONAM, "Disable RX")
+}
+
+record(bo, "@PV_PREFIX@RX:PowerDown") {
+  field(DESC, "Receiver Power Down?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[29] uint32")
+  field(ZNAM, "Power up")
+  field(ONAM, "Power down")
+}
+
+record(bo, "@PV_PREFIX@RX:ResetEventFIFO") {
+  field(DESC, "Reset RX Event FIFO")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+  field(FLNK, "@PV_PREFIX@Intrnl:RX:ResetEventFIFO")
+}
+
+record(bo, "@PV_PREFIX@Intrnl:RX:ResetEventFIFO") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[29] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "Reset")
+  field(ONAM, "No reset")
+}
+
+record(bo, "@PV_PREFIX@Cmd:Reset") {
+  field(DESC, "Soft Reset IP")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+  field(FLNK, "@PV_PREFIX@Intrnl:Cmd:Reset")
+}
+
+record(bo, "@PV_PREFIX@Intrnl:Cmd:Reset") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[26] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "Reset")
+  field(ONAM, "No reset")
+}
+
+record(bo, "@PV_PREFIX@MXC:Reset") {
+  field(DESC, "Reset MXC")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+  field(FLNK, "@PV_PREFIX@Intrnl:MXC:Reset")
+}
+
+record(bo, "@PV_PREFIX@Intrnl:MXC:Reset") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[24] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "Reset")
+  field(ONAM, "No reset")
+}
+
+# AC trigger control register.
+
+record(bo, "@PV_PREFIX@ACSync:BypassDividerAndPhaseShift") {
+  field(DESC, "Bypass divider and phase shifter?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0010)@[17] uint32")
+  field(ZNAM, "No bypass")
+  field(ONAM, "Bypass")
+}
+
+record(bo, "@PV_PREFIX@ACSync:SyncSource") {
+  field(DESC, "AC trigger synchronization source")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0010)@[16] uint32")
+  field(ZNAM, "Event clock")
+  field(ONAM, "MXC 7")
+}
+
+record(longout, "@PV_PREFIX@ACSync:Divider") {
+  field(DESC, "AC trigger input divider")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0010)@[15:8] uint32")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(ao, "@PV_PREFIX@ACSync:PhaseShift") {
+  field(DESC, "AC trigger input phase shift")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0010)@[7:0] uint32")
+  field(LINR, "SLOPE")
+  field(EOFF, "0")
+  field(ESLO, "0.1")
+  field(DRVL, "0")
+  field(DRVH, "25.5")
+  field(LOPR, "0")
+  field(HOPR, "25.5")
+  field(EGU,  "ms")
+  field(PREC, "1")
+}
+
+# AC trigger mapping register.
+
+record(bo, "@PV_PREFIX@ACSync:MapTo:EvTrig7") {
+  field(DESC, "Map AC sync to event trigger 7?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0014)@[7] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@ACSync:MapTo:EvTrig6") {
+  field(DESC, "Map AC sync to event trigger 6?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0014)@[6] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@ACSync:MapTo:EvTrig5") {
+  field(DESC, "Map AC sync to event trigger 5?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0014)@[5] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@ACSync:MapTo:EvTrig4") {
+  field(DESC, "Map AC sync to event trigger 4?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0014)@[4] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@ACSync:MapTo:EvTrig3") {
+  field(DESC, "Map AC sync to event trigger 3?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0014)@[3] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@ACSync:MapTo:EvTrig2") {
+  field(DESC, "Map AC sync to event trigger 2?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0014)@[2] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@ACSync:MapTo:EvTrig1") {
+  field(DESC, "Map AC sync to event trigger 1?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0014)@[1] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@ACSync:MapTo:EvTrig0") {
+  field(DESC, "Map AC sync to event trigger 0?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0014)@[0] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+# Software event register.
+
+# Polling the event pending flag with a fixed rate does not make sense. An
+# application, that wants to trigger a software event should instead trigger
+# processing of this record and wait until its value becomes zero. However, we
+# trigger processing indirectly, so that the UI has a chance to get updated.
+record(bi, "@PV_PREFIX@Event:Soft:Pending") {
+  field(DESC, "Software event pending?")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0018)@[9] uint32")
+  field(ZNAM, "Not pending")
+  field(ONAM, "Event pending")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:Event:Soft:Pending:Scan") {
+  field(SCAN, ".5 second")
+  field(FLNK, "@PV_PREFIX@Event:Soft:Pending")
+}
+
+# The software event enabled flag and the software event code share the same
+# register. This has the consequence that when enabling (or reenabling) the
+# software event, the last used event code is sent because it is still in the
+# register. In order to avoid this, we use two separate records for enabling and
+# disabling software events. This way, we clear the event code stored inside the
+# device when enabling software events (effectively, we send a null event, which
+# should not have any effects).
+# As we still want the record to be initialized from the current setting in the
+# device, we use a separate record for reading the state of the flag from the
+# device during initialization and copy it from that record once.
+record(bo, "@PV_PREFIX@Event:Soft:Enabled") {
+  field(DESC, "Enable software event?")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:Soft:Enabled:Changed")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+# This record reads the software event enabled flag from the device once during
+# initialization.
+record(bi, "@PV_PREFIX@Intrnl:Event:Soft:Enabled:Init1") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0018)@[8] uint32")
+  field(PINI, "YES")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:Soft:Enabled:Init2")
+}
+
+# This record copies the value read from the device to the record that is
+# visible to the user.
+record(bo, "@PV_PREFIX@Intrnl:Event:Soft:Enabled:Init2") {
+  field(OUT,  "@PV_PREFIX@Event:Soft:Enabled MSS PP")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:Event:Soft:Enabled:Init1 MSS")
+}
+
+# This record is always processed when Event:Soft:Enabled is processed. It
+# delegates to the two records that take care of actually enabling or disabling
+# the flag.
+record(fanout, "@PV_PREFIX@Intrnl:Event:Soft:Enabled:Changed") {
+  field(LNK1, "@PV_PREFIX@Intrnl:Event:Soft:Enable")
+  field(LNK2, "@PV_PREFIX@Intrnl:Event:Soft:Disable")
+}
+
+# When enabling the software event, we overwrite the event code with zeros so
+# that a null event is sent. The device always sends a software event when we
+# write to the register and the corresponding flag is enabled, even if we just
+# wanted to enable the flag and not send an event.
+record(longout, "@PV_PREFIX@Intrnl:Event:Soft:Enable") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0018)@[8:0] uint32 no_read_on_init")
+  field(OMSL, "closed_loop")
+  field(DOL,  "256")
+  field(SDIS, "@PV_PREFIX@Event:Soft:Enabled")
+  field(DISV, "0")
+}
+
+# When disabling the software event, it is sufficient to clear the enabled flag.
+# If this flag is zero, the event code also stored in the register is not going
+# to be sent.
+record(bo, "@PV_PREFIX@Intrnl:Event:Soft:Disable") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0018)@[8] uint32 no_read_on_init")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:False")
+  field(SDIS, "@PV_PREFIX@Event:Soft:Enabled")
+  field(DISV, "1")
+}
+
+# Writing to this record causes the written event code to be sent.
+record(longout, "@PV_PREFIX@Event:Soft:EventCode") {
+  field(DESC, "Event code to be sent")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0018)@[7:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+# Data buffer control register.
+
+# Polling the transmission complete flag with a fixed rate does not make sense.
+# An application, that wants to send data should instead trigger processing of
+# this record and wait until its value becomes zero.
+record(bi, "@PV_PREFIX@DataBuffer:TX:Complete") {
+  field(DESC, "Data buffer transmission complete?")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0020)@[20] uint32")
+  field(ZNAM, "Not complete")
+  field(ONAM, "Complete")
+}
+
+# Polling the transmission running flag with a fixed rate does not make sense.
+# An application, that wants to send data should instead trigger processing of
+# this record and wait until its value becomes one or zero (depending on the
+# application).
+record(bi, "@PV_PREFIX@DataBuffer:TX:Running") {
+  field(DESC, "Data buffer transmission running?")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0020)@[19] uint32")
+  field(ZNAM, "Not running")
+  field(ONAM, "Running")
+}
+
+record(bo, "@PV_PREFIX@DataBuffer:TX:Transmit") {
+  field(DESC, "Start data buffer transmission")
+  field(FLNK, "@PV_PREFIX@Intrnl:DataBuffer:TX:Transmit")
+  field(ZNAM, "Transmit")
+  field(ONAM, "Transmit")
+}
+
+record(bo, "@PV_PREFIX@Intrnl:DataBuffer:TX:Transmit") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0020)@[18] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "No transmit")
+  field(ONAM, "Transmit")
+}
+
+record(bo, "@PV_PREFIX@DataBuffer:TX:Enabled") {
+  field(DESC, "Enable data buffer TX engine?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0020)@[17] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@DBus:SharedTX") {
+  field(DESC, "Share dist. bus with data buffer TX?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0020)@[16] uint32")
+  field(ZNAM, "Not shared")
+  field(ONAM, "Shared")
+}
+
+record(ao, "@PV_PREFIX@DataBuffer:TX:TransferSize") {
+  field(DESC, "Data buffer transfer size")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0020)@[10:2] uint32")
+  field(LINR, "SLOPE")
+  field(EOFF, "4")
+  field(ESLO, "4")
+  field(DRVL, "4")
+  field(DRVH, "2048")
+  field(LOPR, "4")
+  field(HOPR, "2048")
+  field(EGU,  "bytes")
+}
+
+# Distributed bus mapping register
+
+record(mbbo, "@PV_PREFIX@DBus:B7:Map") {
+  field(DESC, "Distributed bus mapping for bit 7")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0024)@[31:28] uint32")
+  field(ZRVL, "0")
+  field(ZRST, "Off")
+  field(ONVL, "1")
+  field(ONST, "Ext. input 7")
+  field(TWVL, "2")
+  field(TWST, "MXC 7")
+  field(THVL, "3")
+  field(THST, "Forward")
+}
+
+record(mbbo, "@PV_PREFIX@DBus:B6:Map") {
+  field(DESC, "Distributed bus mapping for bit 6")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0024)@[27:24] uint32")
+  field(ZRVL, "0")
+  field(ZRST, "Off")
+  field(ONVL, "1")
+  field(ONST, "Ext. input 6")
+  field(TWVL, "2")
+  field(TWST, "MXC 6")
+  field(THVL, "3")
+  field(THST, "Forward")
+}
+
+record(mbbo, "@PV_PREFIX@DBus:B5:Map") {
+  field(DESC, "Distributed bus mapping for bit 5")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0024)@[23:20] uint32")
+  field(ZRVL, "0")
+  field(ZRST, "Off")
+  field(ONVL, "1")
+  field(ONST, "Ext. input 5")
+  field(TWVL, "2")
+  field(TWST, "MXC 5")
+  field(THVL, "3")
+  field(THST, "Forward")
+}
+
+record(mbbo, "@PV_PREFIX@DBus:B4:Map") {
+  field(DESC, "Distributed bus mapping for bit 4")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0024)@[19:16] uint32")
+  field(ZRVL, "0")
+  field(ZRST, "Off")
+  field(ONVL, "1")
+  field(ONST, "Ext. input 4")
+  field(TWVL, "2")
+  field(TWST, "MXC 4")
+  field(THVL, "3")
+  field(THST, "Forward")
+}
+
+record(mbbo, "@PV_PREFIX@DBus:B3:Map") {
+  field(DESC, "Distributed bus mapping for bit 3")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0024)@[15:12] uint32")
+  field(ZRVL, "0")
+  field(ZRST, "Off")
+  field(ONVL, "1")
+  field(ONST, "Ext. input 3")
+  field(TWVL, "2")
+  field(TWST, "MXC 3")
+  field(THVL, "3")
+  field(THST, "Forward")
+}
+
+record(mbbo, "@PV_PREFIX@DBus:B2:Map") {
+  field(DESC, "Distributed bus mapping for bit 2")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0024)@[11:8] uint32")
+  field(ZRVL, "0")
+  field(ZRST, "Off")
+  field(ONVL, "1")
+  field(ONST, "Ext. input 2")
+  field(TWVL, "2")
+  field(TWST, "MXC 2")
+  field(THVL, "3")
+  field(THST, "Forward")
+}
+
+record(mbbo, "@PV_PREFIX@DBus:B1:Map") {
+  field(DESC, "Distributed bus mapping for bit 1")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0024)@[7:4] uint32")
+  field(ZRVL, "0")
+  field(ZRST, "Off")
+  field(ONVL, "1")
+  field(ONST, "Ext. input 1")
+  field(TWVL, "2")
+  field(TWST, "MXC 1")
+  field(THVL, "3")
+  field(THST, "Forward")
+}
+
+record(mbbo, "@PV_PREFIX@DBus:B0:Map") {
+  field(DESC, "Distributed bus mapping for bit 7")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0024)@[3:0] uint32")
+  field(ZRVL, "0")
+  field(ZRST, "Off")
+  field(ONVL, "1")
+  field(ONST, "Ext. input 0")
+  field(TWVL, "2")
+  field(TWST, "MXC 0")
+  field(THVL, "3")
+  field(THST, "Forward")
+}
+
+# Distributed bus event enable register.
+
+record(bo, "@PV_PREFIX@Event:MapDBusExtInput7ToSec1") {
+  field(DESC, "Map dist. bus ext. inp. 7 to code 0x71?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0028)@[7] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@Event:MapDBusExtInput6ToSec0") {
+  field(DESC, "Map dist. bus ext. inp. 6 to code 0x70?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0028)@[6] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@Event:MapDBusExtInput5ToTSReset") {
+  field(DESC, "Map dist. bus ext. inp. 5 to code 0x7D?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0028)@[5] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+# FPGA firmware version register.
+
+record(longin, "@PV_PREFIX@Firmware:Version:Complete") {
+  field(DESC, "Complete FPGA firmware version number")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x002c)@ uint32")
+  field(PINI, "YES")
+}
+
+record(mbbi, "@PV_PREFIX@Firmware:FormFactor") {
+  field(DESC, "FPGA firmware form factor")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x002c)@[27:24] uint32")
+  field(PINI, "YES")
+  field(ZRVL, "0")
+  field(ZRST, "cPCI 3U")
+  field(ONVL, "1")
+  field(ONST, "PMC")
+  field(TWVL, "2")
+  field(TWST, "VME64x")
+  field(THVL, "3")
+  field(THST, "cRIO")
+  field(FRVL, "4")
+  field(FRST, "cPCI 6U")
+}
+
+record(longin, "@PV_PREFIX@Firmware:Version") {
+  field(DESC, "Complete FPGA firmware version number")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x002c)@[7:0] uint32")
+  field(PINI, "YES")
+}
+
+# Microseconds divider register.
+
+record(longout, "@PV_PREFIX@EventClock:Freq") {
+  field(DESC, "Event clock frequency")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x004c)@[15:0] uint32")
+  field(DRVL, "50")
+  field(DRVH, "125")
+  field(LOPR, "50")
+  field(HOPR, "125")
+  field(EGU,  "MHz")
+}
+
+# Clock control register.
+
+# A divider value of 13 is invalid and will disable the external RF clock.
+# However, there is no good way how we could filter that value, because an enum
+# can only have 16 options and we need 31.
+record(ao, "@PV_PREFIX@EventClock:Divider") {
+  field(DESC, "Ext. RF to event clock divider")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0050)@[21:16] uint32")
+  field(LINR, "SLOPE")
+  field(EOFF, "1")
+  field(ESLO, "1")
+  field(DRVL, "1")
+  field(DRVH, "32")
+  field(LOPR, "1")
+  field(HOPR, "32")
+}
+
+record(bo, "@PV_PREFIX@EventClock:RefSelect") {
+  field(DESC, "Event clock reference select")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0050)@[24] uint32")
+  field(ZNAM, "Internal")
+  field(ONAM, "External")
+}
+
+record(bi, "@PV_PREFIX@EventClock:Gen:Locked") {
+  field(DESC, "Micrel SY87739L locked?")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0050)@[9] uint32")
+  field(SCAN, "1 second")
+  field(ZNAM, "Not locked")
+  field(ONAM, "Locked")
+}
+
+# Event analyzer control register.
+
+# Applications should process this record on demand. Scanning it does not make
+# sense because the rate at which the value changes depends on the environment.
+record(bi, "@PV_PREFIX@Event:Analyzer:FIFONotEmpty") {
+  field(DESC, "Event analyzer FIFO not empty?")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0060)@[4] uint32")
+  field(ZNAM, "Empty")
+  field(ONAM, "Not empty")
+}
+
+# Applications should process this record on demand. Scanning it does not make
+# sense because the rate at which the value changes depends on the environment.
+# TODO Maybe this should be an output record.
+record(bi, "@PV_PREFIX@Event:Analyzer:Reset") {
+  field(DESC, "Event analyzer reset?")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0060)@[3] uint32")
+  field(ZNAM, "Not in reset")
+  field(ONAM, "Reset")
+}
+
+# Applications should process this record on demand. Scanning it does not make
+# sense because the rate at which the value changes depends on the environment.
+record(bi, "@PV_PREFIX@Event:Analyzer:FIFOOverflow") {
+  field(DESC, "Event analyzer FIFO overflow?")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0060)@[2] uint32")
+  field(ZNAM, "No overflow")
+  field(ONAM, "Overflow")
+}
+
+record(bo, "@PV_PREFIX@Event:Analyzer:Enabled") {
+  field(DESC, "Enable event analyzer?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0060)@[1] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+# Applications should process this record on demand. Scanning it does not make
+# sense because the rate at which the value changes depends on the environment.
+# TODO Maybe this should be an output record.
+record(bi, "@PV_PREFIX@Event:Analyzer:CounterReset") {
+  field(DESC, "Event analyzer counter reset?")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0060)@[0] uint32")
+  field(ZNAM, "Running")
+  field(ONAM, "Reset to zero")
+}
+
+# Event analyzer data register.
+
+# Applications should process this record on demand. Scanning it does not make
+# sense because the rate at which the value changes depends on the environment.
+record(longin, "@PV_PREFIX@Event:Analyzer:EventCode") {
+  field(DESC, "Event analyzer event code")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0064)@[7:0] uint32")
+}
+
+# Event analyzer counter register.
+
+record(longin, "@PV_PREFIX@Event:Analyzer:Counter:High") {
+  field(DESC, "Event analyzer counter (high)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0068)@ uint32")
+}
+
+record(longin, "@PV_PREFIX@Event:Analyzer:Counter:Low") {
+  field(DESC, "Event analyzer counter (low)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x006c)@ uint32")
+}
+
+# Sequence RAM control register.
+
+# We use a common record for reading the enabled and running flags. This way, we
+# reduce the number of read operations needed by 50 percent.
+record(longin, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Status") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0070)@ uint32")
+  field(SCAN, ".5 second")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Running")
+}
+
+record(calc, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Running") {
+  field(CALC, "((A&33554432)=0)?0:1")
+  field(INPA, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Status MSS")
+  field(FLNK, "@PV_PREFIX@Event:SeqRAM0:Running")
+}
+
+record(bi, "@PV_PREFIX@Event:SeqRAM0:Running") {
+  field(DESC, "Sequence RAM 0 running?")
+  field(INP,  "@PV_PREFIX@Intrnl:Event:SeqRAM0:Running MSS")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Enabled")
+  field(ZNAM, "Not running")
+  field(ONAM, "Running")
+}
+
+record(calc, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Enabled") {
+  field(CALC, "((A&16777216)=0)?0:1")
+  field(INPA, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Status MSS")
+  field(FLNK, "@PV_PREFIX@Event:SeqRAM0:Enabled")
+}
+
+record(bi, "@PV_PREFIX@Event:SeqRAM0:Enabled") {
+  field(DESC, "Sequence RAM 0 enabled?")
+  field(INP,  "@PV_PREFIX@Intrnl:Event:SeqRAM0:Enabled MSS")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM0:SoftTrig") {
+  field(DESC, "Soft trigger seq. RAM 0")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM0:SoftTrig")
+  field(ZNAM, "Soft trigger")
+  field(ONAM, "Soft trigger")
+}
+
+record(bo, "@PV_PREFIX@Intrnl:Event:SeqRAM0:SoftTrig") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0070)@[21] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "No soft trigger")
+  field(ONAM, "Soft trigger")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM0:SingleSeq") {
+  field(DESC, "Disable seq. RAM after single seq.?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0070)@[20] uint32")
+  field(ZNAM, "Multiple seq.")
+  field(ONAM, "Single seq.")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM0:Recycle") {
+  field(DESC, "Trigger seq. RAM again at end?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0070)@[19] uint32")
+  field(ZNAM, "Wait for trig.")
+  field(ONAM, "Restart")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM0:Reset") {
+  field(DESC, "Reset sequence RAM 0")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Reset")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Reset") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0070)@[18] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "No reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM0:Disable") {
+  field(DESC, "Disable sequence RAM 0")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Disable")
+  field(ZNAM, "Disable")
+  field(ONAM, "Disable")
+}
+
+record(bo, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Disable") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0070)@[17] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "No disable")
+  field(ONAM, "Disable")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM0:Enable") {
+  field(DESC, "Enable sequence RAM 0")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Enable")
+  field(ZNAM, "Enable")
+  field(ONAM, "Enable")
+}
+
+record(bo, "@PV_PREFIX@Intrnl:Event:SeqRAM0:Enable") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0070)@[16] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "No enable")
+  field(ONAM, "Enable")
+}
+
+record(mbbo, "@PV_PREFIX@Event:SeqRAM0:TrigSource") {
+  field(DESC, "Sequence RAM 0 trigger source")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0070)@[7:0] uint32")
+  field(ZRVL, "0")
+  field(ZRST, "MXC 0")
+  field(ONVL, "1")
+  field(ONST, "MXC 1")
+  field(TWVL, "2")
+  field(TWST, "MXC 2")
+  field(THVL, "3")
+  field(THST, "MXC 3")
+  field(FRVL, "4")
+  field(FRST, "MXC 4")
+  field(FVVL, "5")
+  field(FVST, "MXC 5")
+  field(SXVL, "6")
+  field(SXST, "MXC 6")
+  field(SVVL, "7")
+  field(SVST, "MXC 7")
+  field(EIVL, "16")
+  field(EIST, "AC sync")
+  field(NIVL, "17")
+  field(NIST, "Soft trig. 0")
+  field(TEVL, "18")
+  field(TEST, "Soft trig. 1")
+}
+
+# We use a common record for reading the enabled and running flags. This way, we
+# reduce the number of read operations needed by 50 percent.
+record(longin, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Status") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0074)@ uint32")
+  field(SCAN, ".5 second")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Running")
+}
+
+record(calc, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Running") {
+  field(CALC, "((A&33554432)=0)?0:1")
+  field(INPA, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Status MSS")
+  field(FLNK, "@PV_PREFIX@Event:SeqRAM1:Running")
+}
+
+record(bi, "@PV_PREFIX@Event:SeqRAM1:Running") {
+  field(DESC, "Sequence RAM 1 running?")
+  field(INP,  "@PV_PREFIX@Intrnl:Event:SeqRAM1:Running MSS")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Enabled")
+  field(ZNAM, "Not running")
+  field(ONAM, "Running")
+}
+
+record(calc, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Enabled") {
+  field(CALC, "((A&16777216)=0)?0:1")
+  field(INPA, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Status MSS")
+  field(FLNK, "@PV_PREFIX@Event:SeqRAM1:Enabled")
+}
+
+record(bi, "@PV_PREFIX@Event:SeqRAM1:Enabled") {
+  field(DESC, "Sequence RAM 1 enabled?")
+  field(INP,  "@PV_PREFIX@Intrnl:Event:SeqRAM1:Enabled MSS")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM1:SoftTrig") {
+  field(DESC, "Soft trigger seq. RAM 1")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM1:SoftTrig")
+  field(ZNAM, "Soft trigger")
+  field(ONAM, "Soft trigger")
+}
+
+record(bo, "@PV_PREFIX@Intrnl:Event:SeqRAM1:SoftTrig") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0074)@[21] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "No soft trigger")
+  field(ONAM, "Soft trigger")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM1:SingleSeq") {
+  field(DESC, "Disable seq. RAM after single seq.?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0074)@[20] uint32")
+  field(ZNAM, "Multiple seq.")
+  field(ONAM, "Single seq.")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM1:Recycle") {
+  field(DESC, "Trigger seq. RAM again at end?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0074)@[19] uint32")
+  field(ZNAM, "Wait for trig.")
+  field(ONAM, "Restart")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM1:Reset") {
+  field(DESC, "Reset sequence RAM 1")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Reset")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Reset") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0074)@[18] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "No reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM1:Disable") {
+  field(DESC, "Disable sequence RAM 1")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Disable")
+  field(ZNAM, "Disable")
+  field(ONAM, "Disable")
+}
+
+record(bo, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Disable") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0074)@[17] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "No disable")
+  field(ONAM, "Disable")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM1:Enable") {
+  field(DESC, "Enable sequence RAM 1")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Enable")
+  field(ZNAM, "Enable")
+  field(ONAM, "Enable")
+}
+
+record(bo, "@PV_PREFIX@Intrnl:Event:SeqRAM1:Enable") {
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0074)@[16] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "No enable")
+  field(ONAM, "Enable")
+}
+
+record(mbbo, "@PV_PREFIX@Event:SeqRAM1:TrigSource") {
+  field(DESC, "Sequence RAM 1 trigger source")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0074)@[7:0] uint32")
+  field(ZRVL, "0")
+  field(ZRST, "MXC 0")
+  field(ONVL, "1")
+  field(ONST, "MXC 1")
+  field(TWVL, "2")
+  field(TWST, "MXC 2")
+  field(THVL, "3")
+  field(THST, "MXC 3")
+  field(FRVL, "4")
+  field(FRST, "MXC 4")
+  field(FVVL, "5")
+  field(FVST, "MXC 5")
+  field(SXVL, "6")
+  field(SXST, "MXC 6")
+  field(SVVL, "7")
+  field(SVST, "MXC 7")
+  field(EIVL, "16")
+  field(EIST, "AC sync")
+  field(NIVL, "17")
+  field(NIST, "Soft trig. 0")
+  field(TEVL, "18")
+  field(TEST, "Soft trig. 1")
+}
+
+# SY87739L Fractional divider configuration word.
+
+record(mbbo, "@PV_PREFIX@EventClock:Gen:Freq") {
+  field(DESC, "Int. clock generator freq.")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0080)@ uint32")
+  field(ZRVL, "$(CLK_GEN_CW_0=0x00de816d)")
+  field(ZRST, "$(CLK_GEN_F_0=125 MHz)")
+  field(ONVL, "$(CLK_GEN_CW_1=0x0c928166)")
+  field(ONST, "$(CLK_GEN_F_1=124.908 MHz)")
+  field(TWVL, "$(CLK_GEN_CW_2=0x018741ad)")
+  field(TWST, "$(CLK_GEN_F_2=119 MHz)")
+  field(THVL, "$(CLK_GEN_CW_3=0x072f01ad)")
+  field(THST, "$(CLK_GEN_F_3=114.24 MHz)")
+  field(FRVL, "$(CLK_GEN_CW_4=0x049e81ad)")
+  field(FRST, "$(CLK_GEN_F_4=106.25 MHz)")
+  field(FVVL, "$(CLK_GEN_CW_5=0x008201ad)")
+  field(FVST, "$(CLK_GEN_F_5=100 MHz)")
+  field(SXVL, "$(CLK_GEN_CW_6=0x025b41ed)")
+  field(SXST, "$(CLK_GEN_F_6=99.956 MHz)")
+  field(SVVL, "$(CLK_GEN_CW_7=0x0187422d)")
+  field(SVST, "$(CLK_GEN_F_7=89.25 MHz)")
+  field(EIVL, "$(CLK_GEN_CW_8=0x0082822d)")
+  field(EIST, "$(CLK_GEN_F_8=81 MHz)")
+  field(NIVL, "$(CLK_GEN_CW_9=0x0106822d)")
+  field(NIST, "$(CLK_GEN_F_9=80 MHz)")
+  field(TEVL, "$(CLK_GEN_CW_10=0x019e822d)")
+  field(TEST, "$(CLK_GEN_F_10=78.9 MHz)")
+  field(ELVL, "$(CLK_GEN_CW_11=0x018742ad)")
+  field(ELST, "$(CLK_GEN_F_11=71.4 MHz)")
+  field(TVVL, "$(CLK_GEN_CW_12=0x0c9282a6)")
+  field(TVST, "$(CLK_GEN_F_12=62.454 MHz)")
+  field(TTVL, "$(CLK_GEN_CW_13=0x009743ad)")
+  field(TTST, "$(CLK_GEN_F_13=50 MHz)")
+  field(FTVL, "$(CLK_GEN_CW_14=0xc25b43ad)")
+  field(FTST, "$(CLK_GEN_F_14=49.978 MHz)")
+  field(FFVL, "$(CLK_GEN_CW_15=0x0176c36d)")
+  field(FFST, "$(CLK_GEN_F_15=49.965 MHz)")
+}
+
+# Event trigger register.
+
+record(bo, "@PV_PREFIX@Event:EvTrig0:Enabled") {
+  field(DESC, "Send event code for trigger 0?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0100)@[8] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(longout, "@PV_PREFIX@Event:EvTrig0:EventCode") {
+  field(DESC, "Event code for trigger 0")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0100)@[7:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(bo, "@PV_PREFIX@Event:EvTrig1:Enabled") {
+  field(DESC, "Send event code for trigger 1?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0104)@[8] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(longout, "@PV_PREFIX@Event:EvTrig1:EventCode") {
+  field(DESC, "Event code for trigger 1")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0104)@[7:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(bo, "@PV_PREFIX@Event:EvTrig2:Enabled") {
+  field(DESC, "Send event code for trigger 2?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0108)@[8] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(longout, "@PV_PREFIX@Event:EvTrig2:EventCode") {
+  field(DESC, "Event code for trigger 2")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0108)@[7:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(bo, "@PV_PREFIX@Event:EvTrig3:Enabled") {
+  field(DESC, "Send event code for trigger 3?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x010c)@[8] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(longout, "@PV_PREFIX@Event:EvTrig3:EventCode") {
+  field(DESC, "Event code for trigger 0")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x010c)@[7:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(bo, "@PV_PREFIX@Event:EvTrig4:Enabled") {
+  field(DESC, "Send event code for trigger 4?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0110)@[8] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(longout, "@PV_PREFIX@Event:EvTrig4:EventCode") {
+  field(DESC, "Event code for trigger 4")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0110)@[7:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(bo, "@PV_PREFIX@Event:EvTrig5:Enabled") {
+  field(DESC, "Send event code for trigger 5?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0114)@[8] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(longout, "@PV_PREFIX@Event:EvTrig5:EventCode") {
+  field(DESC, "Event code for trigger 5")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0114)@[7:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(bo, "@PV_PREFIX@Event:EvTrig6:Enabled") {
+  field(DESC, "Send event code for trigger 6?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0118)@[8] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(longout, "@PV_PREFIX@Event:EvTrig6:EventCode") {
+  field(DESC, "Event code for trigger 6")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0118)@[7:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+record(bo, "@PV_PREFIX@Event:EvTrig7:Enabled") {
+  field(DESC, "Send event code for trigger 7?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x011c)@[8] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(longout, "@PV_PREFIX@Event:EvTrig7:EventCode") {
+  field(DESC, "Event code for trigger 7")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x011c)@[7:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "255")
+  field(LOPR, "0")
+  field(HOPR, "255")
+}
+
+# Data buffer transmit memory.
+
+record(waveform, "@PV_PREFIX@DataBuffer:TX:TransmitData") {
+  field(DESC, "Data to be transmitted")
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @ADDR(0x0800)@ uint32 changed_elements_only")
+  field(FTVL, "ULONG")
+  field(NELM, "512")
+}
+
+# Typically, we only write changed elements. However, sometimes we might want to
+# write all elements when something got out of sync.
+record(bo, "@PV_PREFIX@DataBuffer:TX:TransmitData:WriteAll") {
+  field(DESC, "Send the whole data buf. to the device")
+  field(FLNK, "@PV_PREFIX@Intrnl:DataBuffer:TX:TransmitData:Copy")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+
+record(aSub, "@PV_PREFIX@Intrnl:DataBuffer:TX:TransmitData:Copy") {
+  field(SNAM, "mrfArrayCopy")
+  field(EFLG, "NEVER")
+  field(FTA, "ULONG")
+  field(NOA, "512")
+  field(INPA, "@PV_PREFIX@DataBuffer:TX:TransmitData")
+  field(FTVA,  "ULONG")
+  field(NOVA,  "512")
+  field(OUTA, "@PV_PREFIX@Intrnl:DataBuffer:TX:TransmitData:WriteAll NPP")
+  field(FLNK, "@PV_PREFIX@Intrnl:DataBuffer:TX:TransmitData:WriteAll")
+}
+
+record(waveform, "@PV_PREFIX@Intrnl:DataBuffer:TX:TransmitData:WriteAll") {
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @ADDR(0x0800)@ uint32 no_read_on_init")
+  field(FTVL, "ULONG")
+  field(NELM, "512")
+}
+
+# Sequence RAM 0.
+
+record(waveform, "@PV_PREFIX@Event:SeqRAM0:TimeStamps") {
+  field(DESC, "Sequence RAM 0 time stamps")
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @ADDR(0x8000)@ uint32 changed_elements_only element_distance=4")
+  field(FTVL, "ULONG")
+  field(NELM, "2048")
+}
+
+record(waveform, "@PV_PREFIX@Event:SeqRAM0:EventCodes") {
+  field(DESC, "Sequence RAM 0 event codes")
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @ADDR(0x8004)@ uint32 changed_elements_only element_distance=4")
+  field(FTVL, "UCHAR")
+  field(NELM, "2048")
+}
+
+# Typically, we only write changed elements. However, sometimes we might want to
+# write all elements when something got out of sync.
+record(fanout, "@PV_PREFIX@Event:SeqRAM0:WriteAll") {
+  field(DESC, "Write all elements to the device.")
+  field(LNK1, "@PV_PREFIX@Event:SeqRAM0:TimeStamps:WriteAll")
+  field(LNK2, "@PV_PREFIX@Event:SeqRAM0:EventCodes:WriteAll")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM0:TimeStamps:WriteAll") {
+  field(DESC, "Send all time stamps to the device.")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM0:TimeStamps:Copy")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM0:EventCodes:WriteAll") {
+  field(DESC, "Send all event codes to the device.")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM0:EventCodes:Copy")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+
+record(aSub, "@PV_PREFIX@Intrnl:Event:SeqRAM0:TimeStamps:Copy") {
+  field(SNAM, "mrfArrayCopy")
+  field(EFLG, "NEVER")
+  field(FTA, "ULONG")
+  field(NOA, "2048")
+  field(INPA, "@PV_PREFIX@Event:SeqRAM0:TimeStamps")
+  field(FTVA,  "ULONG")
+  field(NOVA,  "2048")
+  field(OUTA, "@PV_PREFIX@Intrnl:Event:SeqRAM0:TimeStamps:WriteAll NPP")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM0:TimeStamps:WriteAll")
+}
+
+record(aSub, "@PV_PREFIX@Intrnl:Event:SeqRAM0:EventCodes:Copy") {
+  field(SNAM, "mrfArrayCopy")
+  field(EFLG, "NEVER")
+  field(FTA, "UCHAR")
+  field(NOA, "2048")
+  field(INPA, "@PV_PREFIX@Event:SeqRAM0:EventCodes")
+  field(FTVA,  "UCHAR")
+  field(NOVA,  "2048")
+  field(OUTA, "@PV_PREFIX@Intrnl:Event:SeqRAM0:EventCodes:WriteAll NPP")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM0:EventCodes:WriteAll")
+}
+
+record(waveform, "@PV_PREFIX@Intrnl:Event:SeqRAM0:TimeStamps:WriteAll") {
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @ADDR(0x8000)@ uint32 no_read_on_init element_distance=4")
+  field(FTVL, "ULONG")
+  field(NELM, "2048")
+}
+
+record(waveform, "@PV_PREFIX@Intrnl:Event:SeqRAM0:EventCodes:WriteAll") {
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @ADDR(0x8004)@ uint32 no_read_on_init element_distance=4")
+  field(FTVL, "UCHAR")
+  field(NELM, "2048")
+}
+
+# Sequence RAM 1.
+
+record(waveform, "@PV_PREFIX@Event:SeqRAM1:TimeStamps") {
+  field(DESC, "Sequence RAM 1 time stamps")
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @ADDR(0xc000)@ uint32 changed_elements_only element_distance=4")
+  field(FTVL, "ULONG")
+  field(NELM, "2048")
+}
+
+record(waveform, "@PV_PREFIX@Event:SeqRAM1:EventCodes") {
+  field(DESC, "Sequence RAM 1 event codes")
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @ADDR(0xc004)@ uint32 changed_elements_only element_distance=4")
+  field(FTVL, "UCHAR")
+  field(NELM, "2048")
+}
+
+# Typically, we only write changed elements. However, sometimes we might want to
+# write all elements when something got out of sync.
+record(fanout, "@PV_PREFIX@Event:SeqRAM1:WriteAll") {
+  field(DESC, "Write all elements to the device.")
+  field(LNK1, "@PV_PREFIX@Event:SeqRAM1:TimeStamps:WriteAll")
+  field(LNK2, "@PV_PREFIX@Event:SeqRAM1:EventCodes:WriteAll")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM1:TimeStamps:WriteAll") {
+  field(DESC, "Send all time stamps to the device.")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM1:TimeStamps:Copy")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+
+record(bo, "@PV_PREFIX@Event:SeqRAM1:EventCodes:WriteAll") {
+  field(DESC, "Send all event codes to the device.")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM1:EventCodes:Copy")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+
+record(aSub, "@PV_PREFIX@Intrnl:Event:SeqRAM1:TimeStamps:Copy") {
+  field(SNAM, "mrfArrayCopy")
+  field(EFLG, "NEVER")
+  field(FTA, "ULONG")
+  field(NOA, "2048")
+  field(INPA, "@PV_PREFIX@Event:SeqRAM1:TimeStamps")
+  field(FTVA,  "ULONG")
+  field(NOVA,  "2048")
+  field(OUTA, "@PV_PREFIX@Intrnl:Event:SeqRAM1:TimeStamps:WriteAll NPP")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM1:TimeStamps:WriteAll")
+}
+
+record(aSub, "@PV_PREFIX@Intrnl:Event:SeqRAM1:EventCodes:Copy") {
+  field(SNAM, "mrfArrayCopy")
+  field(EFLG, "NEVER")
+  field(FTA, "UCHAR")
+  field(NOA, "2048")
+  field(INPA, "@PV_PREFIX@Event:SeqRAM1:EventCodes")
+  field(FTVA,  "UCHAR")
+  field(NOVA,  "2048")
+  field(OUTA, "@PV_PREFIX@Intrnl:Event:SeqRAM1:EventCodes:WriteAll NPP")
+  field(FLNK, "@PV_PREFIX@Intrnl:Event:SeqRAM1:EventCodes:WriteAll")
+}
+
+record(waveform, "@PV_PREFIX@Intrnl:Event:SeqRAM1:TimeStamps:WriteAll") {
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @ADDR(0xc000)@ uint32 no_read_on_init element_distance=4")
+  field(FTVL, "ULONG")
+  field(NELM, "2048")
+}
+
+record(waveform, "@PV_PREFIX@Intrnl:Event:SeqRAM1:EventCodes:WriteAll") {
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @ADDR(0xc004)@ uint32 no_read_on_init element_distance=4")
+  field(FTVL, "UCHAR")
+  field(NELM, "2048")
+}
+# Write all settings in this file to the hardware.
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:Common") {
+  field(LNK1, "@PV_PREFIX@ACSync:BypassDividerAndPhaseShift")
+  field(LNK2, "@PV_PREFIX@ACSync:Divider")
+  field(LNK3, "@PV_PREFIX@ACSync:MapTo:EvTrig0")
+  field(LNK4, "@PV_PREFIX@ACSync:MapTo:EvTrig1")
+  field(LNK5, "@PV_PREFIX@ACSync:MapTo:EvTrig2")
+  field(LNK6, "@PV_PREFIX@ACSync:MapTo:EvTrig3")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout1")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout1") {
+  field(LNK1, "@PV_PREFIX@ACSync:MapTo:EvTrig4")
+  field(LNK2, "@PV_PREFIX@ACSync:MapTo:EvTrig5")
+  field(LNK3, "@PV_PREFIX@ACSync:MapTo:EvTrig6")
+  field(LNK4, "@PV_PREFIX@ACSync:MapTo:EvTrig7")
+  field(LNK5, "@PV_PREFIX@ACSync:PhaseShift")
+  field(LNK6, "@PV_PREFIX@ACSync:SyncSource")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout2")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout2") {
+  field(LNK1, "@PV_PREFIX@DBus:B0:Map")
+  field(LNK2, "@PV_PREFIX@DBus:B1:Map")
+  field(LNK3, "@PV_PREFIX@DBus:B2:Map")
+  field(LNK4, "@PV_PREFIX@DBus:B3:Map")
+  field(LNK5, "@PV_PREFIX@DBus:B4:Map")
+  field(LNK6, "@PV_PREFIX@DBus:B5:Map")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout3")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout3") {
+  field(LNK1, "@PV_PREFIX@DBus:B6:Map")
+  field(LNK2, "@PV_PREFIX@DBus:B7:Map")
+  field(LNK3, "@PV_PREFIX@DBus:SharedTX")
+  field(LNK4, "@PV_PREFIX@DataBuffer:TX:Enabled")
+  field(LNK5, "@PV_PREFIX@DataBuffer:TX:TransferSize")
+  field(LNK6, "@PV_PREFIX@DataBuffer:TX:TransmitData:WriteAll")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout4")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout4") {
+  field(LNK1, "@PV_PREFIX@Enabled")
+  field(LNK2, "@PV_PREFIX@Event:Analyzer:Enabled")
+  field(LNK3, "@PV_PREFIX@Event:EvTrig0:Enabled")
+  field(LNK4, "@PV_PREFIX@Event:EvTrig0:EventCode")
+  field(LNK5, "@PV_PREFIX@Event:EvTrig1:Enabled")
+  field(LNK6, "@PV_PREFIX@Event:EvTrig1:EventCode")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout5")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout5") {
+  field(LNK1, "@PV_PREFIX@Event:EvTrig2:Enabled")
+  field(LNK2, "@PV_PREFIX@Event:EvTrig2:EventCode")
+  field(LNK3, "@PV_PREFIX@Event:EvTrig3:Enabled")
+  field(LNK4, "@PV_PREFIX@Event:EvTrig3:EventCode")
+  field(LNK5, "@PV_PREFIX@Event:EvTrig4:Enabled")
+  field(LNK6, "@PV_PREFIX@Event:EvTrig4:EventCode")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout6")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout6") {
+  field(LNK1, "@PV_PREFIX@Event:EvTrig5:Enabled")
+  field(LNK2, "@PV_PREFIX@Event:EvTrig5:EventCode")
+  field(LNK3, "@PV_PREFIX@Event:EvTrig6:Enabled")
+  field(LNK4, "@PV_PREFIX@Event:EvTrig6:EventCode")
+  field(LNK5, "@PV_PREFIX@Event:EvTrig7:Enabled")
+  field(LNK6, "@PV_PREFIX@Event:EvTrig7:EventCode")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout7")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout7") {
+  field(LNK1, "@PV_PREFIX@Event:MapDBusExtInput5ToTSReset")
+  field(LNK2, "@PV_PREFIX@Event:MapDBusExtInput6ToSec0")
+  field(LNK3, "@PV_PREFIX@Event:MapDBusExtInput7ToSec1")
+  field(LNK4, "@PV_PREFIX@Intrnl:WriteAll:Event:SeqRAM0")
+  field(LNK5, "@PV_PREFIX@Intrnl:WriteAll:Event:SeqRAM1")
+  field(LNK6, "@PV_PREFIX@Event:Soft:Enabled")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout8")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:Common:Fout8") {
+  field(LNK1, "@PV_PREFIX@EventClock:Divider")
+  field(LNK2, "@PV_PREFIX@EventClock:Freq")
+  field(LNK3, "@PV_PREFIX@EventClock:Gen:Freq")
+  field(LNK4, "@PV_PREFIX@EventClock:RefSelect")
+  field(LNK5, "@PV_PREFIX@RX:Disabled")
+  field(LNK6, "@PV_PREFIX@RX:PowerDown")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:Event:SeqRAM0") {
+  field(LNK1, "@PV_PREFIX@Event:SeqRAM0:EventCodes:WriteAll")
+  field(LNK2, "@PV_PREFIX@Event:SeqRAM0:Recycle")
+  field(LNK3, "@PV_PREFIX@Event:SeqRAM0:SingleSeq")
+  field(LNK4, "@PV_PREFIX@Event:SeqRAM0:TimeStamps:WriteAll")
+  field(LNK5, "@PV_PREFIX@Event:SeqRAM0:TrigSource")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:Event:SeqRAM1") {
+  field(LNK1, "@PV_PREFIX@Event:SeqRAM1:EventCodes:WriteAll")
+  field(LNK2, "@PV_PREFIX@Event:SeqRAM1:Recycle")
+  field(LNK3, "@PV_PREFIX@Event:SeqRAM1:SingleSeq")
+  field(LNK4, "@PV_PREFIX@Event:SeqRAM1:TimeStamps:WriteAll")
+  field(LNK5, "@PV_PREFIX@Event:SeqRAM1:TrigSource")
+}
+

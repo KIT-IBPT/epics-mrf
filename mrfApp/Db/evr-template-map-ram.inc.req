@@ -1,4 +1,0 @@
-$(P)$(R)Event:MapRAM@MAP_RAM_NUM@:InternalFunctions.VAL
-$(P)$(R)Event:MapRAM@MAP_RAM_NUM@:ResetPulseGens.VAL
-$(P)$(R)Event:MapRAM@MAP_RAM_NUM@:SetPulseGens.VAL
-$(P)$(R)Event:MapRAM@MAP_RAM_NUM@:TrigPulseGens.VAL

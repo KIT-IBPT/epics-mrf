@@ -1,0 +1,12 @@
+# Prescaler @PRESCALER_NUM@ register.
+
+record(longout, "@PV_PREFIX@Prescaler@PRESCALER_NUM@") {
+  field(DESC, "Prescaler @PRESCALER_NUM@")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @PRESCALER_ADDR@[15:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "65535")
+  field(LOPR, "0")
+  field(HOPR, "65535")
+}
+
