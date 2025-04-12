@@ -1,5 +1,0 @@
-$(P)$(R)PulseGen@PULSE_GEN_NUM@:Enabled.VAL
-$(P)$(R)PulseGen@PULSE_GEN_NUM@:MapResetEnabled.VAL
-$(P)$(R)PulseGen@PULSE_GEN_NUM@:MapSetEnabled.VAL
-$(P)$(R)PulseGen@PULSE_GEN_NUM@:MapTrigEnabled.VAL
-$(P)$(R)PulseGen@PULSE_GEN_NUM@:Polarity.VAL

@@ -8,6 +8,7 @@
 /include
 /lib
 /mrfApp/Db/O.*
+/mrfApp/Db/mrf_db_gen/__pycache__
 /mrfApp/mrfCommonSrc/O.*
 /mrfApp/mrfEpicsMmapSrc/O.*
 /mrfApp/mrfEpicsSrc/O.*

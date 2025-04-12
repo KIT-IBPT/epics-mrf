@@ -1,0 +1,9 @@
+# Pulse @PULSE_GEN_NUM@ width register.
+
+record(longout, "@PV_PREFIX@PulseGen@PULSE_GEN_NUM@:Width") {
+  field(DESC, "Pulse gen. @PULSE_GEN_NUM@ width")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @PULSE_GEN_WIDTH_ADDR@ uint32")
+  field(EGU,  "cycles")
+}
+
