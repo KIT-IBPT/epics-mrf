@@ -1,0 +1,208 @@
+# CML @OUTPUT_DESCRIPTION@ pattern registers.
+
+record(longout, "@PV_PREFIX@@OUTPUT_NAME@:PulseMode:Low") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ low state bit pattern")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_PATTERN_00_ADDR@[19:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "1048575")
+  field(LOPR, "0")
+  field(HOPR, "1048575")
+}
+
+record(longout, "@PV_PREFIX@@OUTPUT_NAME@:PulseMode:Rising") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ rising edge bit pattern")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_PATTERN_01_ADDR@[19:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "1048575")
+  field(LOPR, "0")
+  field(HOPR, "1048575")
+}
+
+record(longout, "@PV_PREFIX@@OUTPUT_NAME@:PulseMode:Falling") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ falling edge bit pattern")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_PATTERN_10_ADDR@[19:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "1048575")
+  field(LOPR, "0")
+  field(HOPR, "1048575")
+}
+
+record(longout, "@PV_PREFIX@@OUTPUT_NAME@:PulseMode:High") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ high state bit pattern")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_PATTERN_11_ADDR@[19:0] uint32")
+  field(DRVL, "0")
+  field(DRVH, "1048575")
+  field(LOPR, "0")
+  field(HOPR, "1048575")
+}
+
+# CML @OUTPUT_DESCRIPTION@ control register.
+
+record(longout, "@PV_PREFIX@@OUTPUT_NAME@:FreqMode:TrigPosition") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ freq. mode trig. position")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_CTRL_ADDR@[31:16] uint32")
+  field(DRVL, "0")
+  field(DRVH, "65535")
+  field(LOPR, "0")
+  field(HOPR, "65535")
+}
+
+record(bo, "@PV_PREFIX@@OUTPUT_NAME@:PatternMode:Recycle") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ recycle bit pattern?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_CTRL_ADDR@[7] uint32")
+  field(ZNAM, "Single")
+  field(ONAM, "Recycle")
+}
+
+record(bo, "@PV_PREFIX@@OUTPUT_NAME@:FreqMode:TrigLevel") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ freq. mode trig. level")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_CTRL_ADDR@[6] uint32")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(mbbo, "@PV_PREFIX@@OUTPUT_NAME@:Mode") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ mode select")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_CTRL_ADDR@[5:4] uint32")
+  field(ZRVL, "0")
+  field(ZRST, "Pulse mode")
+  field(ONVL, "1")
+  field(ONST, "Frequency mode")
+  field(TWVL, "2")
+  field(TWST, "Pattern mode")
+}
+
+record(bo, "@PV_PREFIX@@OUTPUT_NAME@:Reset") {
+  field(DESC, "Reset @OUTPUT_DESCRIPTION@?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_CTRL_ADDR@[2] uint32")
+  field(ZNAM, "Normal oper.")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@@OUTPUT_NAME@:PowerDown") {
+  field(DESC, "Power down @OUTPUT_DESCRIPTION@?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_CTRL_ADDR@[1] uint32")
+  field(ZNAM, "Power up")
+  field(ONAM, "Power down")
+}
+
+record(bo, "@PV_PREFIX@@OUTPUT_NAME@:Enabled") {
+  field(DESC, "Enable @OUTPUT_DESCRIPTION@?")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_CTRL_ADDR@[0] uint32")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+# CML @OUTPUT_DESCRIPTION@ high period count.
+
+record(longout, "@PV_PREFIX@@OUTPUT_NAME@:FreqMode:HighPeriod") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ freq. mode high period")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_HP_ADDR@ uint16")
+  field(DRVL, "20")
+  field(DRVH, "65535")
+  field(LOPR, "0")
+  field(HOPR, "65535")
+}
+
+# CML @OUTPUT_DESCRIPTION@ low period count.
+
+record(longout, "@PV_PREFIX@@OUTPUT_NAME@:FreqMode:LowPeriod") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ freq. mode low period")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_LP_ADDR@ uint16")
+  field(DRVL, "20")
+  field(DRVH, "65535")
+  field(LOPR, "0")
+  field(HOPR, "65535")
+}
+
+# CML @OUTPUT_DESCRIPTION@ number of 20-bit word patterns.
+
+record(longout, "@PV_PREFIX@@OUTPUT_NAME@:PatternMode:NumberOfSamples") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ pattern mode no. of samples")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @OUTPUT_CML_SAMPLES_COUNT_ADDR@ uint32")
+  field(DRVL, "0")
+  field(DRVH, "2048")
+  field(LOPR, "0")
+  field(HOPR, "2048")
+}
+
+# CML @OUTPUT_DESCRIPTION@ pattern memory.
+
+record(waveform, "@PV_PREFIX@@OUTPUT_NAME@:PatternMode:Samples") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ pattern mode samples")
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @ADDR(0x20000)@ uint32 changed_elements_only")
+  field(FTVL, "ULONG")
+  field(NELM, "2048")
+}
+
+# Typically, we only write changed elements. However, sometimes we might want to
+# write all elements when something got out of sync.
+record(bo, "@PV_PREFIX@@OUTPUT_NAME@:PatternMode:Samples:WriteAll") {
+  field(DESC, "Send all samples to the device")
+  field(FLNK, "@PV_PREFIX@Intrnl:@OUTPUT_NAME@:PatternMode:Samples:Copy")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+
+record(aSub, "@PV_PREFIX@Intrnl:@OUTPUT_NAME@:PatternMode:Samples:Copy") {
+  field(SNAM, "mrfArrayCopy")
+  field(EFLG, "NEVER")
+  field(FTA, "ULONG")
+  field(NOA, "2048")
+  field(INPA, "@PV_PREFIX@@OUTPUT_NAME@:PatternMode:Samples")
+  field(FTVA,  "ULONG")
+  field(NOVA,  "2048")
+  field(OUTA, "@PV_PREFIX@Intrnl:@OUTPUT_NAME@:PatternMode:Samples:WriteAll NPP")
+  field(FLNK, "@PV_PREFIX@Intrnl:@OUTPUT_NAME@:PatternMode:Samples:WriteAll")
+}
+
+record(waveform, "@PV_PREFIX@Intrnl:@OUTPUT_NAME@:PatternMode:Samples:WriteAll") {
+  field(DTYP, "MRF Memory Output")
+  field(INP,  "@$(DEVICE) @OUTPUT_CML_SAMPLES_ADDR@ uint32 no_read_on_init")
+  field(FTVL, "ULONG")
+  field(NELM, "2048")
+}
+
+# CML @OUTPUT_DESCRIPTION@ - write all settings to the hardware.
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:@OUTPUT_NAME@:CML") {
+  field(LNK1, "@PV_PREFIX@@OUTPUT_NAME@:Enabled")
+  field(LNK2, "@PV_PREFIX@@OUTPUT_NAME@:FreqMode:HighPeriod")
+  field(LNK3, "@PV_PREFIX@@OUTPUT_NAME@:FreqMode:LowPeriod")
+  field(LNK4, "@PV_PREFIX@@OUTPUT_NAME@:FreqMode:TrigLevel")
+  field(LNK5, "@PV_PREFIX@@OUTPUT_NAME@:FreqMode:TrigPosition")
+  field(LNK6, "@PV_PREFIX@@OUTPUT_NAME@:Mode")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:@OUTPUT_NAME@:CML:Fout1")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:@OUTPUT_NAME@:CML:Fout1") {
+  field(LNK1, "@PV_PREFIX@@OUTPUT_NAME@:PatternMode:NumberOfSamples")
+  field(LNK2, "@PV_PREFIX@@OUTPUT_NAME@:PatternMode:Recycle")
+  field(LNK3, "@PV_PREFIX@@OUTPUT_NAME@:PatternMode:Samples:WriteAll")
+  field(LNK4, "@PV_PREFIX@@OUTPUT_NAME@:PowerDown")
+  field(LNK5, "@PV_PREFIX@@OUTPUT_NAME@:PulseMode:Falling")
+  field(LNK6, "@PV_PREFIX@@OUTPUT_NAME@:PulseMode:High")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll:@OUTPUT_NAME@:CML:Fout2")
+}
+
+record(fanout, "@PV_PREFIX@Intrnl:WriteAll:@OUTPUT_NAME@:CML:Fout2") {
+  field(LNK1, "@PV_PREFIX@@OUTPUT_NAME@:PulseMode:Low")
+  field(LNK2, "@PV_PREFIX@@OUTPUT_NAME@:PulseMode:Rising")
+  field(LNK3, "@PV_PREFIX@@OUTPUT_NAME@:Reset")
+}
+
