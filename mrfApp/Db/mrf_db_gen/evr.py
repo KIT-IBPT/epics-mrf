@@ -242,6 +242,20 @@ class EVR(MRFCommon):
         self.add_to_write_all_pvs_list(f"{output_name}:Map")
         if self._config.feature_level == FeatureLevel.GEN2:
             self.add_to_write_all_pvs_list(f"{output_name}:Map2")
+        # If the output supports CML logic, we have to generate the respective
+        # code.
+        if output_config.cml_block_index is not None:
+            if output_config.cml_block_description is None:
+                output_cml_block_description = output_description
+            else:
+                output_cml_block_description = (
+                    output_config.cml_block_description
+                )
+            self._output_cml_logic(
+                output_name,
+                output_cml_block_description,
+                output_config.cml_block_index,
+            )
         # If the output supports GTX logic, we have to generate the respective
         # code.
         if output_config.gtx_block_index is not None:
@@ -257,7 +271,59 @@ class EVR(MRFCommon):
                 output_config.gtx_block_index,
             )
 
-    def _output_gtx_logic(  # pylint: disable=too-many-arguments
+    def _output_cml_logic(
+        self,
+        output_name: str,
+        output_description: str,
+        cml_block_index: int,
+    ) -> None:
+        cml_base_address = 0x0600 + 0x0020 * cml_block_index
+        cml_pattern_00_address = cml_base_address
+        cml_pattern_01_address = cml_base_address + 0x04
+        cml_pattern_10_address = cml_base_address + 0x08
+        cml_pattern_11_address = cml_base_address + 0x0C
+        cml_control_address = cml_base_address + 0x10
+        cml_high_period_address = cml_base_address + 0x14
+        cml_low_period_address = cml_base_address + 0x16
+        cml_samples_count_address = cml_base_address + 0x18
+        cml_samples_address = 0x20000 + 0x4000 * cml_block_index
+        self.write_template(
+            "evr-template-output-cml",
+            variables={
+                "OUTPUT_CML_CTRL_ADDR": self.render_address(
+                    cml_control_address
+                ),
+                "OUTPUT_CML_HP_ADDR": self.render_address(
+                    cml_high_period_address
+                ),
+                "OUTPUT_CML_LP_ADDR": self.render_address(
+                    cml_low_period_address
+                ),
+                "OUTPUT_CML_PATTERN_00_ADDR": self.render_address(
+                    cml_pattern_00_address
+                ),
+                "OUTPUT_CML_PATTERN_01_ADDR": self.render_address(
+                    cml_pattern_01_address
+                ),
+                "OUTPUT_CML_PATTERN_10_ADDR": self.render_address(
+                    cml_pattern_10_address
+                ),
+                "OUTPUT_CML_PATTERN_11_ADDR": self.render_address(
+                    cml_pattern_11_address
+                ),
+                "OUTPUT_CML_SAMPLES_COUNT_ADDR": self.render_address(
+                    cml_samples_count_address
+                ),
+                "OUTPUT_CML_SAMPLES_ADDR": self.render_address(
+                    cml_samples_address
+                ),
+                "OUTPUT_DESCRIPTION": output_description,
+                "OUTPUT_NAME": output_name,
+            },
+        )
+        self.add_to_write_all_pvs_list(f"Intrnl:WriteAll:{output_name}:CML")
+
+    def _output_gtx_logic(  # pylint: disable=too-many-locals
         self,
         output_name: str,
         output_description: str,
@@ -324,6 +390,7 @@ class EVR(MRFCommon):
                 ),
             },
         )
+        self.add_to_write_all_pvs_list(f"Intrnl:WriteAll:{output_name}:GTX")
 
     def _prescaler(
         self, prescaler_number: int, config: "PrescalerConfig"
@@ -612,13 +679,6 @@ class EVR(MRFCommon):
         for input_index in range(0, self._config.front_panel_inputs):
             self._front_panel_input(input_index)
 
-        # Generate code specific to the VME-EVR-230RF.
-        # TODO We should probably group this together with the other code that
-        #   is specific to a certain device.
-        if self._config.device == Device.VME_EVR_230RF:
-            self.write_template("evr-vme-230rf")
-            self.add_to_write_all_pvs_list("Intrnl:WriteAll:FPOut:CML")
-
         # SFP module (there only is a single one, so we do not include a
         # number).
         self.sfp_module("SFP", 0x8200)
@@ -708,10 +768,22 @@ class FeatureLevel(enum.Enum):
 
 
 @dataclasses.dataclass
-class OutputConfig:
+class OutputConfig:  # pylint: disable=too-many-instance-attributes
     """
     Configuration for an output.
     """
+
+    # Description for the output in the CML logic.
+    #
+    # This is only used if `cml_block_index` is not ``None``.
+    #
+    # If not specified, the regular ``description`` is used.
+    cml_block_description: typing.Optional[str] = None
+
+    # Index of the CML logic block for the output.
+    #
+    # A value of ``None`` means that the output does not support CML logic.
+    cml_block_index: typing.Optional[int] = None
 
     # Description for the output.
     #
@@ -869,7 +941,23 @@ _EVR_CONFIGS = {
         device=Device.VME_EVR_230RF,
         feature_level=FeatureLevel.GEN1,
         front_panel_inputs=2,
-        front_panel_outputs=([_OUTPUT_DEFAULT] * 7),
+        front_panel_outputs=typing.cast(
+            typing.List[typing.Optional[OutputConfig]],
+            (
+                [_OUTPUT_DEFAULT] * 4
+                + [
+                    OutputConfig(
+                        cml_block_description="FP output 4", cml_block_index=0
+                    ),
+                    OutputConfig(
+                        cml_block_description="FP output 5", cml_block_index=1
+                    ),
+                    OutputConfig(
+                        cml_block_description="FP output 6", cml_block_index=2
+                    ),
+                ]
+            ),
+        ),
         prescalers=([_PRESCALER_16] * 3),
         pulse_generators=(
             [_PULSE_GENERATOR_32_8_16] * 4 + [_PULSE_GENERATOR_32_0_16] * 12
