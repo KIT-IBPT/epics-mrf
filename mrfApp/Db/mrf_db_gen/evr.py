@@ -93,7 +93,6 @@ class EVR(MRFCommon):
                 )
 
     def _delay_compensation(self) -> None:
-        # TODO Maybe we should move this into the evr-common-gen2 template?
         self.write_template("evr-delay-compensation")
         self.add_to_write_all_pvs_list("DelayComp:Enabled")
         self.add_to_write_all_pvs_list("DelayComp:TargetDelay")
@@ -632,9 +631,21 @@ class EVR(MRFCommon):
         # devices.
         self._common()
 
-        # If the device supports it, generate the code for supporting delay
-        # compensation.
+        # Generate code that is common to all devices using a modern firmware.
         if self._config.feature_level == FeatureLevel.GEN2:
+            self.write_template("evr-common-gen2")
+            self.add_to_write_all_pvs_list(
+                "EventClock:ClkCleanerPLL:BandwidthSel"
+            )
+            self.add_to_write_all_pvs_list("IRQ:DataBuffer:Enabled:000To1FF")
+            self.add_to_write_all_pvs_list("IRQ:DataBuffer:Enabled:200To3FF")
+            self.add_to_write_all_pvs_list("IRQ:DataBuffer:Enabled:400To5FF")
+            self.add_to_write_all_pvs_list("IRQ:DataBuffer:Enabled:600To7FF")
+
+            # Mapping of distributed-bus bits to pulse generators.
+            self._dbus_bits_to_pulse_gens()
+
+            # Delay compensation.
             self._delay_compensation()
 
         # Mapping RAMs.
@@ -647,18 +658,6 @@ class EVR(MRFCommon):
             self._interrupts_mmap()
         else:
             self._interrupts_udp_ip()
-
-        # Generate code that is common to all devices using a modern firmware.
-        # TODO This code should probably be placed in _common().
-        if self._config.feature_level == FeatureLevel.GEN2:
-            self.write_template("evr-common-gen2")
-            self.add_to_write_all_pvs_list(
-                "EventClock:ClkCleanerPLL:BandwidthSel"
-            )
-            self.add_to_write_all_pvs_list("IRQ:DataBuffer:Enabled:000To1FF")
-            self.add_to_write_all_pvs_list("IRQ:DataBuffer:Enabled:200To3FF")
-            self.add_to_write_all_pvs_list("IRQ:DataBuffer:Enabled:400To5FF")
-            self.add_to_write_all_pvs_list("IRQ:DataBuffer:Enabled:600To7FF")
 
         # Generate code common to both the VME-EVR-230 and VME-EVR-230RF.
         if (
@@ -677,10 +676,6 @@ class EVR(MRFCommon):
             self._config.prescalers
         ):
             self._prescaler(prescaler_index, prescaler_config)
-
-        # Mapping of distributed-bus bits to pulse generators (if supported).
-        if self._config.feature_level == FeatureLevel.GEN2:
-            self._dbus_bits_to_pulse_gens()
 
         # Pulse generators.
         self._pulse_generators_header()
