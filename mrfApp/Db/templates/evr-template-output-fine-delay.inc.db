@@ -1,0 +1,92 @@
+# The fine delays are set by driving a shift register through the GPIO pins.
+# We do not do this directly, but instead have specialized record device
+# support routine for doing so. We only provide the final value that should be
+# put into the shift register and the addresses of the GPIO direction and GPIO
+# output registers. The rest of the magic is done by the device support code.
+#
+# Please refer to
+# http://www.mrf.fi/index.php/universal-io-modules/90-setting-the-delay-on-univ-lvpecl-dly-module
+# for detailed information about how the shift register is used.
+
+record(bi, "@PV_PREFIX@@OUTPUT_NAME@:FineDelayAvailable") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ fine delay avail.?")
+  field(PINI, "YES")
+  field(VAL,  "$(@OUTPUT_FD_AVAILABLE_MACRO@)")
+  field(ZNAM, "Not available")
+  field(ONAM, "Available")
+}
+
+record(ao, "@PV_PREFIX@@OUTPUT_NAME@:FineDelay") {
+  field(DESC, "@OUTPUT_DESCRIPTION@ fine delay")
+  field(DTYP, "Raw Soft Channel")
+  field(LINR, "SLOPE")
+  field(EOFF, "0")
+  field(ESLO, "10")
+  field(EGU,  "ps")
+  field(FLNK, "@PV_PREFIX@Intrnl:@OUTPUT_NAME@:FineDelay:Calc")
+# TODO This makes the alarm severity propagate back but it also causes undesired
+# processing of the record (in particular on startup). Therefore, we do not use
+# it at the moment which means that an output error will not turn up on the
+# record seen by the user.
+#  field(SDIS, "@PV_PREFIX@Intrnl:@OUTPUT_NAME@:FineDelay:Raw.SEVR CP MSS")
+#  field(DISV, "999")
+}
+
+# The lower ten bits represent the fine delay value. The 11th bit represents
+# the “LENA” or “LENB” bit. It must be set to one in order for the delay value
+# to actually be latched into the delay chip. This way, the delays of the two
+# outputs that share a shift register can be set independently.
+#
+# The shift register expects the bits in a somewhat odd order, but the record
+# device support routine takes care of sending them in the right one. As far as
+# the record side is concerned, the order of bits is as follows:
+#
+# - Bit 31: DIS (output disable)
+# - Bit 30: Unused
+# - Bit 29: Unused
+# - Bit 28: Unused
+# - Bit 27: Unused
+# - Bit 26: LENB (latch enable for output B)
+# - Bit 25: Delay for output B, bit 9
+# - Bit 24: Delay for output A, bit 8
+# - Bit 23: Delay for output A, bit 7
+# - Bit 22: Delay for output A, bit 6
+# - Bit 21: Delay for output A, bit 5
+# - Bit 20: Delay for output A, bit 4
+# - Bit 19: Delay for output A, bit 3
+# - Bit 18: Delay for output A, bit 2
+# - Bit 17: Delay for output A, bit 1
+# - Bit 16: Delay for output A, bit 0
+# - Bit 15: Unused
+# - Bit 14: Unused
+# - Bit 13: Unused
+# - Bit 12: Unused
+# - Bit 11: Unused
+# - Bit 10: LENA (latch enable for output A)
+# - Bit  9: Delay for output A, bit 9
+# - Bit  8: Delay for output A, bit 8
+# - Bit  7: Delay for output A, bit 7
+# - Bit  6: Delay for output A, bit 6
+# - Bit  5: Delay for output A, bit 5
+# - Bit  4: Delay for output A, bit 4
+# - Bit  3: Delay for output A, bit 3
+# - Bit  2: Delay for output A, bit 2
+# - Bit  1: Delay for output A, bit 1
+# - Bit  0: Delay for output A, bit 0
+#
+# This means that we have to shift the value (including the latch-enable bit)
+# by 16 bits when dealing with the second output that is handled by the shift
+# register.
+record(calc, "@PV_PREFIX@Intrnl:@OUTPUT_NAME@:FineDelay:Calc") {
+  field(CALC, "(A&1023)@OUTPUT_FD_VAL_BIT_SHIFT@")
+  field(INPA, "@PV_PREFIX@@OUTPUT_NAME@:FineDelay.RVAL")
+  field(FLNK,  "@PV_PREFIX@Intrnl:@OUTPUT_NAME@:FineDelay:Raw")
+}
+
+record(longout, "@PV_PREFIX@Intrnl:@OUTPUT_NAME@:FineDelay:Raw") {
+  field(DTYP, "MRF Fine Delay Shift Register")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0090)@[@OUTPUT_FD_ADDR_BIT_SHIFT@] @ADDR(0x0098)@[@OUTPUT_FD_ADDR_BIT_SHIFT@]")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:@OUTPUT_NAME@:FineDelay:Calc NPP")
+}
+

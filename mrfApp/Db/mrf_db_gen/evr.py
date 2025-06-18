@@ -178,6 +178,7 @@ class EVR(MRFCommon):
         output_address: int,
         output_config: "OutputConfig",
         *,
+        output_fine_delay_available_macro: typing.Optional[str] = None,
         output_installed_macro: typing.Optional[str] = None,
         output_installed_description: typing.Optional[str] = None,
     ) -> None:
@@ -270,6 +271,30 @@ class EVR(MRFCommon):
                 output_gtx_block_description,
                 output_config.gtx_block_index,
             )
+        # If the output allows setting a fine delay through the GPIO pins, we
+        # have to generate the respective code.
+        if output_config.fine_delay_index is not None:
+            if output_config.fine_delay_available_macro is not None:
+                output_fine_delay_available_macro = (
+                    output_config.fine_delay_available_macro
+                )
+            elif output_fine_delay_available_macro is None:
+                raise ValueError(
+                    "If fine_delay_index is set, fine_delay_available_macro "
+                    "must also be set."
+                )
+            if output_config.fine_delay_description is None:
+                output_fine_delay_description = output_description
+            else:
+                output_fine_delay_description = (
+                    output_config.fine_delay_description
+                )
+            self._output_fine_delay(
+                output_name,
+                output_fine_delay_description,
+                output_fine_delay_available_macro,
+                output_config.fine_delay_index,
+            )
 
     def _output_cml_logic(
         self,
@@ -322,6 +347,45 @@ class EVR(MRFCommon):
             },
         )
         self.add_to_write_all_pvs_list(f"Intrnl:WriteAll:{output_name}:CML")
+
+    def _output_fine_delay(
+        self,
+        output_name: str,
+        output_description: str,
+        fine_delay_available_macro: str,
+        fine_delay_index: int,
+    ) -> None:
+        # There cannot be more than 16 fine delays. This limits is due to the
+        # fact that the GPIO registers only have 32 bits, and each shift
+        # register (controlling the fine delay of two outputs each) needs GPIO
+        # lines and thus four bits.
+        if fine_delay_index > 15:
+            raise ValueError(f"Invalid fine-delay index: {fine_delay_index}")
+        # The shift register controlling the first two fine delays is reached
+        # through the first four GPIO lines, the shift register controlling the
+        # next two fine delays through the next four GPIO lines, etc.
+        #
+        # Therefore, we have to shift the address of the GPIO registers by four
+        # bits for each increment of two in the fine delay index. Each shift
+        # register controls the fine delay ouf two outputs, so the shift for an
+        # odd index is the same as for the preceding even index.
+        output_fd_addr_bit_shift = 4 * (fine_delay_index // 2)
+        # If the fine-delay index is even, we do not have to shift the
+        # calculated value before writing it to the record. If it is odd, we
+        # have to let-shift the value by 16 bits to affect the second output
+        # on the shift register instead of the first one.
+        output_fd_val_bit_shift = "<<16" if fine_delay_index % 2 else ""
+        self.write_template(
+            "evr-template-output-fine-delay",
+            variables={
+                "OUTPUT_DESCRIPTION": output_description,
+                "OUTPUT_FD_ADDR_BIT_SHIFT": str(output_fd_addr_bit_shift),
+                "OUTPUT_FD_AVAILABLE_MACRO": fine_delay_available_macro,
+                "OUTPUT_FD_VAL_BIT_SHIFT": output_fd_val_bit_shift,
+                "OUTPUT_NAME": output_name,
+            },
+        )
+        self.add_to_write_all_pvs_list(f"{output_name}:FineDelay")
 
     def _output_gtx_logic(  # pylint: disable=too-many-locals
         self,
@@ -544,6 +608,11 @@ class EVR(MRFCommon):
             f"Universal output {output_number}",
             univ_output_address,
             output_config,
+            output_fine_delay_available_macro=(
+                f"UNIV_OUT_{univ_out_module_first_output_num}_"
+                f"{univ_out_module_second_output_num}_FD_AVAILABLE="
+                "$(UNIV_OUT_FD_AVAILABLE=0)"
+            ),
             output_installed_macro=(
                 f"UNIV_OUT_{univ_out_module_first_output_num}_"
                 f"{univ_out_module_second_output_num}_INSTALLED="
@@ -606,27 +675,11 @@ class EVR(MRFCommon):
             and self._config.device.series == "230"
         ):
             self.write_template("evr-vme-230-common")
-            self.add_to_write_all_pvs_list("UnivOut0:FineDelay")
-            self.add_to_write_all_pvs_list("UnivOut1:FineDelay")
-            self.add_to_write_all_pvs_list("UnivOut2:FineDelay")
-            self.add_to_write_all_pvs_list("UnivOut3:FineDelay")
 
         # Generate code specific to the mTCA-EVR-300.
         if self._config.device == Device.MTCA_EVR_300:
             self.write_template("evr-mtca-300")
             self.add_to_write_all_pvs_list("IFB300:Enabled")
-
-        # Generate code specific to the VME-EVR-300.
-        if self._config.device == Device.VME_EVR_300:
-            self.write_template("evr-vme-300")
-            self.add_to_write_all_pvs_list("UnivOut0:FineDelay")
-            self.add_to_write_all_pvs_list("UnivOut1:FineDelay")
-            self.add_to_write_all_pvs_list("UnivOut2:FineDelay")
-            self.add_to_write_all_pvs_list("UnivOut3:FineDelay")
-            self.add_to_write_all_pvs_list("UnivOut4:FineDelay")
-            self.add_to_write_all_pvs_list("UnivOut5:FineDelay")
-            self.add_to_write_all_pvs_list("UnivOut6:FineDelay")
-            self.add_to_write_all_pvs_list("UnivOut7:FineDelay")
 
         # Prescalers.
         for prescaler_index, prescaler_config in enumerate(
@@ -792,6 +845,32 @@ class OutputConfig:  # pylint: disable=too-many-instance-attributes
     # outputs.
     description: typing.Optional[str] = None
 
+    # Macro expression uses as the value of the “fine-delay available” record.
+    #
+    # Only used when `fine_delay_index` is nont ``None``.
+    fine_delay_available_macro: typing.Optional[str] = None
+
+    # Description for the output in the fine-delay records.
+    #
+    # This is only used if `fine_delay_index` is not ``None``.
+    #
+    # If not specified, the regular ``description`` is used.
+    fine_delay_description: typing.Optional[str] = None
+
+    # Index of the GPIO logic for setting the fine delay.
+    #
+    # A value of ``0`` means that the first four GPIO pins are connected to the
+    # shift register for this output and that it is the first output (A) on
+    # that shift register. A value of ``1`` means that the same GPIO pins and
+    # thus shift register is used, but that it is the second output (B) on that
+    # shift register. A value of ``2`` means that the next four GPIO pins are
+    # connected to the shift register and that it is the first output (A) on
+    # that shift register, etc.
+    #
+    # A value of ``None`` means that the output does not support setting a fine
+    # delay through the GPIO pins.
+    fine_delay_index: typing.Optional[int] = None
+
     # Description for the output in the GTX logic.
     #
     # This is only used if `gtx_block_index` is not ``None``.
@@ -934,7 +1013,12 @@ _EVR_CONFIGS = {
             [_PULSE_GENERATOR_32_8_16] * 4 + [_PULSE_GENERATOR_32_0_16] * 12
         ),
         transition_board_outputs=([_OUTPUT_DEFAULT] * 16),
-        universal_outputs=([_OUTPUT_DEFAULT] * 4),
+        universal_outputs=[
+            OutputConfig(fine_delay_index=0),
+            OutputConfig(fine_delay_index=1),
+            OutputConfig(fine_delay_index=2),
+            OutputConfig(fine_delay_index=3),
+        ],
         use_mmap=False,
     ),
     Device.VME_EVR_230RF: EVRConfig(
@@ -963,7 +1047,12 @@ _EVR_CONFIGS = {
             [_PULSE_GENERATOR_32_8_16] * 4 + [_PULSE_GENERATOR_32_0_16] * 12
         ),
         transition_board_outputs=([_OUTPUT_DEFAULT] * 16),
-        universal_outputs=([_OUTPUT_DEFAULT] * 4),
+        universal_outputs=[
+            OutputConfig(fine_delay_index=0),
+            OutputConfig(fine_delay_index=1),
+            OutputConfig(fine_delay_index=2),
+            OutputConfig(fine_delay_index=3),
+        ],
         use_mmap=False,
     ),
     Device.VME_EVR_300: EVRConfig(
@@ -991,13 +1080,22 @@ _EVR_CONFIGS = {
         universal_outputs=typing.cast(
             typing.List[typing.Optional[OutputConfig]],
             (
-                [_OUTPUT_DEFAULT] * 6
+                [
+                    OutputConfig(fine_delay_index=0),
+                    OutputConfig(fine_delay_index=1),
+                    OutputConfig(fine_delay_index=2),
+                    OutputConfig(fine_delay_index=3),
+                    OutputConfig(fine_delay_index=4),
+                    OutputConfig(fine_delay_index=5),
+                ]
                 + [
                     OutputConfig(
+                        fine_delay_index=6,
                         gtx_block_description="Univ. output 6",
                         gtx_block_index=0,
                     ),
                     OutputConfig(
+                        fine_delay_index=7,
                         gtx_block_description="Univ. output 7",
                         gtx_block_index=1,
                     ),
