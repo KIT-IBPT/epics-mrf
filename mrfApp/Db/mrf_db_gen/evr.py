@@ -16,6 +16,8 @@ from .constants import (
     FormFactor,
 )
 
+from .utils import get_optional_or_default
+
 
 class EVR(MRFCommon):
     """
@@ -182,14 +184,12 @@ class EVR(MRFCommon):
         output_installed_macro: typing.Optional[str] = None,
         output_installed_description: typing.Optional[str] = None,
     ) -> None:
-        if output_config.name is None:
-            output_name = default_output_name
-        else:
-            output_name = output_config.name
-        if output_config.description is None:
-            output_description = default_output_description
-        else:
-            output_description = output_config.description
+        output_name = get_optional_or_default(
+            output_config.name, default_output_name
+        )
+        output_description = get_optional_or_default(
+            output_config.description, default_output_description
+        )
         template_name = (
             "evr-template-output-gen2"
             if self._config.feature_level == FeatureLevel.GEN2
@@ -246,12 +246,9 @@ class EVR(MRFCommon):
         # If the output supports CML logic, we have to generate the respective
         # code.
         if output_config.cml_block_index is not None:
-            if output_config.cml_block_description is None:
-                output_cml_block_description = output_description
-            else:
-                output_cml_block_description = (
-                    output_config.cml_block_description
-                )
+            output_cml_block_description = get_optional_or_default(
+                output_config.cml_block_description, output_description
+            )
             self._output_cml_logic(
                 output_name,
                 output_cml_block_description,
@@ -260,12 +257,9 @@ class EVR(MRFCommon):
         # If the output supports GTX logic, we have to generate the respective
         # code.
         if output_config.gtx_block_index is not None:
-            if output_config.gtx_block_description is None:
-                output_gtx_block_description = output_description
-            else:
-                output_gtx_block_description = (
-                    output_config.gtx_block_description
-                )
+            output_gtx_block_description = get_optional_or_default(
+                output_config.gtx_block_description, output_description
+            )
             self._output_gtx_logic(
                 output_name,
                 output_gtx_block_description,
@@ -283,12 +277,9 @@ class EVR(MRFCommon):
                     "If fine_delay_index is set, fine_delay_available_macro "
                     "must also be set."
                 )
-            if output_config.fine_delay_description is None:
-                output_fine_delay_description = output_description
-            else:
-                output_fine_delay_description = (
-                    output_config.fine_delay_description
-                )
+            output_fine_delay_description = get_optional_or_default(
+                output_config.fine_delay_description, output_description
+            )
             self._output_fine_delay(
                 output_name,
                 output_fine_delay_description,
