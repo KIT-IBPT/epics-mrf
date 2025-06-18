@@ -1511,6 +1511,24 @@ operation:
 </tr>
 </table>
 
+For universal outputs that have GPIO pins for setting a fine delay in the
+output module, there are a number of additional PVs that tell whether the fine
+delay is available and allow setting the fine delay:
+
+<table>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>Out:FineDelay</td>
+<td>Fine delay in picoseconds. This delay is applied inside the universal output module on top of any delay that might already be applied in the logic driving the output. Due to technical limitations of the hardware, this setting cannot be read from the hardware, so on IOC start it is always initialized to zero, even if the actual value used in the hardware differs.</td>
+</tr>
+<tr>
+<td>Out:FineDelayAvailable</td>
+<td>Fine-delay available flag (read only). This flag is only available for universal outputs that have the GPIO pins which are necessary to support setting a fine delay. The flag is 1 if the respective universal output module supports setting a fine delay and 0 if it does not support such a delay. Please note that this information is not read from the hardware, but specified in the IOC startup configuration.</td>
+</tr>
+</table>
 
 ### Pulse generators
 
