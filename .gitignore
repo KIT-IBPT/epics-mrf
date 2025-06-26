@@ -14,3 +14,4 @@
 /mrfApp/mrfEpicsUdpIpSrc/O.*
 /mrfApp/mrfMmapSrc/O.*
 /mrfApp/mrfUdpIpSrc/O.*
+/simulator/mrfsim/__pycache__
