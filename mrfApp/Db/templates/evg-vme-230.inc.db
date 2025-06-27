@@ -1,0 +1,149 @@
+# Event clock control register.
+
+# The generic parts of this register are handled by the common file. The DCM
+# flags, however, might only exist on certain hardware revisions. The EVG manual
+# is not explicit regarding this question, but the EVR manual mentions these
+# flags not being available on some hardware (cPCI EVR), so it seems logical
+# that the same applies to the EVGs.
+# The manual does not explain the meaning of these flags either, but some can be
+# guessed by comparing with the names mentioned in the DCM section of the Xilinx
+# Virtex II Pro manual (available from
+# https://www.xilinx.com/support/documentation/user_guides/ug012.pdf).
+# The event clock register provides the following bits related to DCMs:
+# Bit 1:  EVDCM  RES
+# Bit 2:  EVDCM  SRES
+# Bit 3:  EVDCM  SRUN
+# Bit 4:  EVDCM  PSINC
+# Bit 5:  EVDCM  PSDEC
+# Bit 6:  RECDCM RES
+# Bit 7:  RECDCM PSINC
+# Bit 8:  RECDCM PSDEC
+# Bit 10: EVDCM  PSDONE
+# Bit 11: EVDCM  LOCKED
+# Bit 12: EVDCM  STOPPED
+# Bit 13: RECDCM PSDONE
+# Bit 14: RECDCM INITDONE
+# Bit 15: RECDCM RUN
+# It is assumed that the RECDCM refers to the clock recovered from the signal
+# received over the SFP connector and the EVDCM refers to the event clock.
+# For some of the bits there meaning or even whether they are inputs or outputs
+# is unclear. They are still provided "as-is" because they might be useful to
+# an advanced expert user.
+
+record(mbbiDirect, "@PV_PREFIX@Intrnl:EvClockStatus") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0050)@ uint32")
+  field(SCAN, "1 second")
+  field(FLNK, "@PV_PREFIX@EventClock:EvDCM:RESFlag")
+}
+
+record(bi, "@PV_PREFIX@EventClock:EvDCM:RESFlag") {
+  field(DESC, "Event DCM RES flag")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.B1 NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:EvDCM:SRESFlag")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:EvDCM:SRESFlag") {
+  field(DESC, "Event DCM SRES flag")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.B2 NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:EvDCM:SRUNFlag")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:EvDCM:SRUNFlag") {
+  field(DESC, "Event DCM SRUN flag")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.B3 NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:EvDCM:PSInc")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:EvDCM:PSInc") {
+  field(DESC, "Event DCM phase shift increment")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.B4 NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:EvDCM:PSDec")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:EvDCM:PSDec") {
+  field(DESC, "Event DCM phase shift decrement")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.B5 NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:RecDCM:RESFlag")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:RecDCM:RESFlag") {
+  field(DESC, "Recover DCM RES flag")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.B6 NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:RecDCM:PSInc")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:RecDCM:PSInc") {
+  field(DESC, "Recover DCM phase shift increment")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.B7 NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:RecDCM:PSDec")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:RecDCM:PSDec") {
+  field(DESC, "Reciver DCM phase shift decrement")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.B8 NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:EvDCM:PSDone")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:EvDCM:PSDone") {
+  field(DESC, "Event DCM phase shift done")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.BA NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:EvDCM:Locked")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:EvDCM:Locked") {
+  field(DESC, "Event DCM locked")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.BB NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:EvDCM:Stopped")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:EvDCM:Stopped") {
+  field(DESC, "Event DCM stopped")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.BC NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:RecDCM:PSDone")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:RecDCM:PSDone") {
+  field(DESC, "Recover DCM phase shift done")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.BD NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:RecDCM:InitDone")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:RecDCM:InitDone") {
+  field(DESC, "Recover DCM initialization done")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.BE NPP MS")
+  field(FLNK, "@PV_PREFIX@EventClock:RecDCM:RUNFlag")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}
+
+record(bi, "@PV_PREFIX@EventClock:RecDCM:RUNFlag") {
+  field(DESC, "Recover DCM RUN flag")
+  field(INP,  "@PV_PREFIX@Intrnl:EvClockStatus.BF NPP MS")
+  field(ZNAM, "Low")
+  field(ONAM, "High")
+}

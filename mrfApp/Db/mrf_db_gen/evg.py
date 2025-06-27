@@ -118,6 +118,15 @@ class EVG(MRFCommon):
         )
         self.add_to_write_all_pvs_list(f"Intrnl:WriteAll:{input_name}")
 
+    def _interrupts_mmap(self) -> None:
+        raise NotImplementedError(
+            "EVG devices that use memory-mapped I/O are not (yet) supported."
+        )
+
+    def _interrupts_udp_ip(self) -> None:
+        self.write_template("evg-interrupts-udp-ip")
+        self.add_to_write_all_pvs_list("Intrnl:WriteAll:IRQ")
+
     def _multiplexed_counter(self, mxc_number: int) -> None:
         mxc_addr = 0x0180 + 8 * mxc_number
         mxc_prescaler_addr = 0x0184 + 8 * mxc_number
@@ -225,10 +234,6 @@ class EVG(MRFCommon):
             ),
         )
 
-    def _vme(self) -> None:
-        self.write_template("evg-vme")
-        self.add_to_write_all_pvs_list("Intrnl:WriteAll:VME")
-
     def generate(self) -> None:
         """
         Generate all code needed for the specified device.
@@ -246,9 +251,20 @@ class EVG(MRFCommon):
         # devices.
         self._common()
 
+        # Interrupt handling. Which one we need depends on whether the device
+        # is controlled through memory-mapped I/O or through the UDP/IP.
+        if self._config.use_mmap:
+            self._interrupts_mmap()
+        else:
+            self._interrupts_udp_ip()
+
         # Multiplexed counters.
         for index in range(0, 8):
             self._multiplexed_counter(index)
+
+        # Front-panel outputs.
+        for index in range(0, self._config.front_panel_outputs):
+            self._front_panel_output(index)
 
         # Universal outputs.
         for index in range(0, self._config.universal_outputs):
@@ -262,17 +278,16 @@ class EVG(MRFCommon):
         for index in range(0, self._config.universal_inputs):
             self._universal_input(index)
 
-        # There also are a couple of records that are specific to the VME form
-        # factor.
-        if self._config.device.form_factor == FormFactor.VME:
-            self._vme()
-            # TODO The number of front-panel outputs and transition board
-            # inputs depends on the form factor, but this code should probably
-            # still be placed somewhere else.
-            for index in range(0, self._config.front_panel_outputs):
-                self._front_panel_output(index)
-            for index in range(0, 16):
-                self._transition_board_input(index)
+        # Transition-board inputs.
+        for index in range(0, self._config.transition_board_inputs):
+            self._transition_board_input(index)
+
+        # Generate code specific to the VME-EVG-230.
+        if (
+            self._config.device.form_factor == FormFactor.VME
+            and self._config.device.series == "230"
+        ):
+            self.write_template("evg-vme-230")
 
         # SFP module (there only is a single one, so we do not include a
         # number).
@@ -294,25 +309,37 @@ class EVGConfig:
     # Device to which this configuration applies.
     device: Device
 
+    # Tells whether the memory-mapped interface to the device is used.
+    #
+    # This is important because interrupt handling is implemented differently
+    # for such devices when compared to devices that are controlled through
+    # UDP/IP.
+    use_mmap: bool
+
     # Number of front-panel inputs.
-    front_panel_inputs: int
+    front_panel_inputs: int = 0
 
     # Number of front-panel outputs.
-    front_panel_outputs: int
+    front_panel_outputs: int = 0
+
+    # Number of transition-board inputs.
+    transition_board_inputs: int = 0
 
     # Number of universal inputs.
-    universal_inputs: int
+    universal_inputs: int = 0
 
     # Number of universal outputs.
-    universal_outputs: int
+    universal_outputs: int = 0
 
 
 # Configuration for specific EVG devices.
 _EVG_CONFIGS = {
     Device.VME_EVG_230: EVGConfig(
         device=Device.VME_EVG_230,
+        use_mmap=False,
         front_panel_inputs=2,
         front_panel_outputs=4,
+        transition_board_inputs=16,
         universal_inputs=4,
         universal_outputs=4,
     )
