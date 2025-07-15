@@ -1,6 +1,6 @@
 /*
- * Copyright 2016-2025 aquenos GmbH.
- * Copyright 2016-2025 Karlsruhe Institute of Technology.
+ * Copyright 2025 aquenos GmbH.
+ * Copyright 2025 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -27,33 +27,20 @@
  * of the GNU LGPL version 3 or newer.
  */
 
+#ifndef ANKA_MRF_EPICS_IOCSH_DUMP_CACHE_H
+#define ANKA_MRF_EPICS_IOCSH_DUMP_CACHE_H
 
-#include <epicsExport.h>
-
-#include "mrfIocshDumpCache.h"
-#include "mrfIocshMapInterruptToEvent.h"
-#include "mrfIocshReadUInt16.h"
-#include "mrfIocshReadUInt32.h"
-#include "mrfIocshWriteUInt16.h"
-#include "mrfIocshWriteUInt32.h"
-
-using namespace anka::mrf;
-using namespace anka::mrf::epics;
-
-extern "C" {
+namespace anka {
+namespace mrf {
+namespace epics {
 
 /**
- * Registrar that registers the iocsh commands.
+ * Registers the mrfDumpCache IOC shell function.
  */
-static void mrfRegistrarCommon() {
-  registerIocshMrfDumpCache();
-  registerIocshMrfMapInterruptToEvent();
-  registerIocshMrfReadUInt16();
-  registerIocshMrfReadUInt32();
-  registerIocshMrfWriteUInt16();
-  registerIocshMrfWriteUInt32();
-}
+void registerIocshMrfDumpCache();
 
-epicsExportRegistrar(mrfRegistrarCommon);
+} // namespace epics
+} // namespace mrf
+} // namespace anka
 
-} // extern "C"
+#endif // ANKA_MRF_EPICS_IOCSH_DUMP_CACHE_H
