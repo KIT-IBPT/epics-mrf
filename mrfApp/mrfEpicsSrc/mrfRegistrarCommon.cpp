@@ -1,6 +1,6 @@
 /*
- * Copyright 2016-2021 aquenos GmbH.
- * Copyright 2016-2021 Karlsruhe Institute of Technology.
+ * Copyright 2016-2025 aquenos GmbH.
+ * Copyright 2016-2025 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -46,6 +46,10 @@
 
 #include "MrfDeviceRegistry.h"
 #include "mrfEpicsError.h"
+#include "mrfIocshReadUInt16.h"
+#include "mrfIocshReadUInt32.h"
+#include "mrfIocshWriteUInt16.h"
+#include "mrfIocshWriteUInt32.h"
 
 using namespace anka::mrf;
 using namespace anka::mrf::epics;
@@ -304,6 +308,10 @@ static void mrfRegistrarCommon() {
   ::iocshRegister(&iocshMrfDumpCacheFuncDef, iocshMrfDumpCacheFunc);
   ::iocshRegister(&iocshMrfMapInterruptToEventFuncDef,
       iocshMrfMapInterruptToEventFunc);
+  registerIocshMrfReadUInt16();
+  registerIocshMrfReadUInt32();
+  registerIocshMrfWriteUInt16();
+  registerIocshMrfWriteUInt32();
 }
 
 epicsExportRegistrar(mrfRegistrarCommon);
