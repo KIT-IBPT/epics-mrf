@@ -37,6 +37,10 @@ mrfEpics_SRCS += MrfWaveformInRecord.cpp
 mrfEpics_SRCS += MrfWaveformOutRecord.cpp
 mrfEpics_SRCS += mrfArrayASubRoutines.c
 mrfEpics_SRCS += mrfEpicsError.cpp
+mrfEpics_SRCS += mrfIocshReadUInt16.cpp
+mrfEpics_SRCS += mrfIocshReadUInt32.cpp
+mrfEpics_SRCS += mrfIocshWriteUInt16.cpp
+mrfEpics_SRCS += mrfIocshWriteUInt32.cpp
 mrfEpics_SRCS += mrfRecordDefinitions.cpp
 mrfEpics_SRCS += mrfRegistrarCommon.cpp
 

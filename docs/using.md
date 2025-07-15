@@ -725,3 +725,67 @@ When opening this panel, a couple of macros have to be set:
 <td>PV prefix used for the Autosave PVs. This is the prefix that is specified with the <code>CONFIG_PV_PREFIX</code> macro when loading the <code>mrf-autosave-menu.db</code> file in the IOC startup file.</td>
 </tr>
 </table>
+
+
+Auxilliary IOC shell functions
+------------------------------
+
+There are a couple of IOC shell functions that are not needed during regular
+operation but can be useful for development work or when debugging.
+
+### `mrfDumpCache`
+
+The `mrfDumpCache` function can be used to dump the contents of the memory
+cache for a device. The memory cache is only filled during initialization, so
+this function is mainly useful to developers who want to see which memory
+sections are read as part of the initialization routine.
+
+Example:
+
+```
+mrfDumpCache("EVR01")
+```
+
+### `mrfReadUInt16`
+
+The `mrfReadUInt16` function can be used to directly read the value of a 16-bit
+unsigned integer register in a device.
+
+Example:
+
+```
+mrfReadUInt16("EVR01", 0x400)
+```
+
+### `mrfReadUInt32`
+
+The `mrfReadUInt32` function can be used to directly read the value of a 32-bit
+unsigned integer register in a device.
+
+Example:
+
+```
+mrfReadUInt32("EVR01", 0x100)
+```
+
+### `mrfWriteUInt16`
+
+The `mrfWriteUInt16` function can be used to directly set the value of a 16-bit
+unsigned integer register in a device.
+
+Example:
+
+```
+mrfWriteUInt16("EVR01", 0x400, 62)
+```
+
+### `mrfWriteUInt32`
+
+The `mrfWriteUInt32` function can be used to directly set the value of a 32-bit
+unsigned integer register in a device.
+
+Example:
+
+```
+mrfWriteUInt32("EVR01", 0x100, 500)
+```
