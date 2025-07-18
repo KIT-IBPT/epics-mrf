@@ -28,10 +28,10 @@
  */
 
 #include <cinttypes>
-#include <stdexcept>
-#include <cstdio>
 #include <cstring>
+#include <stdexcept>
 
+#include <epicsStdio.h>
 #include <epicsVersion.h>
 #include <iocsh.h>
 
@@ -68,7 +68,7 @@ static int mrfIocshFuncInternal(const iocshArgBuf *args) noexcept {
       return 1;
     }
     std::uint16_t value = device->readUInt16(address);
-    std::printf(
+    ::epicsStdoutPrintf(
       "0x%08" PRIx32 ": 0x%04" PRIx16 " (decimal value: %" PRIu16 ")\n",
       address, value, value);
   } catch (std::exception &e) {

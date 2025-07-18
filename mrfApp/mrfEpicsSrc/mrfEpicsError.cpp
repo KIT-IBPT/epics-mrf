@@ -1,6 +1,6 @@
 /*
- * Copyright 2015 aquenos GmbH.
- * Copyright 2015 Karlsruhe Institute of Technology.
+ * Copyright 2015-2025 aquenos GmbH.
+ * Copyright 2015-2025 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -30,13 +30,19 @@
 #include <cstdarg>
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 extern "C" {
+#include <stdio.h>
 #include <unistd.h>
-}
+} // extern "C"
 
+#include <epicsStdio.h>
 #include <epicsThread.h>
 #include <epicsTime.h>
+#include <epicsVersion.h>
+#include <errlog.h>
 
 #include "mrfEpicsError.h"
 
@@ -44,27 +50,195 @@ namespace anka {
 namespace mrf {
 namespace epics {
 
-static void errorPrintInternal(const char *format, const char *timeString,
-    const char *threadString, std::va_list varArgs) noexcept {
-  bool useAnsiSequences = ::isatty(STDERR_FILENO);
-  if (useAnsiSequences) {
+namespace {
+
+char *bufferOffset(char *buffer, std::size_t offset) noexcept {
+  return buffer ? (buffer + offset) : nullptr;
+}
+
+std::size_t bufferRemaining(
+    std::size_t bufferSize, std::size_t offset) noexcept {
+  return (bufferSize && bufferSize > offset) ? (bufferSize - offset) : 0;
+}
+
+bool prepareErrorMessage(
+    char *buffer,
+    std::size_t bufferSize,
+    std::size_t *bytesWritten,
+    const char *format,
+    const char *timeString,
+    const char *threadString,
+    bool useAnsiEscapes,
+    std::va_list varArgs) noexcept {
+  std::size_t offset = 0;
+  int result;
+  if (useAnsiEscapes) {
     // Set format to bold, red.
-    std::fprintf(stderr, "\x1b[1;31m");
+    result = std::snprintf(
+      bufferOffset(buffer, offset),
+      bufferRemaining(bufferSize, offset),
+      "\x1b[1;31m");
+    if (result < 0) {
+      return false;
+    }
+    offset += result;
   }
   if (timeString) {
-    std::fprintf(stderr, "%s ", timeString);
+    result = std::snprintf(
+      bufferOffset(buffer, offset),
+      bufferRemaining(bufferSize, offset),
+      "%s ",
+      timeString);
+    if (result < 0) {
+      return false;
+    }
+    offset += result;
   }
   if (threadString) {
-    std::fprintf(stderr, "%s ", threadString);
+    result = std::snprintf(
+      bufferOffset(buffer, offset),
+      bufferRemaining(bufferSize, offset),
+      "%s ",
+      threadString);
+    if (result < 0) {
+      return false;
+    }
+    offset += result;
   }
-  std::vfprintf(stderr, format, varArgs);
-  if (useAnsiSequences) {
-    // Reset format
-    std::fprintf(stderr, "\x1b[0m");
+  // Typically, this function is called multiple times (at least twice), so we
+  // cannot consume the variable arguments and have to make a copy instead.
+  std::va_list varArgsCopy;
+  va_copy(varArgsCopy, varArgs);
+  result = std::vsnprintf(
+    bufferOffset(buffer, offset),
+    bufferRemaining(bufferSize, offset),
+    format,
+    varArgsCopy);
+  va_end(varArgsCopy);
+  if (result < 0) {
+    return false;
   }
-  std::fprintf(stderr, "\n");
-  std::fflush(stderr);
+  offset += result;
+  if (useAnsiEscapes) {
+    // Reset format.
+    result = std::snprintf(
+      bufferOffset(buffer, offset),
+      bufferRemaining(bufferSize, offset),
+      "\x1b[0m");
+    if (result < 0) {
+      return false;
+    }
+    offset += result;
+  }
+  result = std::snprintf(
+    bufferOffset(buffer, offset),
+    bufferRemaining(bufferSize, offset),
+    "\n");
+  if (result < 0) {
+    return false;
+  }
+  offset += result;
+  if (bytesWritten) {
+    *bytesWritten = offset;
+  }
+  return true;
 }
+
+void errorPrintInternal(const char *format, const char *timeString,
+    const char *threadString, std::va_list varArgs) noexcept {
+  // In order to avoid the message being interlaced with the message written by
+  // another thread, we first prepare a buffer with the whole message and then
+  // write it in a single go. This should significantly reduce the risk of
+  // different messages getting mingled.
+  //
+  // First, we have to determine how long the whole message is going to be. In
+  // order to not make the code more complex than it needs to be, we always
+  // reserve the size that is needed when including the ANSI escape sequences,
+  // even if we are not going to use them in the end.
+  std::size_t bufferSize;
+  if (!prepareErrorMessage(
+      nullptr,
+      0,
+      &bufferSize,
+      format,
+      timeString,
+      threadString,
+      true,
+      varArgs)) {
+    // This is very unlikely, but we still have to handle it.
+    ::errlogPrintf(
+      "Error: Could not determine buffer size for error message.\n");
+    return;
+  }
+  // We also want to reserve space for the terminating null byte.
+  bufferSize += 1;
+  // Now, we can allocate a buffer.
+  char *buffer = static_cast<char *>(std::malloc(bufferSize));
+  if (!buffer) {
+    // It is very unlikely that the allocation fails, but we still have to
+    // handle such a case. We could use a more elegant alternative like
+    // reverting to writing the message without a dynamically allocated buffer,
+    // risking that it might get interlaced with another message. However, an
+    // allocation failure looks sufficiently unlikly that it is simply not
+    // worth the added complexity in the code.
+    ::errlogPrintf("Error: Could not allocate buffer for error message.\n");
+    return;
+  }
+  // Starting with EPICS Base 7.0.7, errlogPrintf automatically removes ANSI
+  // sequences when not writing to a terminal, so we can simply use that
+  // function. For earlier versions, we handle output to stderr ourselves (only
+  // using ANSI escapes when it is a terminal) and pass the message without
+  // escapes to errlogPrintfNoConsole.
+#if EPICS_VERSION_INT >= VERSION_INT(7,0,7,0)
+  if (prepareErrorMessage(
+      buffer,
+      bufferSize,
+      nullptr,
+      format,
+      timeString,
+      threadString,
+      true,
+      varArgs)) {
+    ::errlogPrintf("%s", buffer);
+  } else {
+    ::errlogPrintf("Error: Could not prepare error message.\n");
+  }
+#else // EPICS_VERSION_INT >= VERSION_INT(7,0,7,0)
+std::FILE *output = ::epicsGetStderr();
+bool useAnsiSequences = ::isatty(::fileno(output));
+  if (prepareErrorMessage(
+      buffer,
+      bufferSize,
+      nullptr,
+      format,
+      timeString,
+      threadString,
+      useAnsiSequences,
+      varArgs)) {
+    std::fprintf(output, "%s", buffer);
+    std::fflush(output);
+    // We also write the message to the errlog, but without again writing it to
+    // the console and omitting the ANSI escape sequences.
+    if (!useAnsiSequences || prepareErrorMessage(
+        buffer,
+        bufferSize,
+        nullptr,
+        format,
+        timeString,
+        threadString,
+        false,
+        varArgs)) {
+      ::errlogPrintfNoConsole("%s", buffer);
+    }
+  } else {
+    ::errlogPrintf("Error: Could not prepare error message.\n");
+  }
+#endif // EPICS_VERSION_INT >= VERSION_INT(7,0,7,0)
+  // Free the dynamically allocated buffer.
+  std::free(buffer);
+}
+
+} // anonymous namespace
 
 void errorPrintf(const char *format, ...) noexcept {
   std::va_list varArgs;
