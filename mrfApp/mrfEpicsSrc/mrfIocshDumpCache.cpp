@@ -28,9 +28,9 @@
  */
 
 #include <cinttypes>
-#include <cstdio>
 #include <cstring>
 
+#include <epicsStdio.h>
 #include <epicsVersion.h>
 #include <iocsh.h>
 
@@ -81,16 +81,16 @@ static int iocshMrfDumpCacheFuncInternal(const iocshArgBuf *args) noexcept {
       errorPrintf("Could not find cache for device with ID \"%s\".", deviceId);
       return 1;
     }
-    std::printf("uint16 registers:\n\n");
+    ::epicsStdoutPrintf("uint16 registers:\n\n");
     for (auto &addressAndValue : cache->getCacheUInt16()) {
-      std::printf(
+      ::epicsStdoutPrintf(
         "0x%08" PRIx32 ": 0x%04" PRIx16 "\n",
         addressAndValue.first,
         addressAndValue.second);
     }
-    std::printf("\n\nuint32 registers:\n\n");
+    ::epicsStdoutPrintf("\n\nuint32 registers:\n\n");
     for (auto &addressAndValue : cache->getCacheUInt32()) {
-      std::printf(
+      ::epicsStdoutPrintf(
         "0x%08" PRIx32 ": 0x%08" PRIx32 "\n",
         addressAndValue.first,
         addressAndValue.second);
