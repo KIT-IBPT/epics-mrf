@@ -32,8 +32,12 @@ record(mbbo, "@PV_PREFIX@EventClock:ClkCleanerPLL:BandwidthSel") {
 # segment addresses instead of the segment numbers for identifying the segments.
 
 # TODO It seems like these registers has been moved from address 0x0780 to
-# 0x8f80. The old addresses were used in firmware 0201, the new one are used in
-# firmware 0207.
+#   0x8f80. The old addresses were used in firmware 0201, the new one are used
+#   in firmware 0207. Even though the registers are named in a slightly
+#   different way, it has been confirmed with the vendor that these indeed are
+#   the same registers and only the address has changed, so we have to update
+#   the address here and document that the device support is not compatible
+#   with firmware versions before 0207 when using a -300 series EVR.
 
 record(longout, "@PV_PREFIX@IRQ:DataBuffer:Enabled:000To1FF") {
   field(DESC, "Data buf. IRQ en. addrs. 0x000 to 0x1ff")

@@ -1,0 +1,10 @@
+# Write all settings to the hardware (the target record is generated)
+# dynamically.
+
+record(bo, "@PV_PREFIX@WriteAll") {
+  field(DESC, "Send all settings to the hardware")
+  field(FLNK, "@PV_PREFIX@Intrnl:WriteAll")
+  field(ZNAM, "Write all")
+  field(ONAM, "Write all")
+}
+

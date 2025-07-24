@@ -1,0 +1,64 @@
+# Control register (only parts specific to -300 series devices).
+
+# TODO Bit 23 BCGEN
+
+# TODO Bit 22 DCMST
+
+# Interrupt flag register (only parts specific to -300 series devices).
+
+# Interrupt enable register (only parts specific to -300 series devices).
+
+# TODO This has to go into the evg-interrupts-….db files, because all interrupt
+#   flags are read at once and the exact mechanism also depends on whether
+#   using the Linux kernel driver or the UDP/IP based protocol.
+
+# AC trigger control register (only parts specific to -300 series devices).
+
+# TODO Replace @PV_PREFIX@ACSync:SyncSource with an mbbo record. This also
+#   means that the existing record has to be removed from evg-common.inc.db and
+#   moved to evg-common-gen1.inc.db.
+
+# Data buffer control register (only parts specific to -300 series devices).
+
+# TODO @PV_PREFIX@DBus:SharedTX must be fixed to one, because the DC firmware
+#   does not support disabling data transmission. This means that the existing
+#   record has to be moved from evg-common.inc.db to evg-common-gen1.inc.db.
+
+# Segmented data buffer control register.
+
+# TODO Add records.
+
+# Timestamp event generator control register.
+
+# TODO Add records.
+
+# Timestamp event generator value register.
+
+# TODO Add records.
+
+# Clock control register (only parts specific to -300 series devices).
+
+# TODO Bit 31 PLLLOCK.
+
+# TODO Bits 30–28 BWSEL.
+
+# TODO Bit 23 PHTOGG
+
+# Sequence RAM 0 control register (only parts specific to -300 series devices).
+
+# TODO Bit 23 SQ0XTR
+
+# TODO Bit 22 SQ0XEN
+
+# TODO Bit 15–12 SQSWMASK (while present in the control register for both
+#   sequence RAMs, both refer to the same value, so it is sufficient to include
+#   the one in the sequence RAM 0 control register).
+
+# TODO Bit 8–11 SQSWENA (while present in the control register for both
+#   sequence RAMs, both refer to the same value, so it is sufficient to include
+#   the one in the sequence RAM 0 control register).
+
+# Segmented data buffer transmit memory.
+
+# TODO Add records (we have to check whether it even makes sense to expose this
+#   directly).

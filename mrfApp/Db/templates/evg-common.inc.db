@@ -675,6 +675,28 @@ record(mbbi, "@PV_PREFIX@Firmware:FormFactor") {
   field(THST, "cRIO")
   field(FRVL, "4")
   field(FRST, "cPCI 6U")
+  # Number five is not defined in the EVR manual, but it might in the future,
+  # so we rather keep it unused.
+  field(SXVL, "6")
+  field(SXST, "PXIe")
+  field(SVVL, "7")
+  field(SVST, "PCIe")
+  field(EIVL, "8")
+  field(EIST, "mTCA")
+}
+
+record(longin, "@PV_PREFIX@Firmware:SubreleaseID") {
+  field(DESC, "FW version subrelease ID")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x002c)@[23:16] uint32")
+  field(PINI, "YES")
+}
+
+record(longin, "@PV_PREFIX@Firmware:FirmwareID") {
+  field(DESC, "FW version firmware ID")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x002c)@[15:8] uint32")
+  field(PINI, "YES")
 }
 
 record(longin, "@PV_PREFIX@Firmware:Version") {

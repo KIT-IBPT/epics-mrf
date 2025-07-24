@@ -1,0 +1,363 @@
+# Internal general purpose records.
+
+record(bi, "@PV_PREFIX@Intrnl:True") {
+  field(PINI, "YES")
+  field(VAL,  "1")
+}
+
+record(bi, "@PV_PREFIX@Intrnl:False") {
+  field(PINI, "YES")
+  field(VAL,  "0")
+}
+
+# Status register.
+
+# On older releases of EPICS Base, the mbbiDirect record has fields for the
+# lower 16 bits only, so we cannot read the status directly into an mbbiDirect
+# records and use two mbbiDirect records that link to a longin record instead.
+record(longin, "@PV_PREFIX@Intrnl:Status") {
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0000)@ uint32")
+  field(FLNK, "@PV_PREFIX@Intrnl:Status:High")
+  field(SCAN, "1 second")
+}
+
+record(mbbiDirect, "@PV_PREFIX@Intrnl:Status:High") {
+  field(DTYP, "Raw Soft Channel")
+  field(INP,  "@PV_PREFIX@Intrnl:Status MSS")
+  field(SHFT, "16")
+  field(FLNK, "@PV_PREFIX@Intrnl:Status:Low")
+}
+
+record(mbbiDirect, "@PV_PREFIX@Intrnl:Status:Low") {
+  field(DTYP, "Raw Soft Channel")
+  field(INP,  "@PV_PREFIX@Intrnl:Status MSS")
+  field(SHFT, "0")
+  field(FLNK, "@PV_PREFIX@SFP1:Link")
+}
+
+record(bi, "@PV_PREFIX@SFP1:Link") {
+  field(DESC, "SFP link up?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:High.B0 MSS")
+  field(FLNK, "@PV_PREFIX@SFP2:Link")
+  field(ZNAM, "Link down")
+  field(ONAM, "Link up")
+}
+
+record(bi, "@PV_PREFIX@SFP2:Link") {
+  field(DESC, "SFP link up?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:High.B1 MSS")
+  field(FLNK, "@PV_PREFIX@SFP3:Link")
+  field(ZNAM, "Link down")
+  field(ONAM, "Link up")
+}
+
+record(bi, "@PV_PREFIX@SFP3:Link") {
+  field(DESC, "SFP link up?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:High.B2 MSS")
+  field(FLNK, "@PV_PREFIX@SFP3:Link")
+  field(ZNAM, "Link down")
+  field(ONAM, "Link up")
+}
+
+record(bi, "@PV_PREFIX@SFP4:Link") {
+  field(DESC, "SFP link up?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:High.B3 MSS")
+  field(FLNK, "@PV_PREFIX@SFP5:Link")
+  field(ZNAM, "Link down")
+  field(ONAM, "Link up")
+}
+
+record(bi, "@PV_PREFIX@SFP5:Link") {
+  field(DESC, "SFP link up?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:High.B4 MSS")
+  field(FLNK, "@PV_PREFIX@SFP6:Link")
+  field(ZNAM, "Link down")
+  field(ONAM, "Link up")
+}
+
+record(bi, "@PV_PREFIX@SFP6:Link") {
+  field(DESC, "SFP link up?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:High.B5 MSS")
+  field(FLNK, "@PV_PREFIX@SFP7:Link")
+  field(ZNAM, "Link down")
+  field(ONAM, "Link up")
+}
+
+record(bi, "@PV_PREFIX@SFP7:Link") {
+  field(DESC, "SFP link up?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:High.B6 MSS")
+  field(FLNK, "@PV_PREFIX@SFP8:Link")
+  field(ZNAM, "Link down")
+  field(ONAM, "Link up")
+}
+
+record(bi, "@PV_PREFIX@SFP8:Link") {
+  field(DESC, "SFP link up?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:High.B7 MSS")
+  field(FLNK, "@PV_PREFIX@SFP1:RXViolation")
+  field(ZNAM, "Link down")
+  field(ONAM, "Link up")
+}
+
+record(bi, "@PV_PREFIX@SFP1:RXViolation") {
+  field(DESC, "SFP receiver violation detected?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:Low.B0 MSS")
+  field(FLNK, "@PV_PREFIX@SFP2:RXViolation")
+  field(ZNAM, "OK")
+  field(ONAM, "RX violation")
+  field(OSV,  "MAJOR")
+}
+
+record(bi, "@PV_PREFIX@SFP2:RXViolation") {
+  field(DESC, "SFP receiver violation detected?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:Low.B1 MSS")
+  field(FLNK, "@PV_PREFIX@SFP3:RXViolation")
+  field(ZNAM, "OK")
+  field(ONAM, "RX violation")
+  field(OSV,  "MAJOR")
+}
+
+record(bi, "@PV_PREFIX@SFP3:RXViolation") {
+  field(DESC, "SFP receiver violation detected?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:Low.B2 MSS")
+  field(FLNK, "@PV_PREFIX@SFP4:RXViolation")
+  field(ZNAM, "OK")
+  field(ONAM, "RX violation")
+  field(OSV,  "MAJOR")
+}
+
+record(bi, "@PV_PREFIX@SFP4:RXViolation") {
+  field(DESC, "SFP receiver violation detected?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:Low.B3 MSS")
+  field(FLNK, "@PV_PREFIX@SFP5:RXViolation")
+  field(ZNAM, "OK")
+  field(ONAM, "RX violation")
+  field(OSV,  "MAJOR")
+}
+
+record(bi, "@PV_PREFIX@SFP5:RXViolation") {
+  field(DESC, "SFP receiver violation detected?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:Low.B4 MSS")
+  field(FLNK, "@PV_PREFIX@SFP6:RXViolation")
+  field(ZNAM, "OK")
+  field(ONAM, "RX violation")
+  field(OSV,  "MAJOR")
+}
+
+record(bi, "@PV_PREFIX@SFP6:RXViolation") {
+  field(DESC, "SFP receiver violation detected?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:Low.B5 MSS")
+  field(FLNK, "@PV_PREFIX@SFP7:RXViolation")
+  field(ZNAM, "OK")
+  field(ONAM, "RX violation")
+  field(OSV,  "MAJOR")
+}
+
+record(bi, "@PV_PREFIX@SFP7:RXViolation") {
+  field(DESC, "SFP receiver violation detected?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:Low.B6 MSS")
+  field(FLNK, "@PV_PREFIX@SFP8:RXViolation")
+  field(ZNAM, "OK")
+  field(ONAM, "RX violation")
+  field(OSV,  "MAJOR")
+}
+
+record(bi, "@PV_PREFIX@SFP8:RXViolation") {
+  field(DESC, "SFP receiver violation detected?")
+  field(INP,  "@PV_PREFIX@Intrnl:Status:Low.B7 MSS")
+  field(ZNAM, "OK")
+  field(ONAM, "RX violation")
+  field(OSV,  "MAJOR")
+}
+
+# Control register.
+
+record(bo, "@PV_PREFIX@SFP1:RXViolation:Reset") {
+  field(DESC, "Reset SFP RX violation flag")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[0] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@SFP2:RXViolation:Reset") {
+  field(DESC, "Reset SFP RX violation flag")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[1] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@SFP3:RXViolation:Reset") {
+  field(DESC, "Reset SFP RX violation flag")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[2] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@SFP4:RXViolation:Reset") {
+  field(DESC, "Reset SFP RX violation flag")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[3] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@SFP5:RXViolation:Reset") {
+  field(DESC, "Reset SFP RX violation flag")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[4] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@SFP6:RXViolation:Reset") {
+  field(DESC, "Reset SFP RX violation flag")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[5] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@SFP7:RXViolation:Reset") {
+  field(DESC, "Reset SFP RX violation flag")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[6] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+record(bo, "@PV_PREFIX@SFP8:RXViolation:Reset") {
+  field(DESC, "Reset SFP RX violation flag")
+  field(DTYP, "MRF Memory")
+  field(OUT,  "@$(DEVICE) @ADDR(0x0004)@[7] uint32 no_verify")
+  field(OMSL, "closed_loop")
+  field(DOL,  "@PV_PREFIX@Intrnl:True")
+  field(ZNAM, "Reset")
+  field(ONAM, "Reset")
+}
+
+# Upstream data compensation delay register.
+
+record(longin, "@PV_PREFIX@DelayComp:UpstreamDelay") {
+  field(DESC, "Upstream data compensation delay (r/o)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0010)@ uint32")
+  field(SCAN, "1 second")
+}
+
+# Receive FIFO data compensation delay register.
+
+record(longin, "@PV_PREFIX@DelayComp:FIFODelay") {
+  field(DESC, "FIFO data compensation delay (r/o)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0014)@ uint32")
+  field(SCAN, "1 second")
+}
+
+# FCT internal datapath data compensation delay register.
+
+record(longin, "@PV_PREFIX@DelayComp:InternalDelay") {
+  field(DESC, "Int. datapath data comp. delay (r/o)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0018)@ uint32")
+  field(SCAN, "1 second")
+}
+
+# Timing node topology ID register.
+
+record(longin, "@PV_PREFIX@DelayComp:TopologyID") {
+  field(DESC, "Timing node topology ID (r/o)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x002C)@ uint32")
+  field(SCAN, "10 second")
+}
+
+# Port 1 loop delay register.
+
+record(longin, "@PV_PREFIX@DelayComp:Port1Delay") {
+  field(DESC, "Port 1 delay (r/o)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0040)@ uint32")
+  field(SCAN, "1 second")
+}
+
+# Port 2 loop delay register.
+
+record(longin, "@PV_PREFIX@DelayComp:Port2Delay") {
+  field(DESC, "Port 2 delay (r/o)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0044)@ uint32")
+  field(SCAN, "1 second")
+}
+
+# Port 3 loop delay register.
+
+record(longin, "@PV_PREFIX@DelayComp:Port3Delay") {
+  field(DESC, "Port 3 delay (r/o)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0048)@ uint32")
+  field(SCAN, "1 second")
+}
+
+# Port 4 loop delay register.
+
+record(longin, "@PV_PREFIX@DelayComp:Port4Delay") {
+  field(DESC, "Port 4 delay (r/o)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x004c)@ uint32")
+  field(SCAN, "1 second")
+}
+
+# Port 5 loop delay register.
+
+record(longin, "@PV_PREFIX@DelayComp:Port5Delay") {
+  field(DESC, "Port 5 delay (r/o)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0050)@ uint32")
+  field(SCAN, "1 second")
+}
+
+# Port 6 loop delay register.
+
+record(longin, "@PV_PREFIX@DelayComp:Port6Delay") {
+  field(DESC, "Port 6 delay (r/o)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0054)@ uint32")
+  field(SCAN, "1 second")
+}
+
+# Port 7 loop delay register.
+
+record(longin, "@PV_PREFIX@DelayComp:Port7Delay") {
+  field(DESC, "Port 7 delay (r/o)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x0058)@ uint32")
+  field(SCAN, "1 second")
+}
+
+# Port 8 loop delay register.
+
+record(longin, "@PV_PREFIX@DelayComp:Port8Delay") {
+  field(DESC, "Port 8 delay (r/o)")
+  field(DTYP, "MRF Memory")
+  field(INP,  "@$(DEVICE) @ADDR(0x005c)@ uint32")
+  field(SCAN, "1 second")
+}
+

@@ -5,13 +5,14 @@ support.
 
 import typing
 
-from . import common, constants, evg, evr, template
+from . import common, constants, evg, evm, evr, template
 
 __all__ = [
     "common",
     "constants",
     "device_for_name",
     "evg",
+    "evm",
     "evr",
     "generate_file",
     "template",
@@ -58,6 +59,10 @@ def generate_file(
     """
     if device.device_class == constants.DeviceClass.EVG:
         evg.generate_file(
+            output_file, device, file_type, description_record_type
+        )
+    elif device.device_class == constants.DeviceClass.EVM:
+        evm.generate_file(
             output_file, device, file_type, description_record_type
         )
     elif device.device_class == constants.DeviceClass.EVR:

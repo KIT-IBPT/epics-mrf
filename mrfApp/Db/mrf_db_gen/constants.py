@@ -95,6 +95,9 @@ class Device(DeviceType, enum.Enum):
     # VME-EVG-230.
     VME_EVG_230 = FormFactor.VME, DeviceClass.EVG, "VME-EVG-230", "230"
 
+    # VME-EVM-300.
+    VME_EVM_300 = FormFactor.VME, DeviceClass.EVM, "VME-EVM-300", "300"
+
     # VME-EVR-230.
     VME_EVR_230 = FormFactor.VME, DeviceClass.EVR, "VME-EVR-230", "230"
 
