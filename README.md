@@ -37,7 +37,10 @@ Documentation
 
 - [Installing / compiling the device support](docs/installing.md)
 - [Using the device support](docs/using.md)
-- [Process variables for the EVG and EVR](docs/process_variables.md)
+- Process variables for the:
+  - [EVG](docs/process_variables_evg.md)
+  - [EVM](docs/process_variables_evm.md)
+  - [EVR](docs/process_variables_evr.md)
 - [Linux kernel module](support/mrf-pci-dkms-0.1.20250218/README.md)
 - [Extending the device support](docs/extending.md)
 - [Current limitations of the device support](docs/limitations.md)

@@ -3,6 +3,7 @@ Generate `.db` and `.req` files for EVGs.
 """
 
 import dataclasses
+import enum
 import typing
 
 from .common import MRFCommon
@@ -78,6 +79,8 @@ class EVG(MRFCommon):
     def _front_panel_input(self, input_number: int) -> None:
         address = 0x0500 + 4 * input_number
         self._input(f"FPIn{input_number}", f"FP input {input_number}", address)
+        # TODO For gen2 devices, each of the up to three front-panel inputs
+        # also has a phase monitoring register.
 
     def _front_panel_output(self, output_number: int) -> None:
         address = 0x0400 + 2 * output_number
@@ -96,6 +99,13 @@ class EVG(MRFCommon):
         input_installed_macro: str = "",
         input_installed_description: str = "",
     ) -> None:
+        # TODO For gen2 devices, also add a record for the respective input
+        #   state register. For performance reasonse, we might only want to
+        #   read the whole register once, and then extract the information for
+        #   individual inputs into the respective records.
+        # TODO For gen2 devices, the input mapping registers have additional
+        #   fields for mapping to a sequence event mask bit, a sequence event
+        #   enable bit, and for mapping to sequence external enable 0 and 1.
         self.write_template(
             "evg-template-input",
             variables={
@@ -152,6 +162,9 @@ class EVG(MRFCommon):
         output_installed_macro: str = "",
         output_installed_description: str = "",
     ) -> None:
+        # TODO For gen2 devices, there are lot of additional options that can
+        #   be selected for the output mapping, so we need a different record
+        #   template file. See Table 6 in section 2.12. (page 21) for details.
         self.write_template(
             "evg-template-output",
             variables={
@@ -239,7 +252,10 @@ class EVG(MRFCommon):
         Generate all code needed for the specified device.
         """
         # Check that a supported device has been passed.
-        if self._config.device.device_class != DeviceClass.EVG:
+        if self._config.device.device_class not in (
+            DeviceClass.EVG,
+            DeviceClass.EVM,
+        ):
             raise ValueError(
                 f"Cannot generate EVG code for {self._config.device}."
             )
@@ -289,6 +305,11 @@ class EVG(MRFCommon):
         ):
             self.write_template("evg-vme-230")
 
+        # Generate code that is common to all devices using a modern firmware.
+        if self._config.feature_level == FeatureLevel.GEN2:
+            self.write_template("evg-common-gen2")
+            # TODO Add to write-all list.
+
         # SFP module (there only is a single one, so we do not include a
         # number).
         self.sfp_module("SFP", 0x1200)
@@ -308,6 +329,9 @@ class EVGConfig:
 
     # Device to which this configuration applies.
     device: Device
+
+    # Feature level supported by the device.
+    feature_level: "FeatureLevel"
 
     # Tells whether the memory-mapped interface to the device is used.
     #
@@ -332,10 +356,33 @@ class EVGConfig:
     universal_outputs: int = 0
 
 
+class FeatureLevel(enum.Enum):
+    """
+    Feature level supported by a device.
+
+    This can depend both on the hardware revision and firmware version
+    installed on the hardware.
+    """
+
+    # Feature level that represents legacy firmware versions (00##) like they
+    # are used for the old *-EVR-230 devices and the cPCI-EVR-300,
+    # cPCI-EVRTG-300, and cRIO-EVR-300.
+    GEN1 = 1
+
+    # Feature level that represents modern firmware versions (02##) like they
+    # are used for most -300 series devices (e.g. mTCA-EVR-300, PCIe-EVR-300DC,
+    # and VME-EVR-300).
+    #
+    # Strictly speaking only firmware versions 0206 and newer are supported,
+    # due to some address layout changes.
+    GEN2 = 2
+
+
 # Configuration for specific EVG devices.
 _EVG_CONFIGS = {
     Device.VME_EVG_230: EVGConfig(
         device=Device.VME_EVG_230,
+        feature_level=FeatureLevel.GEN1,
         use_mmap=False,
         front_panel_inputs=2,
         front_panel_outputs=4,

@@ -619,7 +619,10 @@ class EVR(MRFCommon):
         Generate all code needed for the specified device.
         """
         # Check that a supported device has been passed.
-        if self._config.device.device_class != DeviceClass.EVR:
+        if self._config.device.device_class not in (
+            DeviceClass.EVM,
+            DeviceClass.EVR,
+        ):
             raise ValueError(
                 f"Cannot generate EVR code for {self._config.device}."
             )
@@ -718,9 +721,10 @@ class EVR(MRFCommon):
         for input_index in range(0, self._config.front_panel_inputs):
             self._front_panel_input(input_index)
 
-        # SFP module (there only is a single one, so we do not include a
+        # SFP module (there never is more than one, so we do not include a
         # number).
-        self.sfp_module("SFP", 0x8200)
+        if self._config.sfp_available:
+            self.sfp_module("SFP", 0x8200)
 
         # Generate record that links to all output records.
         self.fanout_for_write_all_pvs("Intrnl:WriteAll")
@@ -769,6 +773,9 @@ class EVRConfig:  # pylint: disable=too-many-instance-attributes
     front_panel_outputs: typing.List[typing.Optional["OutputConfig"]] = (
         dataclasses.field(default_factory=list)
     )
+
+    # Tells whether the SFP configuration / diagnostic memory is available.
+    sfp_available: bool = True
 
     # Configuration for transition-board inputs.
     transition_board_outputs: typing.List[typing.Optional["OutputConfig"]] = (

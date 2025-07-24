@@ -3,8 +3,9 @@ include $(TOP)/configure/CONFIG
 #----------------------------------------
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 
-MRF_ALL_DEVICES = $(MRF_EVG_DEVICES) $(MRF_EVR_DEVICES)
+MRF_ALL_DEVICES = $(MRF_EVG_DEVICES) $(MRF_EVM_DEVICES) $(MRF_EVR_DEVICES)
 MRF_EVG_DEVICES = vme-evg-230
+MRF_EVM_DEVICES = vme-evm-300
 MRF_EVR_DEVICES = mtca-evr-300 vme-evr-230 vme-evr-230rf vme-evr-300
 
 MRF_DB_DEPS = \
