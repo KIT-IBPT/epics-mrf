@@ -17,10 +17,17 @@ The IOC has to be linked against the following libraries:
 
 ### Table of contents
 - [IOC startup configuration](#ioc-startup-configuration)
+  - [VME-EVG-230](#vme-evg-230)
+  - [VME-EVR-230 and VME-EVR-230RF](#vme-evr-230-and-vme-evr-230rf)
+  - [MTCA-EVR-300](#mtca-evr-300)
+  - [Supplemental database files](#supplemental-database-files)
+  - [Optional arguments to IOC shell functions](
+    #optional-arguments-to-ioc-shell-functions)
 - [Autosave support](#autosave-support)
 - [Interrupt handling](#interrupt-handling)
 - [Clock generator configuration](#clock-generator-configuration)
 - [GUI / OPI panels](#gui--opi-panels)
+- [Auxilliary IOC shell functions](#auxilliary-ioc-shell-functions)
 
 
 IOC startup configuration
@@ -279,6 +286,35 @@ the [calc module](https://github.com/epics-modules/calc).
 When loading the database file, the `P` and `R` parameters have to be set to the
 same values that are specified for the primary database file of the respective
 device.
+
+
+### Optional arguments to IOC shell functions
+
+In addition to the two mandatory arguments, the IOC shell functions for the
+devices which are controlled via UDP/IP (`mrfUdpIpEvgDevice` and
+ `mrfUdpIpEvrDevice`) accept two optional arguments.
+
+The argument order is:
+
+1. Device identifier (mandatory)
+2. Hostname or IP address (mandatory)
+3. Queue timeout (optional)
+4. Request timeout (optional)
+
+Both the queue and request timeout are specified in seconds and as a floating
+point number.
+
+The queue timeout defines a read or write request (typically caused by a record
+being processed) can stay in the queue before being sent to the device or
+timing out. Choosing this too short can hurt performance during IOC startup,
+because it might result in read operations being carried out in serial that
+would otherwise be parallelized. As a rule of thumb, this should be at least
+30 seconds. The default value is zero, meaning no timeout at all.
+
+The request timeout defines when a request times out *after* being sent for the
+first time. Within this time frame, the request may be sent multiple times if
+no reply is received within the expected time. The default value (also being
+used when zero is specified) is 5 seconds.
 
 
 Autosave support

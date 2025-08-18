@@ -27,6 +27,7 @@
  * of the GNU LGPL version 3 or newer.
  */
 
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -39,7 +40,6 @@
 
 #include <MrfConsistentAsynchronousMemoryAccess.h>
 #include <MrfDeviceRegistry.h>
-#include <MrfTime.h>
 #include <MrfUdpIpMemoryAccess.h>
 #include <mrfEpicsError.h>
 
@@ -216,14 +216,15 @@ void preheatCacheVmeEvr230Rf(std::shared_ptr<MrfMemoryCache> cache) {
  * Creates (and registers) a UDP/IP device. EVG and EVR devices are nearly
  * identical with the exception that they use a different base address.
  */
-void createUdpIpDevice(const std::string& deviceId,
-    const std::string &hostName, std::uint32_t baseAddress,
-    const MrfTime &delayBetweenPackets, const MrfTime &udpTimeout,
-    int maximumNumberOfTries,
+void createUdpIpDevice(
+    const std::string& deviceId,
+    const std::string &hostName,
+    std::uint32_t baseAddress,
+    const std::chrono::duration<double> queueTimeout,
+    const std::chrono::duration<double> requestTimeout,
     std::function<void(std::shared_ptr<MrfMemoryCache>)> preheatFunction) {
   std::shared_ptr<MrfUdpIpMemoryAccess> rawDevice = std::make_shared<
-      MrfUdpIpMemoryAccess>(hostName, baseAddress, delayBetweenPackets,
-      udpTimeout, maximumNumberOfTries);
+    MrfUdpIpMemoryAccess>(hostName, baseAddress, queueTimeout, requestTimeout);
   std::shared_ptr<MrfConsistentAsynchronousMemoryAccess> consistentDevice =
       std::make_shared<MrfConsistentAsynchronousMemoryAccess>(rawDevice);
   MrfDeviceRegistry::getInstance().registerDevice(std::string(deviceId),
@@ -245,12 +246,18 @@ void createUdpIpDevice(const std::string& deviceId,
  * UDP/IP based protocol. Throws an exception if the device cannot be created
  * (e.g. because the device ID is already in use).
  */
-void createUdpIpEvgDevice(const std::string& deviceId,
-    const std::string &hostName, const MrfTime &delayBetweenPackets,
-    const MrfTime &udpTimeout, int maximumNumberOfTries) {
-  createUdpIpDevice(deviceId, hostName,
-      MrfUdpIpMemoryAccess::baseAddressVmeEvgRegister, delayBetweenPackets,
-      udpTimeout, maximumNumberOfTries, preheatCacheVmeEvg230);
+void createUdpIpEvgDevice(
+    const std::string& deviceId,
+    const std::string &hostName,
+    const std::chrono::duration<double> queueTimeout,
+    const std::chrono::duration<double> requestTimeout) {
+  createUdpIpDevice(
+    deviceId,
+    hostName,
+    MrfUdpIpMemoryAccess::baseAddressVmeEvgRegister,
+    queueTimeout,
+    requestTimeout,
+    preheatCacheVmeEvg230);
 }
 
 /**
@@ -258,12 +265,18 @@ void createUdpIpEvgDevice(const std::string& deviceId,
  * UDP/IP based protocol. Throws an exception if the device cannot be created
  * (e.g. because the device ID is already in use).
  */
-void createUdpIpEvrDevice(const std::string& deviceId,
-    const std::string &hostName, const MrfTime &delayBetweenPackets,
-    const MrfTime &udpTimeout, int maximumNumberOfTries) {
-  createUdpIpDevice(deviceId, hostName,
-      MrfUdpIpMemoryAccess::baseAddressVmeEvrRegister, delayBetweenPackets,
-      udpTimeout, maximumNumberOfTries, preheatCacheVmeEvr230Rf);
+void createUdpIpEvrDevice(
+    const std::string& deviceId,
+    const std::string &hostName,
+    const std::chrono::duration<double> queueTimeout,
+    const std::chrono::duration<double> requestTimeout) {
+  createUdpIpDevice(
+    deviceId,
+    hostName,
+    MrfUdpIpMemoryAccess::baseAddressVmeEvrRegister,
+    queueTimeout,
+    requestTimeout,
+    preheatCacheVmeEvr230Rf);
 }
 
 } // anonymous namespace
@@ -271,22 +284,25 @@ void createUdpIpEvrDevice(const std::string& deviceId,
 extern "C" {
 
 // Data structures needed for the iocsh mrfUdpIpDevice function.
-static const iocshArg iocshMrfUdpIpDeviceArg0 = { "device ID", iocshArgString };
-static const iocshArg iocshMrfUdpIpDeviceArg1 = { "host name or address",
-    iocshArgString };
+static const iocshArg iocshMrfUdpIpDeviceArg0 = {"device ID", iocshArgString};
+static const iocshArg iocshMrfUdpIpDeviceArg1 = {
+  "host name or address", iocshArgString
+};
 static const iocshArg iocshMrfUdpIpDeviceArg2 = {
-    "min. delay between consecutive UDP packets (seconds)", iocshArgDouble };
-static const iocshArg iocshMrfUdpIpDeviceArg3 = { "UDP timeout (seconds)",
-    iocshArgDouble };
-static const iocshArg iocshMrfUdpIpDeviceArg4 = { "max. number of tries",
-    iocshArgInt };
-static const iocshArg * const iocshMrfUdpIpDeviceArgs[] =
-    { &iocshMrfUdpIpDeviceArg0, &iocshMrfUdpIpDeviceArg1,
-        &iocshMrfUdpIpDeviceArg2, &iocshMrfUdpIpDeviceArg3,
-        &iocshMrfUdpIpDeviceArg4 };
+  "queue timeout (seconds)", iocshArgDouble
+};
+static const iocshArg iocshMrfUdpIpDeviceArg3 = {
+  "request timeout (seconds)", iocshArgDouble
+};
+static const iocshArg * const iocshMrfUdpIpDeviceArgs[] = {
+  &iocshMrfUdpIpDeviceArg0,
+  &iocshMrfUdpIpDeviceArg1,
+  &iocshMrfUdpIpDeviceArg2,
+  &iocshMrfUdpIpDeviceArg3
+};
 static const iocshFuncDef iocshMrfUdpIpEvgDeviceFuncDef = {
   "mrfUdpIpEvgDevice",
-  5,
+  4,
   iocshMrfUdpIpDeviceArgs,
 #ifdef IOCSHFUNCDEF_HAS_USAGE
   "Define a UDP/IP connection to a VME-EVG-230.\n",
@@ -294,7 +310,7 @@ static const iocshFuncDef iocshMrfUdpIpEvgDeviceFuncDef = {
 };
 static const iocshFuncDef iocshMrfUdpIpEvrDeviceFuncDef = {
   "mrfUdpIpEvrDevice",
-  5,
+  4,
   iocshMrfUdpIpDeviceArgs,
 #ifdef IOCSHFUNCDEF_HAS_USAGE
   "Define a UDP/IP connection to a VME-EVR-230RF.\n",
@@ -309,9 +325,8 @@ static int iocshMrfUdpIpDeviceFunc(const iocshArgBuf *args, bool evr)
     noexcept {
   char *deviceId = args[0].sval;
   char *hostAddress = args[1].sval;
-  double delayBetweenPacketsDouble = args[2].dval;
-  double udpTimeoutDouble = args[3].dval;
-  int maxNumberOfTries = args[4].ival;
+  double queueTimeoutDouble = args[2].dval;
+  double requestTimeoutDouble = args[3].dval;
   // Verify and convert the parameters.
   if (!deviceId) {
     errorPrintf("Could not create device: Device ID must be specified.");
@@ -330,54 +345,31 @@ static int iocshMrfUdpIpDeviceFunc(const iocshArgBuf *args, bool evr)
     if (!std::strlen(hostAddress)) {
       throw std::invalid_argument("Host name or address must not be empty.");
     }
-    if (!std::isfinite(delayBetweenPacketsDouble)) {
+    if (!std::isfinite(queueTimeoutDouble)) {
       throw std::invalid_argument(
-          "Min. delay between consecutive UDP packets must be a finite value.");
+        "Queue timeout must be finite.");
     }
-    if (delayBetweenPacketsDouble <= 0.0) {
-      // We use a default value of 400 us. Experiments have shown that this is
-      // a good value.
-      delayBetweenPacketsDouble = 0.0004;
+    if (queueTimeoutDouble < 0.0) {
+      queueTimeoutDouble = 0.0;
     }
-    // We have to set an upper limit on the delay because it has to be converted
-    // to an integer. We could allow a larger value, but such a value would not
-    // make sense anyway.
-    if (delayBetweenPacketsDouble > 3600.0) {
+    if (!std::isfinite(requestTimeoutDouble) || requestTimeoutDouble < 0.0) {
       throw std::invalid_argument(
-          "Min. delay between consecutive UDP packets must not be greater than 3600 seconds.");
+        "Request timeout must be finite.");
     }
-    if (!std::isfinite(udpTimeoutDouble)) {
-      throw std::invalid_argument("UDP timeout must be a finite value.");
+    if (requestTimeoutDouble <= 0.0) {
+      // We use a default value of 5 seconds. For any local network that is not
+      // experiencing a tremendous amount of packet loss, this should be
+      // sufficient.
+      requestTimeoutDouble = 5.0;
     }
-    if (udpTimeoutDouble <= 0.0) {
-      // We use a default value of 5ms. For a direct connection, the typical
-      // round-trip time is about 750 us. With a switch involved, it is about
-      // 770 us. Therefore, 5 ms should be enough even if there are multiple
-      // switches involved.
-      udpTimeoutDouble = 0.005;
-    }
-    // We have to set an upper limit on the timeout because it has to be
-    // converted to an integer. We could allow a larger value, but such a value
-    // would not make sense anyway.
-    if (udpTimeoutDouble > 3600.0) {
-      throw std::invalid_argument(
-          "UDP timeout must not be greater than 3600 seconds.");
-    }
-    if (maxNumberOfTries <= 0) {
-      // Five retries are a good default value because it should cover most
-      // situations where a packet is lost because of network congestion.
-      maxNumberOfTries = 5;
-    }
-    MrfTime delayBetweenPackets(std::floor(delayBetweenPacketsDouble),
-        std::remainder(delayBetweenPacketsDouble * 1000000000.0, 1000000000.0));
-    MrfTime udpTimeout(std::floor(udpTimeoutDouble),
-        std::remainder(udpTimeoutDouble * 1000000000.0, 1000000000.0));
+    auto queueTimeout = std::chrono::duration<double>(queueTimeoutDouble);
+    auto requestTimeout = std::chrono::duration<double>(requestTimeoutDouble);
     if (evr) {
-      createUdpIpEvrDevice(deviceId, hostAddress, delayBetweenPackets,
-          udpTimeout, maxNumberOfTries);
+      createUdpIpEvrDevice(
+        deviceId, hostAddress, queueTimeout, requestTimeout);
     } else {
-      createUdpIpEvgDevice(deviceId, hostAddress, delayBetweenPackets,
-          udpTimeout, maxNumberOfTries);
+      createUdpIpEvgDevice(
+        deviceId, hostAddress, queueTimeout, requestTimeout);
     }
   } catch (std::exception &e) {
     anka::mrf::epics::errorPrintf("Could not create device %s: %s", deviceId,
