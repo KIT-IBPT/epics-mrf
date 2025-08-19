@@ -19,15 +19,15 @@ INC += MrfConsistentAsynchronousMemoryAccess.h
 INC += MrfConsistentMemoryAccess.h
 INC += MrfFdSelector.h
 INC += MrfMemoryAccess.h
-INC += MrfTime.h
 INC += mrfErrorUtil.h
+INC += mrfGaiErrorCategory.h
 
 # specify all source files to be compiled and added to the library
 mrfCommon_SRCS += MrfConsistentAsynchronousMemoryAccess.cpp
 mrfCommon_SRCS += MrfConsistentMemoryAccess.cpp
 mrfCommon_SRCS += MrfFdSelector.cpp
 mrfCommon_SRCS += MrfMemoryAccess.cpp
-mrfCommon_SRCS += MrfTime.h
+mrfCommon_SRCS += mrfGaiErrorCategory.cpp
 
 # mrfCommon_LIBS += $(EPICS_BASE_IOC_LIBS)
 

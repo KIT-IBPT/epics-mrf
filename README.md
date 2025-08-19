@@ -31,10 +31,17 @@ Documentation
 - [Installing / compiling the device support](docs/installing.md)
 - [Using the device support](docs/using.md)
 - [Process variables for the EVG and EVR](docs/process_variables.md)
+- [Upgrade instructions](docs/upgrading.md)
 - [Linux kernel module](support/mrf-pci-dkms-0.1.20250218/README.md)
 - [Extending the device support](docs/extending.md)
 - [Current limitations of the device support](docs/limitations.md)
 
+Breaking changes in version 2.x
+-------------------------------
+
+The signature of the IOC shell functions for configuring UDP/IP communication
+with devices has changed in version 2.x. Please refer to the
+[upgrade instructions](docs/upgrading.md) for details.
 
 Copyright / License
 -------------------

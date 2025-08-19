@@ -30,20 +30,12 @@
 #ifndef ANKA_MRF_UDP_IP_MEMORY_ACCESS_H
 #define ANKA_MRF_UDP_IP_MEMORY_ACCESS_H
 
-#include <atomic>
-#include <list>
-#include <mutex>
+#include <chrono>
+#include <cstdint>
 #include <string>
-#include <thread>
-#include <unordered_map>
 
-extern "C" {
-#include <sys/select.h>
-}
-
-#include <MrfFdSelector.h>
 #include <MrfMemoryAccess.h>
-#include <MrfTime.h>
+#include "MrfUdpIpClient.h"
 
 namespace anka {
 namespace mrf {
@@ -79,45 +71,64 @@ public:
 
   /**
    * Creates a memory-access object for an MRF device that can be controlled
-   * via UDP/IP. The specified host name can either be a DNS name or an IP
-   * address. The base address is added to the address specified in a read or
-   * write request. This is useful if different devices with the same register
-   * layout but different base addresses shall be accessed.
-   * The constructor creates two background threads that take care of
-   * communicating with the device. The minimum delay between sending two
-   * packets is initialized with a default of 400 microseconds, the timeout is
-   * initialized with a default value of 5 milliseconds, and the maximum number
-   * of retries is initialized with a default value of 5. Throws an exception if
-   * the socket cannot be initialized or the background threads cannot be
-   * created.
+   * via UDP/IP.
+   *
+   * The specified host name can either be a DNS name or an IP address.
+   *
+   * The base address is added to the address specified in a read or write
+   * request. This is useful if different devices with the same register layout
+   * but different base addresses shall be accessed.
+   *
+   * This constructor uses a value of zero for the queue timeout (thus
+   * disabling the queue timeout) and a value of five seconds for the reply
+   * timeout.
+   *
+   * The constructor creates an instance of MrfUdpIpClient that takes care of
+   * the low-level communication with the device.
+   *
+   * Throws an exception if the client cannot be created because the socket
+   * cannot be initialized, the background threads cannot be created, or if one
+   * of the parameters is invalid.
    */
   MrfUdpIpMemoryAccess(const std::string &hostName, std::uint32_t baseAddress);
 
   /**
    * Creates a memory-access object for an MRF device that can be controlled
-   * via UDP/IP. The specified host name can either be a DNS name or an IP
-   * address. The base address is added to the address specified in a read or
-   * write request. This is useful if different devices with the same register
-   * layout but different base addresses shall be accessed.
-   * The constructor creates two background threads that take care of
-   * communicating with the device. The delay between packets is the minimum
-   * time that is spent between sending too packets. Thus this setting
-   * effectively limits the maximum data rate. The UDP timeout is the maximum
-   * time between sending a request and receiving the response. If the response
-   * is not received within this interval, the request is sent again. This
-   * parameter should typically be about five times the round-trip time for the
-   * network. The maximum number of tries specified how often a request that
-   * timed out is sent again before failing permanently. Throws an exception if
-   * the socket cannot be initialized, the background threads cannot be
-   * created, or if one of the parameters is invalid.
+   * via UDP/IP.
+   *
+   * The specified host name can either be a DNS name or an IP address.
+   *
+   * The base address is added to the address specified in a read or write
+   * request. This is useful if different devices with the same register layout
+   * but different base addresses shall be accessed.
+   *
+   * The queue timeout is the time between queuing a request and it being
+   * discarded because it could not be sent. Once a request has been sent for
+   * the first time, this timeout does not apply any longer and the request
+   * timeout takes over instead. The queue timeout can be zero, meaning that
+   * requests are kept in the queue indefinitely, until they finally can be
+   * sent (or a are discarded because the peer is offline).
+   *
+   * The request timeout is the time between sending a packet for a request for
+   * the first time and the request failing with a timeout if no valid response
+   * is received. Within this time, retransmissions of the request may happen
+   * automatically. The request timeout must not be zero.
+   *
+   * The constructor creates an instance of MrfUdpIpClient that takes care of
+   * the low-level communication with the device.
+   *
+   * Throws an exception if the client cannot be created because the socket
+   * cannot be initialized, the background threads cannot be created, or if one
+   * of the parameters is invalid.
    */
-  MrfUdpIpMemoryAccess(const std::string &hostName, std::uint32_t baseAddress,
-      const MrfTime &delayBetweenPackets, const MrfTime &udpTimeout,
-      int maximumNumberOfTries);
+  MrfUdpIpMemoryAccess(
+      const std::string &hostName,
+      std::uint32_t baseAddress,
+      const std::chrono::duration<double> &queueTimeout,
+      const std::chrono::duration<double> &requestTimeout);
 
   /**
-   * Destructor. Closes the connection to the device and terminates the
-   * background thread.
+   * Destructor. Shuts down and destroys the underlying UDP client.
    */
   virtual ~MrfUdpIpMemoryAccess();
 
@@ -163,42 +174,19 @@ public:
 private:
 
   /**
-   * Data structure for a UDP packet sent to or received from the MRF VME
-   * modules.
-   */
-// We have to pack the structure so that it matches the network representation.
-#pragma pack(push, 1)
-  struct MrfUdpPacket {
-    std::uint8_t accessType;
-    std::int8_t status;
-    std::uint16_t data;
-    std::uint32_t address;
-    std::uint32_t ref;
-  };
-#pragma pack(pop)
-
-  /**
-   * Data structure that is used for the internal request callbacks.
-   */
-  struct MrfRequestCallback {
-    virtual ~MrfRequestCallback() {}
-
-    virtual void operator()(std::uint16_t receivedData, std::int8_t status,
-        bool timeout) = 0;
-  };
-
-  /**
    * Internal callback for a uint16 read or write request.
    */
-  struct UInt16Callback: MrfRequestCallback {
+  struct UInt16Callback: MrfUdpIpClient::RequestCallback {
     std::uint32_t address;
     std::shared_ptr<MrfMemoryAccess::CallbackUInt16> callback;
 
     UInt16Callback(std::uint32_t address,
         std::shared_ptr<MrfMemoryAccess::CallbackUInt16> callback);
 
-    void operator()(std::uint16_t receivedData, std::int8_t status,
-        bool timeout);
+    void operator()(
+        std::uint16_t receivedData,
+        std::int8_t receivedStatus,
+        std::exception_ptr exception);
   };
 
   /**
@@ -226,31 +214,35 @@ private:
   /**
    * Internal callback for reading the low word of a uint32 register.
    */
-  struct UInt32ReadLowCallback: MrfRequestCallback {
+  struct UInt32ReadLowCallback: MrfUdpIpClient::RequestCallback {
     std::shared_ptr<UInt32ReadShared> sharedData;
 
     UInt32ReadLowCallback(std::shared_ptr<UInt32ReadShared> sharedData);
 
-    void operator()(std::uint16_t receivedData, std::int8_t status,
-        bool timeout);
+    void operator()(
+        std::uint16_t receivedData,
+        std::int8_t receivedStatus,
+        std::exception_ptr exception);
   };
 
   /**
    * Internal callback for reading the high word of a uint32 register.
    */
-  struct UInt32ReadHighCallback: MrfRequestCallback {
+  struct UInt32ReadHighCallback: MrfUdpIpClient::RequestCallback {
     std::shared_ptr<UInt32ReadShared> sharedData;
 
     UInt32ReadHighCallback(std::shared_ptr<UInt32ReadShared> sharedData);
 
-    void operator()(std::uint16_t receivedData, std::int8_t status,
-        bool timeout);
+    void operator()(
+        std::uint16_t receivedData,
+        std::int8_t receivedStatus,
+        std::exception_ptr exception);
   };
 
   /**
    * Internal callback for writing the low word of a uint32 register.
    */
-  struct UInt32WriteLowCallback: MrfRequestCallback {
+  struct UInt32WriteLowCallback: MrfUdpIpClient::RequestCallback {
     std::uint32_t address;
     std::uint16_t highData;
     std::shared_ptr<MrfMemoryAccess::CallbackUInt32> callback;
@@ -258,14 +250,16 @@ private:
     UInt32WriteLowCallback(std::uint32_t address, std::uint16_t highData,
         std::shared_ptr<MrfMemoryAccess::CallbackUInt32> callback);
 
-    void operator()(std::uint16_t receivedData, std::int8_t status,
-        bool timeout);
+    void operator()(
+        std::uint16_t receivedData,
+        std::int8_t receivedStatus,
+        std::exception_ptr exception);
   };
 
   /**
    * Internal callback for writing the high word of a uint32 register.
    */
-  struct UInt32WriteHighCallback: MrfRequestCallback {
+  struct UInt32WriteHighCallback: MrfUdpIpClient::RequestCallback {
     MrfUdpIpMemoryAccess &memoryAccess;
     std::uint32_t address;
     std::uint16_t lowData;
@@ -275,19 +269,10 @@ private:
         std::uint32_t address, std::uint16_t lowData,
         std::shared_ptr<MrfMemoryAccess::CallbackUInt32> callback);
 
-    void operator()(std::uint16_t receivedData, std::int8_t status,
-        bool timeout);
-  };
-
-  /**
-   * Data structure storing all data associated with the request for sending a
-   * UDP packet.
-   */
-  struct MrfRequest {
-    MrfUdpPacket packet;
-    std::shared_ptr<MrfRequestCallback> callback;
-    int numberOfTries;
-    MrfTime timeout;
+    void operator()(
+        std::uint16_t receivedData,
+        std::int8_t receivedStatus,
+        std::exception_ptr exception);
   };
 
   // We do not want to allow copy or move construction or assignment.
@@ -296,60 +281,13 @@ private:
   MrfUdpIpMemoryAccess &operator=(const MrfUdpIpMemoryAccess &) = delete;
   MrfUdpIpMemoryAccess &operator=(MrfUdpIpMemoryAccess &&) = delete;
 
-  std::string hostName;
   std::uint32_t baseAddress;
-  std::recursive_mutex mutex;
-  std::thread receiveThread;
-  std::thread sendThread;
-  std::atomic<bool> shutdown;
 
-  // Experiments have shown that the MRF VME-EVG can process packets at a rate
-  // of roughly one packet every 400 microseconds without losing packets.
-  MrfTime delayBetweenPackets;
-
-  // Experiments have shown that for a direct connection the round-trip time of
-  // a request is about 750 microseconds and for a connection over a switch it
-  // is about 770 microseconds. Therefore, a default timeout of 5 ms is
-  // reasonable for the typical setup (MRF EVG or EVR is in the same network
-  // segment as the controlling computer and there are only a few switches in
-  // between).
-  MrfTime udpTimeout;
-
-  int maximumNumberOfTries;
-
-  int socketDescriptor = -1;
-  MrfFdSelector receiveSelector;
-  MrfFdSelector sendSelector;
-
-  std::list<MrfRequest> requestQueue;
-  std::unordered_map<std::uint32_t, MrfRequest> pendingRequests;
-  std::uint32_t nextRequestCounter = 0;
-
-  /**
-   * Queues a request for reading a word from a memory address.
-   */
-  void queueReadRequest(std::uint32_t address,
-      std::shared_ptr<MrfRequestCallback> callback);
-
-  /**
-   * Queues a request for writing a word to a memory address.
-   */
-  void queueWriteRequest(std::uint32_t address, std::uint16_t data,
-      std::shared_ptr<MrfRequestCallback> callback);
-
-  /**
-   * Main function of the receive thread.
-   */
-  void runReceiveThread();
-
-  /**
-   * Main function of the send thread.
-   */
-  void runSendThread();
+  MrfUdpIpClient client;
 
 };
 
-}
-}
+} // namespace mrf
+} // namespace anka
 
 #endif // ANKA_MRF_UDP_IP_MEMORY_ACCESS_H
