@@ -27,13 +27,13 @@
  * of the GNU LGPL version 3 or newer.
  */
 
+#include <cerrno>
+#include <system_error>
+
 extern "C" {
-#include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
 }
-
-#include "mrfErrorUtil.h"
 
 #include "MrfFdSelector.h"
 
@@ -43,7 +43,10 @@ namespace mrf {
 MrfFdSelector::MrfFdSelector() {
   int fileDescriptors[2];
   if (::pipe(fileDescriptors)) {
-    throw systemErrorFromErrNo("Could not create pipe for the FD selector");
+    throw std::system_error(
+      errno,
+      std::generic_category(),
+      "Could not create pipe for the FD selector");
   }
   this->readFd = fileDescriptors[0];
   this->writeFd = fileDescriptors[1];
@@ -54,8 +57,10 @@ MrfFdSelector::MrfFdSelector() {
     this->readFd = -1;
     ::close(this->writeFd);
     this->writeFd = -1;
-    throw systemErrorForErrNo("Could not put pipe FD into non-blocking mode",
-        savedErrorNumber);
+    throw std::system_error(
+      savedErrorNumber,
+      std::generic_category(),
+      "Could not put pipe FD into non-blocking mode");
   }
 }
 
@@ -82,7 +87,8 @@ void MrfFdSelector::select(::fd_set *readFds, ::fd_set *writeFds,
     maxFd = readFd;
   }
   if (::select(maxFd + 1, readFds, writeFds, errorFds, timeout) == -1) {
-    throw systemErrorFromErrNo("Select operation failed");
+    throw std::system_error(
+      errno, std::generic_category(), "Select operation failed");
   }
   // If the read FD is flagged, we should consume all bytes so that the next
   // select call will work as expected.
@@ -104,7 +110,8 @@ void MrfFdSelector::wakeUp() {
     if (errno == EAGAIN || errno == EWOULDBLOCK) {
       return;
     }
-    throw systemErrorFromErrNo("Write to pipe failed");
+    throw std::system_error(
+      errno, std::generic_category(), "Write to pipe failed");
   }
 }
 

@@ -19,7 +19,6 @@ INC += MrfConsistentAsynchronousMemoryAccess.h
 INC += MrfConsistentMemoryAccess.h
 INC += MrfFdSelector.h
 INC += MrfMemoryAccess.h
-INC += mrfErrorUtil.h
 INC += mrfGaiErrorCategory.h
 
 # specify all source files to be compiled and added to the library
