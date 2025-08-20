@@ -1,6 +1,6 @@
 /*
- * Copyright 2016-2024 aquenos GmbH.
- * Copyright 2016-2024 Karlsruhe Institute of Technology.
+ * Copyright 2016-2025 aquenos GmbH.
+ * Copyright 2016-2025 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -28,13 +28,13 @@
  */
 
 #include <atomic>
+#include <cerrno>
 #include <mutex>
 #include <stdexcept>
 #include <system_error>
 
 extern "C" {
 #include <arpa/inet.h>
-#include <errno.h>
 #include <fcntl.h>
 #include <pthread.h>
 #include <setjmp.h>
@@ -46,8 +46,6 @@ extern "C" {
 #include <time.h>
 #include <unistd.h>
 }
-
-#include <mrfErrorUtil.h>
 
 #include "MrfMmapMemoryAccess.h"
 
@@ -399,27 +397,32 @@ static void prepareInterrupt(int fileDescriptor) {
   owner.type = F_OWNER_TID;
   owner.pid = ::syscall(SYS_gettid);
   if (::fcntl(fileDescriptor, F_SETOWN_EX, &owner) == -1) {
-    throw anka::mrf::systemErrorFromErrNo(
-        "fcntl(..., F_SETOWN_EX, ...) failed");
+    throw std::system_error(
+      errno, std::generic_category(), "fcntl(..., F_SETOWN_EX, ...) failed");
   }
   // If we do not set the desired signal to SIGIO explicitly, the extended
   // signal information (e.g. the file descriptor) is not included.
   if (::fcntl(fileDescriptor, F_SETSIG, SIGIO) == -1) {
-    throw anka::mrf::systemErrorFromErrNo("fcntl(..., F_SETSIG, SIGIO) failed");
+    throw std::system_error(
+      errno, std::generic_category(), "fcntl(..., F_SETSIG, SIGIO) failed");
   }
   int flags = ::fcntl(fileDescriptor, F_GETFL);
   if (flags == -1) {
-    throw anka::mrf::systemErrorFromErrNo("fcntl(..., F_GETFL) failed");
+    throw std::system_error(
+      errno, std::generic_category(), "fcntl(..., F_GETFL) failed");
   }
   flags |= O_ASYNC;
   if (::fcntl(fileDescriptor, F_SETFL, flags | O_ASYNC) == -1) {
-    throw anka::mrf::systemErrorFromErrNo("fcntl(..., F_SETFL, ...) failed");
+    throw std::system_error(
+      errno, std::generic_category(), "fcntl(..., F_SETFL, ...) failed");
   }
 }
 
 static void enableInterrupt(int fileDescriptor) {
   if (::ioctl(fileDescriptor, ANKA_MRF_IOCTL_IRQ_ENABLE) == -1) {
-    throw anka::mrf::systemErrorFromErrNo(
+    throw std::system_error(
+        errno,
+        std::generic_category(),
         "ioctl(...) for enabling interrupt failed");
   }
 }
@@ -586,8 +589,8 @@ void MrfMmapMemoryAccess::runIoThread() {
         // This kind of error is not directly related to a request, but this is
         // the only reasonable way how we can communicate the error to the user.
         deviceErrorDetails = std::string(
-            "signalfd(-1, { SIGIO }, SDF_NON_BLOCK | SFD_CLOEXEC) failed: ")
-            + errorStringFromErrNo();
+          "signalfd(-1, { SIGIO }, SDF_NON_BLOCK | SFD_CLOEXEC) failed: ")
+          + std::generic_category().message(errno);
       }
     }
     // If we have not opened the device yet, we try to do this now. We do this
@@ -596,8 +599,11 @@ void MrfMmapMemoryAccess::runIoThread() {
     if (deviceMemory == nullptr && signalFd != -1) {
       deviceFd = ::open(devicePath.c_str(), O_RDWR);
       if (deviceFd == -1) {
-        deviceErrorDetails = std::string("Could not open device ") + devicePath
-            + ": " + errorStringFromErrNo();
+        deviceErrorDetails =
+          std::string("Could not open device ")
+          + devicePath
+          + ": "
+          + std::generic_category().message(errno);
       } else {
         deviceMemory = ::mmap(0, memorySize, PROT_READ | PROT_WRITE, MAP_SHARED,
             deviceFd, 0);
@@ -614,8 +620,11 @@ void MrfMmapMemoryAccess::runIoThread() {
                 + devicePath + " for generating interrupts: " + e.what();
           }
         } else {
-          deviceErrorDetails = std::string("Could not mmap device ")
-              + devicePath + ": " + errorStringFromErrNo();
+          deviceErrorDetails =
+            std::string("Could not mmap device ")
+            + devicePath
+            + ": "
+            + std::generic_category().message(errno);
           deviceMemory = nullptr;
           ::close(deviceFd);
           deviceFd = -1;
@@ -634,9 +643,9 @@ void MrfMmapMemoryAccess::runIoThread() {
           // longer. This kind of error is not directly related to a request,
           // but this is the only reasonable way how we can communicate the
           // error to the user.
-          deviceErrorDetails = std::string(
-              "read(...) failed for signal file-descriptor: ")
-              + errorStringFromErrNo();
+          deviceErrorDetails =
+            std::string("read(...) failed for signal file-descriptor: ")
+            + std::generic_category().message(errno);
           // We close the signal file-descriptor so that it is created again at
           // next iteration.
           ::close(signalFd);
