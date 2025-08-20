@@ -1,6 +1,6 @@
 # We do not scan the input at a fixed rate because this simply does not make any
 # sense. The input might change at a much higher rate than we can scan it at, so
-# we rater have processing be triggered by the user. 
+# we rather have processing be triggered by the user.
 record(bi, "@PV_PREFIX@FPIn@FP_INPUT_NUM@:Status") {
   field(DESC, "Front panel input @FP_INPUT_NUM@ status")
   field(DTYP, "MRF Memory")
