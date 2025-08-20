@@ -50,7 +50,7 @@ class _MrfPacket:
 
     @staticmethod
     def decode(  # pylint: disable=missing-function-docstring
-        packet_data: collections.abc.Buffer,
+        packet_data: typing.Union[bytearray, bytes],
     ) -> "_MrfPacket":
         if len(memoryview(packet_data)) != _mrf_packet_struct.size:
             raise ValueError(
@@ -76,11 +76,14 @@ class _MrfProtocol(asyncio.DatagramProtocol):
         self._transport: asyncio.DatagramTransport | None = None
 
     def connection_lost(self, exc: Exception | None) -> None:
-        self._simulator._stopped()
+        self._simulator._stopped()  # pylint: disable=protected-access
 
     def connection_made(self, transport: asyncio.BaseTransport) -> None:
-        assert isinstance(transport, asyncio.DatagramTransport)
-        self._transport = transport
+        # In Python 3.12 and older, the transport passed here does not
+        # implement asyncio.DatagramTransport, so we cannot use an assertion
+        # here. However, it implements the sendto(…) function, which is all we
+        # need, so we can act like it implemented asyncio.DatagramTransport.
+        self._transport = transport  # type: ignore
 
     def datagram_received(
         self, data: bytes, addr: tuple[str | typing.Any, int]
@@ -168,7 +171,9 @@ class DeviceSimulator:
                 extends beyond the memory limit.
         """
         self._validate_address(address, 2)
-        return int.from_bytes(self._memory[address : address + 2])
+        return int.from_bytes(
+            self._memory[address : address + 2], byteorder="big"
+        )
 
     def read_uint32(self, address: int) -> int:
         """
@@ -185,7 +190,9 @@ class DeviceSimulator:
                 extends beyond the memory limit.
         """
         self._validate_address(address, 4)
-        return int.from_bytes(self._memory[address : address + 4])
+        return int.from_bytes(
+            self._memory[address : address + 4], byteorder="big"
+        )
 
     async def start_server(
         self,
@@ -257,7 +264,9 @@ class DeviceSimulator:
                 unsigned 16-bit integer.
         """
         self._validate_address(address, 2)
-        self._memory[address : address + 2] = value.to_bytes(2)
+        self._memory[address : address + 2] = value.to_bytes(
+            2, byteorder="big"
+        )
 
     def write_uint32(self, address: int, value: int) -> None:
         """
@@ -274,7 +283,9 @@ class DeviceSimulator:
                 unsigned 32-bit integer.
         """
         self._validate_address(address, 4)
-        self._memory[address : address + 4] = value.to_bytes(4)
+        self._memory[address : address + 4] = value.to_bytes(
+            4, byteorder="big"
+        )
 
 
 async def main(args: collections.abc.Sequence[str] | None = None) -> None:
