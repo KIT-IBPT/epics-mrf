@@ -38,7 +38,8 @@ namespace anka {
 namespace mrf {
 
 namespace {
-std::pair<
+
+  std::pair<
     MrfMemoryAccess::ErrorCode, std::string> exceptionToErrorCodeAndMessage(
     std::exception_ptr exception) {
   try {
