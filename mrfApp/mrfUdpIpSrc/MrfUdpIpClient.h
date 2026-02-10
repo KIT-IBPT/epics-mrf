@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2025 aquenos GmbH.
- * Copyright 2015-2025 Karlsruhe Institute of Technology.
+ * Copyright 2015-2026 aquenos GmbH.
+ * Copyright 2015-2026 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -71,14 +71,22 @@ public:
   /**
    * Data structure that is used for the request callbacks.
    */
-  struct RequestCallback {
+  struct AbstractRequestCallback {
+    virtual ~AbstractRequestCallback() {}
+  };
+
+  template<typename DataType>
+  struct RequestCallback : public AbstractRequestCallback {
     virtual ~RequestCallback() {}
 
     virtual void operator()(
-        std::uint16_t receivedData,
+        DataType receivedData,
         std::int8_t receivedStatus,
         std::exception_ptr exception) = 0;
   };
+
+  using RequestCallback16 = RequestCallback<std::uint16_t>;
+  using RequestCallback32 = RequestCallback<std::uint32_t>;
 
   /**
    * Exception that is passed to the RequestCallback when a request fails
@@ -132,19 +140,63 @@ public:
   /**
    * Queues a request for reading a word from a memory address.
    */
-  void queueReadRequest(
-      std::uint32_t address,
-      const std::shared_ptr<RequestCallback> &callback);
+  void queueReadRequest16(
+    std::uint32_t address,
+    const std::shared_ptr<RequestCallback16> &callback
+  );
+
+  /**
+   * Queues a request for reading a double-word from a memory address.
+   */
+  void queueReadRequest32(
+    std::uint32_t address,
+    const std::shared_ptr<RequestCallback32> &callback
+  );
 
   /**
    * Queues a request for writing a word to a memory address.
    */
-  void queueWriteRequest(
-      std::uint32_t address,
-      std::uint16_t data,
-      const std::shared_ptr<RequestCallback> &callback);
+  void queueWriteRequest16(
+    std::uint32_t address,
+    std::uint16_t data,
+    const std::shared_ptr<RequestCallback16> &callback
+  );
+
+  /**
+   * Queues a request for writing a double-word to a memory address.
+   */
+  void queueWriteRequest32(
+    std::uint32_t address,
+    std::uint32_t data,
+    const std::shared_ptr<RequestCallback32> &callback
+  );
 
 private:
+
+  /**
+   * Type of memory access (16-bit / 32-bit, read / write).
+   */
+  enum class AccessType : std::int8_t {
+    /**
+     * Read word.
+     */
+    READ16 = 1,
+
+    /**
+     * Read double word (only valid with protocol version 2).
+     */
+    READ32 = 3,
+
+    /**
+     * Write word.
+     */
+    WRITE16 = 2,
+
+    /**
+     * Write double word (only valid with protocol version 2).
+     */
+    WRITE32 = 4
+  };
 
   /**
    * Clock that is internally used for time keeping.
@@ -160,19 +212,36 @@ private:
    */
   struct Request {
     Request(
-        const std::shared_ptr<RequestCallback> &callback,
-        std::uint8_t accessType,
-        std::uint32_t address,
-        std::uint16_t data,
-        bool idempotent) :
-        callback(callback),
-        idempotent(idempotent),
-        packet(accessType, address, data, 0, 0),
-        queueTime(Clock::now()),
-        successOrTimeout(false) {
+      const std::shared_ptr<RequestCallback16> &callback,
+      AccessType accessType,
+      std::uint32_t address,
+      std::uint16_t data,
+      bool idempotent
+    ) :
+      callback(callback),
+      idempotent(idempotent),
+      packet(static_cast<std::int8_t>(accessType), address, data, 0, 0),
+      queueTime(Clock::now()),
+      successOrTimeout(false)
+    {
     }
 
-    std::shared_ptr<RequestCallback> callback;
+    Request(
+      const std::shared_ptr<RequestCallback32> &callback,
+      AccessType accessType,
+      std::uint32_t address,
+      std::uint32_t data,
+      bool idempotent
+    ) :
+      callback(callback),
+      idempotent(idempotent),
+      packet(static_cast<std::int8_t>(accessType), address, data, 0, 0),
+      queueTime(Clock::now()),
+      successOrTimeout(false)
+    {
+    }
+
+    std::shared_ptr<AbstractRequestCallback> callback;
     bool congestionWindowResetAfterSent;
     Clock::time_point firstSendTime;
     bool idempotent;
@@ -564,7 +633,7 @@ private:
    * Callbacks for requests that have timed out and where the callback still
    * needs to be notified.
    */
-  std::list<std::shared_ptr<RequestCallback>> timeoutCallbacks;
+  std::list<std::shared_ptr<AbstractRequestCallback>> timeoutCallbacks;
 
 };
 

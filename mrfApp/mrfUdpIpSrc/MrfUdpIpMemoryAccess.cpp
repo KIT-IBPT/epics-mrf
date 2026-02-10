@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2025 aquenos GmbH.
- * Copyright 2015-2025 Karlsruhe Institute of Technology.
+ * Copyright 2015-2026 aquenos GmbH.
+ * Copyright 2015-2026 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -161,7 +161,7 @@ void MrfUdpIpMemoryAccess::UInt32ReadShared::receivedLow(std::uint16_t data) {
   }
   if (sendHighAgain) {
     // Send request for high word again.
-    memoryAccess.client.queueReadRequest(
+    memoryAccess.client.queueReadRequest16(
       memoryAccess.baseAddress + address,
       std::make_shared<UInt32ReadHighCallback>(this->shared_from_this()));
   }
@@ -312,7 +312,7 @@ void MrfUdpIpMemoryAccess::UInt32WriteHighCallback::operator()(
       std::shared_ptr<UInt32WriteLowCallback> internalCallback =
           std::make_shared<UInt32WriteLowCallback>(address, receivedData,
               callback);
-      memoryAccess.client.queueWriteRequest(
+      memoryAccess.client.queueWriteRequest16(
         memoryAccess.baseAddress + address + 2, lowData, internalCallback);
     } catch (std::exception &e) {
       callback->failure(address, ErrorCode::unknown,
@@ -328,14 +328,14 @@ void MrfUdpIpMemoryAccess::readUInt16(std::uint32_t address,
     std::shared_ptr<CallbackUInt16> callback) {
   std::shared_ptr<UInt16Callback> internalCallback = std::make_shared<
       UInt16Callback>(address, callback);
-  client.queueReadRequest(baseAddress + address, internalCallback);
+  client.queueReadRequest16(baseAddress + address, internalCallback);
 }
 
 void MrfUdpIpMemoryAccess::writeUInt16(std::uint32_t address,
     std::uint16_t value, std::shared_ptr<CallbackUInt16> callback) {
   std::shared_ptr<UInt16Callback> internalCallback = std::make_shared<
       UInt16Callback>(address, callback);
-  client.queueWriteRequest(baseAddress + address, value, internalCallback);
+  client.queueWriteRequest16(baseAddress + address, value, internalCallback);
 }
 
 void MrfUdpIpMemoryAccess::readUInt32(std::uint32_t address,
@@ -345,7 +345,7 @@ void MrfUdpIpMemoryAccess::readUInt32(std::uint32_t address,
   // The low word should be read first.
   std::shared_ptr<UInt32ReadLowCallback> lowCallback = std::make_shared<
       UInt32ReadLowCallback>(sharedData);
-  client.queueReadRequest(baseAddress + address + 2, lowCallback);
+  client.queueReadRequest16(baseAddress + address + 2, lowCallback);
   // The high word should be read second. If we cannot queue the second read
   // request, we do not throw but call the failure method on the callback
   // shared data object instead. Otherwise, the callback might be called if the
@@ -355,7 +355,7 @@ void MrfUdpIpMemoryAccess::readUInt32(std::uint32_t address,
   try {
     std::shared_ptr<UInt32ReadHighCallback> highCallback = std::make_shared<
         UInt32ReadHighCallback>(sharedData);
-    client.queueReadRequest(baseAddress + address, highCallback);
+    client.queueReadRequest16(baseAddress + address, highCallback);
   } catch (std::exception &e) {
     try {
       callback->failure(address, ErrorCode::unknown,
@@ -385,7 +385,7 @@ void MrfUdpIpMemoryAccess::writeUInt32(std::uint32_t address,
   // inconsistent data in the device.
   std::shared_ptr<UInt32WriteHighCallback> internalCallback = std::make_shared<
       UInt32WriteHighCallback>(*this, address, lowWord, callback);
-  client.queueWriteRequest(baseAddress + address, highWord, internalCallback);
+  client.queueWriteRequest16(baseAddress + address, highWord, internalCallback);
 }
 
 } // namespace mrf

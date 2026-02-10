@@ -1,6 +1,6 @@
 /*
- * Copyright 2025 aquenos GmbH.
- * Copyright 2025 Karlsruhe Institute of Technology.
+ * Copyright 2025-2026 aquenos GmbH.
+ * Copyright 2025-2026 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -44,6 +44,17 @@ class MrfUdpPacket {
 public:
 
   /**
+   * Version of the UDP-based protocol.
+   *
+   * Version 1 only supports 16-bit operations, version 32 supports both 16-
+   * and 32-bit operations.
+   */
+  enum class ProtocolVersion {
+    V1,
+    V2
+  };
+
+  /**
    * Default constructor.
    *
    * An instance that is constructed this way has fields that are undefined, so
@@ -53,14 +64,28 @@ public:
   MrfUdpPacket();
 
   /**
-   * Creates a packet with its fields initialized to the specified values.
+   * Creates a packet for protocol version 1 with its fields initialized to the
+   * specified values.
    */
   MrfUdpPacket(
-      std::uint8_t accessType,
-      std::uint32_t address,
-      std::uint16_t data,
-      std::uint32_t ref,
-      std::int8_t status);
+    std::uint8_t accessType,
+    std::uint32_t address,
+    std::uint16_t data,
+    std::uint32_t ref,
+    std::int8_t status
+  );
+
+  /**
+   * Creates a packet for protocol version 2 with its fields initialized to the
+   * specified values.
+   */
+  MrfUdpPacket(
+    std::uint8_t accessType,
+    std::uint32_t address,
+    std::uint32_t data,
+    std::uint32_t ref,
+    std::int8_t status
+  );
 
   /**
    * Creates a copy of an existing instance.
@@ -86,7 +111,7 @@ public:
   /**
    * Returns the data.
    */
-  std::uint16_t getData() const;
+  std::uint32_t getData() const;
 
   /**
    * Returns the reference.
@@ -124,11 +149,11 @@ public:
 private:
 
   /**
-   * Data structure for the on-wire format of a packet.
+   * Data structure for the on-wire format of a packet for protocol version 1.
    */
 // We have to pack the structure so that it matches the network representation.
 #pragma pack(push, 1)
-  struct OnWirePacket {
+  struct OnWirePacketV1 {
     std::uint8_t accessType;
     std::int8_t status;
     std::uint16_t data;
@@ -138,11 +163,34 @@ private:
 #pragma pack(pop)
 
   /**
+   * Data structure for the on-wire format of a packet for protocol version 2.
+   */
+// We have to pack the structure so that it matches the network representation.
+#pragma pack(push, 1)
+  struct OnWirePacketV2 {
+    std::uint8_t accessType;
+    std::int8_t status;
+    std::uint16_t reserved;
+    std::uint32_t address;
+    std::uint32_t ref;
+    std::uint32_t data;
+  };
+#pragma pack(pop)
+
+  /**
+   * Union of structures for the on-wire formats of all versions.
+   */
+  union OnWirePacket {
+    OnWirePacketV1 v1;
+    OnWirePacketV2 v2;
+  };
+
+  /**
    * Construct a packet instance from the on-wire representation, possibly
    * invalidating the original instance. This constructor is only intended for
    * internal use by the receive(…) function.
    */
-  MrfUdpPacket(OnWirePacket &&packet);
+  MrfUdpPacket(ProtocolVersion protocolVersion, OnWirePacket &&packet);
 
   /**
    * On-wire representation of the packet.
@@ -156,6 +204,10 @@ private:
     OnWirePacket packet;
   };
 
+  /**
+   * Protocol version that is used.
+   */
+  ProtocolVersion protocolVersion;
 };
 
 } // namespace mrf

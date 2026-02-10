@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2025 aquenos GmbH.
- * Copyright 2015-2025 Karlsruhe Institute of Technology.
+ * Copyright 2015-2026 aquenos GmbH.
+ * Copyright 2015-2026 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -196,7 +196,7 @@ private:
   /**
    * Internal callback for a uint16 read or write request.
    */
-  struct UInt16Callback: MrfUdpIpClient::RequestCallback {
+  struct UInt16Callback: MrfUdpIpClient::RequestCallback16 {
     std::uint32_t address;
     std::shared_ptr<MrfMemoryAccess::CallbackUInt16> callback;
 
@@ -234,7 +234,9 @@ private:
   /**
    * Internal callback for reading the low word of a uint32 register.
    */
-  struct UInt32ReadLowCallback: MrfUdpIpClient::RequestCallback {
+  // TODO This is only supposed to be used when reading a uint32 as two
+  //   uint16s.
+  struct UInt32ReadLowCallback: MrfUdpIpClient::RequestCallback16 {
     std::shared_ptr<UInt32ReadShared> sharedData;
 
     UInt32ReadLowCallback(std::shared_ptr<UInt32ReadShared> sharedData);
@@ -248,7 +250,9 @@ private:
   /**
    * Internal callback for reading the high word of a uint32 register.
    */
-  struct UInt32ReadHighCallback: MrfUdpIpClient::RequestCallback {
+  // TODO This is only supposed to be used when reading a uint32 as two
+  //   uint16s.
+  struct UInt32ReadHighCallback: MrfUdpIpClient::RequestCallback16 {
     std::shared_ptr<UInt32ReadShared> sharedData;
 
     UInt32ReadHighCallback(std::shared_ptr<UInt32ReadShared> sharedData);
@@ -262,7 +266,9 @@ private:
   /**
    * Internal callback for writing the low word of a uint32 register.
    */
-  struct UInt32WriteLowCallback: MrfUdpIpClient::RequestCallback {
+  // TODO This is only supposed to be used when writing a uint32 as two
+  //   uint16s.
+  struct UInt32WriteLowCallback: MrfUdpIpClient::RequestCallback16 {
     std::uint32_t address;
     std::uint16_t highData;
     std::shared_ptr<MrfMemoryAccess::CallbackUInt32> callback;
@@ -279,7 +285,9 @@ private:
   /**
    * Internal callback for writing the high word of a uint32 register.
    */
-  struct UInt32WriteHighCallback: MrfUdpIpClient::RequestCallback {
+  // TODO This is only supposed to be used when writing a uint32 as two
+  //   uint16s.
+  struct UInt32WriteHighCallback: MrfUdpIpClient::RequestCallback16 {
     MrfUdpIpMemoryAccess &memoryAccess;
     std::uint32_t address;
     std::uint16_t lowData;

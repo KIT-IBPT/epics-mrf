@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2025 aquenos GmbH.
- * Copyright 2015-2025 Karlsruhe Institute of Technology.
+ * Copyright 2015-2026 aquenos GmbH.
+ * Copyright 2015-2026 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -56,6 +56,33 @@ namespace anka {
 namespace mrf {
 
 namespace {
+
+void callCallback(
+  std::shared_ptr<MrfUdpIpClient::AbstractRequestCallback> const &callback,
+  std::uint32_t data,
+  std::int8_t status,
+  std::exception_ptr exception
+) {
+  if (!callback) {
+    return;
+  }
+  std::shared_ptr<MrfUdpIpClient::RequestCallback16> callback16 = (
+    std::dynamic_pointer_cast<MrfUdpIpClient::RequestCallback16>(callback)
+  );
+  std::shared_ptr<MrfUdpIpClient::RequestCallback32> callback32 = (
+    std::dynamic_pointer_cast<MrfUdpIpClient::RequestCallback32>(callback)
+  );
+  try {
+    if (callback16) {
+      (*callback16)(static_cast<uint16_t>(data), status, exception);
+    } else if (callback32) {
+      (*callback32)(data, status, exception);
+    }
+  } catch (...) {
+      // We catch all errors so that an exception that is thrown by a callback
+      // does not stop the calling thread.
+  }
+}
 
 bool refGreaterThan(std::uint32_t ref1, std::uint32_t ref2) {
   // This function determines whether the packet using ref1 was sent after the
@@ -292,7 +319,7 @@ MrfUdpIpClient::Clock::time_point MrfUdpIpClient::checkSentRequests() {
       // the timeout has been handled, and that is the only purpose of this
       // set.
       timeoutCallbacks.emplace_back(std::move(request->callback));
-      request->callback = std::shared_ptr<RequestCallback>();
+      request->callback = std::shared_ptr<AbstractRequestCallback>();
       request->successOrTimeout = true;
       // We have to increment the timeout counter, unless we have already
       // exceeded the limit. In the latter case, we do not increment it in
@@ -539,8 +566,9 @@ void MrfUdpIpClient::packetLossDetected(
   congestionWindowIncrementCounter = 0;
 }
 
-void MrfUdpIpClient::queueReadRequest(std::uint32_t address,
-    const std::shared_ptr<RequestCallback> &callback) {
+void MrfUdpIpClient::queueReadRequest16(
+  std::uint32_t address, const std::shared_ptr<RequestCallback16> &callback
+) {
   // We have to hold a lock on the mutex while incrementing the counter and
   // modifying the request queue. We create the request object after acquiring
   // the lock because we have to ensure that the ordering of the queueTime
@@ -549,14 +577,16 @@ void MrfUdpIpClient::queueReadRequest(std::uint32_t address,
   {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     auto request = std::make_shared<Request>(
-      callback, 1, address, 0, true);
+      callback, AccessType::READ16, address, 0, true
+    );
     newRequests.emplace_back(std::move(request));
     sendSelector.wakeUp();
   }
 }
 
-void MrfUdpIpClient::queueWriteRequest(std::uint32_t address,
-    std::uint16_t data, const std::shared_ptr<RequestCallback> &callback) {
+void MrfUdpIpClient::queueReadRequest32(
+  std::uint32_t address, const std::shared_ptr<RequestCallback32> &callback
+) {
   // We have to hold a lock on the mutex while incrementing the counter and
   // modifying the request queue. We create the request object after acquiring
   // the lock because we have to ensure that the ordering of the queueTime
@@ -565,7 +595,48 @@ void MrfUdpIpClient::queueWriteRequest(std::uint32_t address,
   {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     auto request = std::make_shared<Request>(
-      callback, 2, address, data, false);
+      callback, AccessType::READ32, address, 0, true
+    );
+    newRequests.emplace_back(std::move(request));
+    sendSelector.wakeUp();
+  }
+}
+
+void MrfUdpIpClient::queueWriteRequest16(
+  std::uint32_t address,
+  std::uint16_t data,
+  std::shared_ptr<RequestCallback16> const &callback
+) {
+  // We have to hold a lock on the mutex while incrementing the counter and
+  // modifying the request queue. We create the request object after acquiring
+  // the lock because we have to ensure that the ordering of the queueTime
+  // stored inside the request matches the order in which the requests are
+  // stored in the list.
+  {
+    std::lock_guard<std::recursive_mutex> lock(mutex);
+    auto request = std::make_shared<Request>(
+      callback, AccessType::WRITE16, address, data, false
+    );
+    newRequests.emplace_back(std::move(request));
+    sendSelector.wakeUp();
+  }
+}
+
+void MrfUdpIpClient::queueWriteRequest32(
+  std::uint32_t address,
+  std::uint32_t data,
+  const std::shared_ptr<RequestCallback32> &callback
+) {
+  // We have to hold a lock on the mutex while incrementing the counter and
+  // modifying the request queue. We create the request object after acquiring
+  // the lock because we have to ensure that the ordering of the queueTime
+  // stored inside the request matches the order in which the requests are
+  // stored in the list.
+  {
+    std::lock_guard<std::recursive_mutex> lock(mutex);
+    auto request = std::make_shared<Request>(
+      callback, AccessType::WRITE32, address, data, false
+    );
     newRequests.emplace_back(std::move(request));
     sendSelector.wakeUp();
   }
@@ -748,7 +819,7 @@ void MrfUdpIpClient::runReceiveThread() {
     numberOfConsecutiveReadFailures = 0;
     // Find the request associated with the received packet, so that we can
     // call the callback.
-    std::shared_ptr<RequestCallback> callback;
+    std::shared_ptr<AbstractRequestCallback> callback;
     {
       // We have to hold the mutex while accessing the refToRequest map,
       // updating the RTT estimate, and making other changes to shared
@@ -928,14 +999,9 @@ void MrfUdpIpClient::runReceiveThread() {
     }
     // We call the callback without holding the mutex in order to avoid a dead
     // lock.
-    if (callback) {
-      try {
-        (*callback)(packet.getData(), packet.getStatus(), std::exception_ptr());
-      } catch (...) {
-        // We catch all errors so that an exception that is thrown by a callback
-        // does not stop the receive thread.
-      }
-    }
+    callCallback(
+      callback, packet.getData(), packet.getStatus(), std::exception_ptr()
+    );
   }
 }
 
@@ -957,7 +1023,7 @@ void MrfUdpIpClient::runSendThread() {
     // into an instance that is local to this function while holding the lock.
     // This way, the code is future proof and the cost for doing this is
     // minimal because we can use a swap operation.
-    std::list<std::shared_ptr<RequestCallback>> localTimeoutCallbacks;
+    std::list<std::shared_ptr<AbstractRequestCallback>> localTimeoutCallbacks;
     // When making the select call, we might want to limit how long this call
     // blocks. If the following variable is non-zero, it defines the point in
     // time at which the select call should wake up. If it is zero, this
@@ -967,7 +1033,7 @@ void MrfUdpIpClient::runSendThread() {
     // want to notify the callback, but we have to do this after releasing the
     // lock.
     std::exception_ptr sendException;
-    std::shared_ptr<RequestCallback> sendExceptionCallback;
+    std::shared_ptr<AbstractRequestCallback> sendExceptionCallback;
     // This flag indicates whether we would write to the socket if it was
     // ready. This information is used to decide whether we should wait for the
     // socket to become writable.
@@ -1124,24 +1190,12 @@ void MrfUdpIpClient::runSendThread() {
     //
     // If there was an error sending a packet, we call the associated callback
     // now.
-    if (sendExceptionCallback) {
-      try {
-        (*sendExceptionCallback)(0, 0, sendException);
-      } catch (...) {
-        // We do not want an exception in the callback to stop the send thread,
-        // so we ignore it.
-      }
-    }
+    callCallback(sendExceptionCallback, 0, 0, sendException);
     // We have to notify the callbacks of requests that timed out.
     for (const auto &callback : localTimeoutCallbacks) {
-      if (callback) {
-        try {
-          (*callback)(0, 0, std::make_exception_ptr(TimeoutException()));
-        } catch (...) {
-          // We do not want an exception in the callback to stop the send
-          // thread, so we ignore it.
-        }
-      }
+      callCallback(
+        callback, 0, 0, std::make_exception_ptr(TimeoutException())
+      );
     }
     // We clear the list, so that it is empty the next time it is swapped with
     // the other instance.
