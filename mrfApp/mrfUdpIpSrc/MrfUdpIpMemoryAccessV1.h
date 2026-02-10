@@ -27,67 +27,26 @@
  * of the GNU LGPL version 3 or newer.
  */
 
-#ifndef ANKA_MRF_UDP_IP_MEMORY_ACCESS_H
-#define ANKA_MRF_UDP_IP_MEMORY_ACCESS_H
+#ifndef ANKA_MRF_UDP_IP_MEMORY_ACCESS_V1_H
+#define ANKA_MRF_UDP_IP_MEMORY_ACCESS_V1_H
 
 #include <chrono>
 #include <cstdint>
 #include <string>
 
-#include <MrfMemoryAccess.h>
-#include "MrfUdpIpClient.h"
+#include "MrfUdpIpMemoryAccess.h"
 
 namespace anka {
 namespace mrf {
 
 /**
  * MRF memory access implementation that provides access to an MRF device
- * through the UDP/IP protocol. This is the base class that is shared by the
- * implementations for both protocol versions 1 and 2.
+ * through version 1 of the UDP/IP protocol. At the time of writing, only the
+ * VME-based devices (e.g. VME-EVG-230) support this kind of access.
  */
-class MrfUdpIpMemoryAccess: public MrfMemoryAccess {
+class MrfUdpIpMemoryAccessV1 : public MrfUdpIpMemoryAccess {
 
 public:
-
-  /**
-   * Base address of the CR/CSR space in the VME-EVG-230.
-   */
-  static constexpr std::uint32_t baseAddressVmeEvgCrCsr = 0x00000000;
-
-  /**
-   * Base address of the EVG registers space in the VME-EVG-230.
-   */
-  static constexpr std::uint32_t baseAddressVmeEvgRegister = 0x80000000;
-
-  /**
-   * Base address of the CR/CSR space in the VME-EVM-300.
-   */
-  static constexpr std::uint32_t baseAddressVmeEvmCrCsr = 0x00000000;
-
-  /**
-   * Base address of the EVM registers space in the VME-EVM-300.
-   */
-  static constexpr std::uint32_t baseAddressVmeEvmRegister = 0x80000000;
-
-  /**
-   * Base address of the CR/CSR space in the VME-EVR-230(RF).
-   */
-  static constexpr std::uint32_t baseAddressVmeEvr230CrCsr = 0x78000000;
-
-  /**
-   * Base address of the EVR registers space in the VME-EVR-230(RF).
-   */
-  static constexpr std::uint32_t baseAddressVmeEvr230Register = 0x7a000000;
-
-  /**
-   * Base address of the CR/CSR space in the VME-EVR-300.
-   */
-  static constexpr std::uint32_t baseAddressVmeEvr300CrCsr = 0x00000000;
-
-  /**
-   * Base address of the EVR registers space in the VME-EVR-300.
-   */
-  static constexpr std::uint32_t baseAddressVmeEvr300Register = 0x80000000;
 
   /**
    * Creates a memory-access object for an MRF device that can be controlled
@@ -110,7 +69,9 @@ public:
    * cannot be initialized, the background threads cannot be created, or if one
    * of the parameters is invalid.
    */
-  MrfUdpIpMemoryAccess(const std::string &hostName, std::uint32_t baseAddress);
+  MrfUdpIpMemoryAccessV1(
+    const std::string &hostName, std::uint32_t baseAddress
+  );
 
   /**
    * Creates a memory-access object for an MRF device that can be controlled
@@ -141,7 +102,7 @@ public:
    * cannot be initialized, the background threads cannot be created, or if one
    * of the parameters is invalid.
    */
-  MrfUdpIpMemoryAccess(
+  MrfUdpIpMemoryAccessV1(
     const std::string &hostName,
     std::uint32_t baseAddress,
     const std::chrono::duration<double> &queueTimeout,
@@ -151,72 +112,126 @@ public:
   /**
    * Destructor. Shuts down and destroys the underlying UDP client.
    */
-  virtual ~MrfUdpIpMemoryAccess();
+  virtual ~MrfUdpIpMemoryAccessV1();
 
   /**
-   * Reads from an unsigned 16-bit register. This method does not block. The
+   * Reads from an unsigned 32-bit register. This method does not block. The
    * operation is queued and executed asynchronously. When the operation
    * finishes, the specified callback is called.
    */
-  virtual void readUInt16(
-    std::uint32_t address, std::shared_ptr<CallbackUInt16> callback
+  virtual void readUInt32(
+    std::uint32_t address, std::shared_ptr<CallbackUInt32> callback
   );
 
   /**
-   * Writes to an unsigned 16-bit register. This method does not block. The
+   * Writes to an unsigned 32-bit register. This method does not block. The
    * operation is queued and executed asynchronously. When the operation
    * finishes, the specified callback is called.
    */
-  virtual void writeUInt16(
-    std::uint32_t address, std::uint16_t value, std::shared_ptr<CallbackUInt16>
+  virtual void writeUInt32(
+    std::uint32_t address, std::uint32_t value, std::shared_ptr<CallbackUInt32>
   );
 
   // We want the methods from the base class to participate in overload
   // resolution.
-  using MrfMemoryAccess::readUInt16;
-  using MrfMemoryAccess::readUInt32;
-  using MrfMemoryAccess::writeUInt16;
-  using MrfMemoryAccess::writeUInt32;
-
-protected:
-
-  /**
-   * Base address for memory access.
-   *
-   * This is applied as an offset for all addresses that are specified in
-   * read or write operations.
-   */
-  std::uint32_t const baseAddress;
-
-  /**
-   * Client for the UDP/IP protocol.
-   */
-  MrfUdpIpClient client;
-
-  /**
-   * Converts an exception that is received by a callback into an error code.
-   */
-  static std::pair<
-    MrfMemoryAccess::ErrorCode, std::string
-  > exceptionToErrorCodeAndMessage(std::exception_ptr exception);
-
-  /**
-   * Converts a status code that is received by a callback into an error code.
-   */
-  static MrfMemoryAccess::ErrorCode statusToErrorCode(std::int8_t status);
+  using MrfUdpIpMemoryAccess::readUInt16;
+  using MrfUdpIpMemoryAccess::readUInt32;
+  using MrfUdpIpMemoryAccess::writeUInt16;
+  using MrfUdpIpMemoryAccess::writeUInt32;
 
 private:
 
   /**
-   * Internal callback for a uint16 read or write request.
+   * Data structure that is shared by the callbacks for a uint32 read request.
    */
-  struct UInt16Callback: MrfUdpIpClient::RequestCallback16 {
+  struct UInt32ReadShared: std::enable_shared_from_this<UInt32ReadShared> {
+    MrfUdpIpMemoryAccessV1 &memoryAccess;
+    std::mutex mutex;
     std::uint32_t address;
-    std::shared_ptr<MrfMemoryAccess::CallbackUInt16> callback;
+    std::uint32_t data = 0;
+    bool failed = false;
+    bool gotLow = false;
+    bool gotHigh = false;
+    std::shared_ptr<MrfMemoryAccess::CallbackUInt32> callback;
 
-    UInt16Callback(
+    UInt32ReadShared(
+      MrfUdpIpMemoryAccessV1 &memoryAccess,
       std::uint32_t address,
-      std::shared_ptr<MrfMemoryAccess::CallbackUInt16> callback
+      std::shared_ptr<MrfMemoryAccess::CallbackUInt32> callback
+    );
+
+    void receivedLow(std::uint16_t data);
+    void receivedHigh(std::uint16_t data);
+    void failure(
+      MrfMemoryAccess::ErrorCode errorCode, const std::string &details
+    );
+  };
+
+  /**
+   * Internal callback for reading the high word of a uint32 register.
+   */
+  struct UInt32ReadHighCallback : MrfUdpIpClient::RequestCallback16 {
+    std::shared_ptr<UInt32ReadShared> sharedData;
+
+    UInt32ReadHighCallback(std::shared_ptr<UInt32ReadShared> sharedData);
+
+    void operator()(
+      std::uint16_t receivedData,
+      std::int8_t receivedStatus,
+      std::exception_ptr exception
+    );
+  };
+
+  /**
+   * Internal callback for reading the low word of a uint32 register.
+   */
+  struct UInt32ReadLowCallback : MrfUdpIpClient::RequestCallback16 {
+    std::shared_ptr<UInt32ReadShared> sharedData;
+
+    UInt32ReadLowCallback(std::shared_ptr<UInt32ReadShared> sharedData);
+
+    void operator()(
+      std::uint16_t receivedData,
+      std::int8_t receivedStatus,
+      std::exception_ptr exception
+    );
+  };
+
+  /**
+   * Internal callback for writing the high word of a uint32 register.
+   */
+  struct UInt32WriteHighCallback : MrfUdpIpClient::RequestCallback16 {
+    MrfUdpIpMemoryAccessV1 &memoryAccess;
+    std::uint32_t address;
+    std::uint16_t lowData;
+    std::shared_ptr<MrfMemoryAccess::CallbackUInt32> callback;
+
+    UInt32WriteHighCallback(
+      MrfUdpIpMemoryAccessV1 &memoryAccess,
+      std::uint32_t address,
+      std::uint16_t lowData,
+      std::shared_ptr<MrfMemoryAccess::CallbackUInt32> callback
+    );
+
+    void operator()(
+      std::uint16_t receivedData,
+      std::int8_t receivedStatus,
+      std::exception_ptr exception
+    );
+  };
+
+  /**
+   * Internal callback for writing the low word of a uint32 register.
+   */
+  struct UInt32WriteLowCallback : MrfUdpIpClient::RequestCallback16 {
+    std::uint32_t address;
+    std::uint16_t highData;
+    std::shared_ptr<MrfMemoryAccess::CallbackUInt32> callback;
+
+    UInt32WriteLowCallback(
+      std::uint32_t address,
+      std::uint16_t highData,
+      std::shared_ptr<MrfMemoryAccess::CallbackUInt32> callback
     );
 
     void operator()(
@@ -227,14 +242,14 @@ private:
   };
 
   // We do not want to allow copy or move construction or assignment.
-  MrfUdpIpMemoryAccess(const MrfUdpIpMemoryAccess &) = delete;
-  MrfUdpIpMemoryAccess(MrfUdpIpMemoryAccess &&) = delete;
-  MrfUdpIpMemoryAccess &operator=(const MrfUdpIpMemoryAccess &) = delete;
-  MrfUdpIpMemoryAccess &operator=(MrfUdpIpMemoryAccess &&) = delete;
+  MrfUdpIpMemoryAccessV1(const MrfUdpIpMemoryAccess &) = delete;
+  MrfUdpIpMemoryAccessV1(MrfUdpIpMemoryAccess &&) = delete;
+  MrfUdpIpMemoryAccessV1 &operator=(const MrfUdpIpMemoryAccess &) = delete;
+  MrfUdpIpMemoryAccessV1 &operator=(MrfUdpIpMemoryAccess &&) = delete;
 
 };
 
 } // namespace mrf
 } // namespace anka
 
-#endif // ANKA_MRF_UDP_IP_MEMORY_ACCESS_H
+#endif // ANKA_MRF_UDP_IP_MEMORY_ACCESS_V1_H

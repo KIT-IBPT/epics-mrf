@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2025 aquenos GmbH.
- * Copyright 2015-2025 Karlsruhe Institute of Technology.
+ * Copyright 2015-2026 aquenos GmbH.
+ * Copyright 2015-2026 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -41,6 +41,7 @@
 #include <MrfConsistentAsynchronousMemoryAccess.h>
 #include <MrfDeviceRegistry.h>
 #include <MrfUdpIpMemoryAccess.h>
+#include <MrfUdpIpMemoryAccessV1.h>
 #include <mrfEpicsError.h>
 
 #if EPICS_VERSION_INT >= VERSION_INT(7,0,3,1)
@@ -587,13 +588,20 @@ void createUdpIpDevice(
     std::uint32_t baseAddress,
     const std::chrono::duration<double> queueTimeout,
     const std::chrono::duration<double> requestTimeout,
-    std::function<void(std::shared_ptr<MrfMemoryCache>)> preheatFunction) {
-  std::shared_ptr<MrfUdpIpMemoryAccess> rawDevice = std::make_shared<
-    MrfUdpIpMemoryAccess>(hostName, baseAddress, queueTimeout, requestTimeout);
-  std::shared_ptr<MrfConsistentAsynchronousMemoryAccess> consistentDevice =
-      std::make_shared<MrfConsistentAsynchronousMemoryAccess>(rawDevice);
-  MrfDeviceRegistry::getInstance().registerDevice(std::string(deviceId),
-      consistentDevice);
+    std::function<void(std::shared_ptr<MrfMemoryCache>)> preheatFunction
+) {
+  // TODO Use correct implementation based on protocol version.
+  std::shared_ptr<MrfUdpIpMemoryAccess> rawDevice = (
+    std::make_shared<MrfUdpIpMemoryAccessV1>(
+      hostName, baseAddress, queueTimeout, requestTimeout
+    )
+  );
+  std::shared_ptr<MrfConsistentAsynchronousMemoryAccess> consistentDevice = (
+      std::make_shared<MrfConsistentAsynchronousMemoryAccess>(rawDevice)
+  );
+  MrfDeviceRegistry::getInstance().registerDevice(
+    std::string(deviceId), consistentDevice
+  );
   // We want to preheat the cache. We do not have to check whether the returned
   // pointer is null, because it won't be null if registerDevice did not throw
   // an exception.
