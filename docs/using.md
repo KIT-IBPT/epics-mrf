@@ -179,6 +179,14 @@ default values are used.
 
 ### VME-EVM-300
 
+**Important:** In order to use this device support with the VME-EVM-300, the
+[firmware](https://github.com/jpietari/VME-SAM3X/) for the SAM3X
+microcontroller on the VME-EVM-300 board needsto be sufficiently recent. In
+particular, it needs to include support for 32-bit read and write operations
+over the network, which was introduced with [commit `acc1e68`](
+https://github.com/jpietari/VME-SAM3X/commit/acc1e68f8242006a78d103ef11ef45d4aefa0a42)
+in February 2026).
+
 ```
 mrfUdpIpVmeEvm300Device("EVM01", "evm.example.com")
 
@@ -396,6 +404,14 @@ default values are used.
 
 
 ### VME-EVR-300
+
+**Important:** In order to use this device support with the VME-EVR-300, the
+[firmware](https://github.com/jpietari/VME-SAM3X/) for the SAM3X
+microcontroller on the VME-EVR-300 board needsto be sufficiently recent. In
+particular, it needs to include support for 32-bit read and write operations
+over the network, which was introduced with [commit `acc1e68`](
+https://github.com/jpietari/VME-SAM3X/commit/acc1e68f8242006a78d103ef11ef45d4aefa0a42)
+in February 2026).
 
 ```
 mrfUdpIpVmeEvr300Device("EVR01", "evr.example.com")

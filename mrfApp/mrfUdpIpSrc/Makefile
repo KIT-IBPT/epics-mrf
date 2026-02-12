@@ -18,12 +18,14 @@ LIBRARY_IOC += mrfUdpIp
 INC += MrfUdpIpClient.h
 INC += MrfUdpIpMemoryAccess.h
 INC += MrfUdpIpMemoryAccessV1.h
+INC += MrfUdpIpMemoryAccessV2.h
 INC += MrfUdpPacket.h
 
 # specify all source files to be compiled and added to the library
 mrfUdpIp_SRCS += MrfUdpIpClient.cpp
 mrfUdpIp_SRCS += MrfUdpIpMemoryAccess.cpp
 mrfUdpIp_SRCS += MrfUdpIpMemoryAccessV1.cpp
+mrfUdpIp_SRCS += MrfUdpIpMemoryAccessV2.cpp
 mrfUdpIp_SRCS += MrfUdpPacket.cpp
 
 # mrfUdpIp_LIBS += $(EPICS_BASE_IOC_LIBS)

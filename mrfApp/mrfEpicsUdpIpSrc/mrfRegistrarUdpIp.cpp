@@ -42,6 +42,7 @@
 #include <MrfDeviceRegistry.h>
 #include <MrfUdpIpMemoryAccess.h>
 #include <MrfUdpIpMemoryAccessV1.h>
+#include <MrfUdpIpMemoryAccessV2.h>
 #include <mrfEpicsError.h>
 
 #if EPICS_VERSION_INT >= VERSION_INT(7,0,3,1)
@@ -55,6 +56,10 @@ using namespace anka::mrf;
 using namespace anka::mrf::epics;
 
 namespace {
+
+enum class ProtocolVersion {
+  V1, V2
+};
 
 /**
  * Preheats the cache for a VME-EVG-230. This helps reduce the initialization
@@ -583,21 +588,33 @@ void preheatCacheVmeEvr300(std::shared_ptr<MrfMemoryCache> cache) {
  * identical with the exception that they use a different base address.
  */
 void createUdpIpDevice(
-    const std::string& deviceId,
-    const std::string &hostName,
-    std::uint32_t baseAddress,
-    const std::chrono::duration<double> queueTimeout,
-    const std::chrono::duration<double> requestTimeout,
-    std::function<void(std::shared_ptr<MrfMemoryCache>)> preheatFunction
+  const std::string& deviceId,
+  const std::string &hostName,
+  ProtocolVersion protocolVersion,
+  std::uint32_t baseAddress,
+  const std::chrono::duration<double> queueTimeout,
+  const std::chrono::duration<double> requestTimeout,
+  std::function<void(std::shared_ptr<MrfMemoryCache>)> preheatFunction
 ) {
-  // TODO Use correct implementation based on protocol version.
-  std::shared_ptr<MrfUdpIpMemoryAccess> rawDevice = (
-    std::make_shared<MrfUdpIpMemoryAccessV1>(
-      hostName, baseAddress, queueTimeout, requestTimeout
-    )
-  );
+  std::shared_ptr<MrfUdpIpMemoryAccess> rawDevice;
+  switch (protocolVersion) {
+  case ProtocolVersion::V1:
+    rawDevice = (
+      std::make_shared<MrfUdpIpMemoryAccessV1>(
+        hostName, baseAddress, queueTimeout, requestTimeout
+      )
+    );
+    break;
+  case ProtocolVersion::V2:
+    rawDevice = (
+      std::make_shared<MrfUdpIpMemoryAccessV2>(
+        hostName, baseAddress, queueTimeout, requestTimeout
+      )
+    );
+    break;
+  }
   std::shared_ptr<MrfConsistentAsynchronousMemoryAccess> consistentDevice = (
-      std::make_shared<MrfConsistentAsynchronousMemoryAccess>(rawDevice)
+    std::make_shared<MrfConsistentAsynchronousMemoryAccess>(rawDevice)
   );
   MrfDeviceRegistry::getInstance().registerDevice(
     std::string(deviceId), consistentDevice
@@ -621,9 +638,10 @@ void createUdpIpDevice(
  */
 int iocshMrfUdpIpDeviceFunc(
   const iocshArgBuf *args,
+  ProtocolVersion protocolVersion,
   std::uint32_t baseAddress,
-  std::function<void(std::shared_ptr<MrfMemoryCache>)> preheatFunction)
-  noexcept {
+  std::function<void(std::shared_ptr<MrfMemoryCache>)> preheatFunction
+) noexcept {
   char *deviceId = args[0].sval;
   char *hostAddress = args[1].sval;
   double queueTimeoutDouble = args[2].dval;
@@ -668,6 +686,7 @@ int iocshMrfUdpIpDeviceFunc(
     createUdpIpDevice(
       deviceId,
       hostAddress,
+      protocolVersion,
       baseAddress,
       queueTimeout,
       requestTimeout,
@@ -769,36 +788,48 @@ static const iocshFuncDef iocshMrfUdpIpVmeEvr300DeviceFuncDef = {
  * functions.
  */
 static void iocshMrfUdpIpVmeEvg230DeviceFunc(
-    const iocshArgBuf *args) noexcept {
+  const iocshArgBuf *args
+) noexcept {
   MRF_IOC_SET_ERROR(
     iocshMrfUdpIpDeviceFunc(
       args,
+      ProtocolVersion::V1,
       MrfUdpIpMemoryAccess::baseAddressVmeEvgRegister,
-      preheatCacheVmeEvg230));
+      preheatCacheVmeEvg230
+    )
+  );
 }
 
 /**
  * Implementation of the iocsh mrfUdpIpVmeEvm300Device function.
  */
 static void iocshMrfUdpIpVmeEvm300DeviceFunc(
-    const iocshArgBuf *args) noexcept {
+  const iocshArgBuf *args
+) noexcept {
   MRF_IOC_SET_ERROR(
     iocshMrfUdpIpDeviceFunc(
       args,
+      ProtocolVersion::V2,
       MrfUdpIpMemoryAccess::baseAddressVmeEvmRegister,
-      preheatCacheVmeEvm300));
+      preheatCacheVmeEvm300
+    )
+  );
 }
 
 /**
  * Implementation of the iocsh mrfUdpIpVmeEvr230Device.
  */
 static void iocshMrfUdpIpVmeEvr230DeviceFunc(
-    const iocshArgBuf *args) noexcept {
+  const iocshArgBuf *args
+) noexcept {
   MRF_IOC_SET_ERROR(
     iocshMrfUdpIpDeviceFunc(
       args,
+      ProtocolVersion::V1,
       MrfUdpIpMemoryAccess::baseAddressVmeEvr230Register,
-      preheatCacheVmeEvr230Rf));
+      preheatCacheVmeEvr230Rf
+    )
+  );
 }
 
 /**
@@ -806,24 +837,32 @@ static void iocshMrfUdpIpVmeEvr230DeviceFunc(
  * functions.
  */
 static void iocshMrfUdpIpVmeEvr230RfDeviceFunc(
-    const iocshArgBuf *args) noexcept {
+  const iocshArgBuf *args
+) noexcept {
   MRF_IOC_SET_ERROR(
     iocshMrfUdpIpDeviceFunc(
       args,
+      ProtocolVersion::V1,
       MrfUdpIpMemoryAccess::baseAddressVmeEvr230Register,
-      preheatCacheVmeEvr230Rf));
+      preheatCacheVmeEvr230Rf
+    )
+  );
 }
 
 /**
  * Implementation of the iocsh mrfUdpIpVmeEvr300Device function.
  */
 static void iocshMrfUdpIpVmeEvr300DeviceFunc(
-    const iocshArgBuf *args) noexcept {
+  const iocshArgBuf *args
+) noexcept {
   MRF_IOC_SET_ERROR(
     iocshMrfUdpIpDeviceFunc(
       args,
+      ProtocolVersion::V2,
       MrfUdpIpMemoryAccess::baseAddressVmeEvr300Register,
-      preheatCacheVmeEvr300));
+      preheatCacheVmeEvr300
+    )
+  );
 }
 
 /*

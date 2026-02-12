@@ -185,7 +185,7 @@ private:
     /**
      * Read double word (only valid with protocol version 2).
      */
-    READ32 = 3,
+    READ32 = 4,
 
     /**
      * Write word.
@@ -195,7 +195,7 @@ private:
     /**
      * Write double word (only valid with protocol version 2).
      */
-    WRITE32 = 4
+    WRITE32 = 5
   };
 
   /**
