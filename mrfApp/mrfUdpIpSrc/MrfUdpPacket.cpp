@@ -159,7 +159,10 @@ void MrfUdpPacket::receive(int socket) {
 }
 
 void MrfUdpPacket::send(int socket, int flags) const {
-  std::size_t packetSize;
+  // The initialization here is not really needed because one of the branches
+  // that set the variable later should always apply, but GCC cannot detect
+  // this, so we initialize the variable in order to avoid a compiler warning.
+  std::size_t packetSize = 0;
   switch (this->protocolVersion) {
   case ProtocolVersion::V1:
     packetSize = sizeof(OnWirePacketV1);

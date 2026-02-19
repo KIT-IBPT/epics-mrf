@@ -70,7 +70,10 @@ void MrfUdpIpMemoryAccess::writeUInt16(
   std::shared_ptr<UInt16Callback> internalCallback = (
     std::make_shared<UInt16Callback>(address, callback)
   );
-  bool readback;
+  // The initialization here is not really needed because one of the branches
+  // that set the variable later should always apply, but GCC cannot detect
+  // this, so we initialize the variable in order to avoid a compiler warning.
+  bool readback = true;
   switch (readbackMode) {
   case ReadbackMode::may:
     if (client.getProtocolVersion() == ProtocolVersion::V1) {
