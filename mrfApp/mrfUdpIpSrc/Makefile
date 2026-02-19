@@ -19,6 +19,7 @@ INC += MrfUdpIpClient.h
 INC += MrfUdpIpMemoryAccess.h
 INC += MrfUdpIpMemoryAccessV1.h
 INC += MrfUdpIpMemoryAccessV2.h
+INC += MrfUdpIpProtocolVersion.h
 INC += MrfUdpPacket.h
 
 # specify all source files to be compiled and added to the library

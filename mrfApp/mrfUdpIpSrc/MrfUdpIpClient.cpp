@@ -124,13 +124,17 @@ template<class Rep, class Period>
 } // anonymous namespace
 
 MrfUdpIpClient::MrfUdpIpClient(
-    const std::string &hostName,
-    const Clock::duration &queueTimeout,
-    const Clock::duration &requestTimeout) :
-    hostName(hostName),
-    queueTimeout(queueTimeout),
-    requestTimeout(requestTimeout),
-    shutdown(false) {
+  ProtocolVersion protocolVersion,
+  const std::string &hostName,
+  const Clock::duration &queueTimeout,
+  const Clock::duration &requestTimeout
+) :
+  hostName(hostName),
+  protocolVersion(protocolVersion),
+  queueTimeout(queueTimeout),
+  requestTimeout(requestTimeout),
+  shutdown(false)
+{
   if (queueTimeout < Clock::duration::zero()) {
     throw std::invalid_argument(
       "The queue timeout must be zero or positive.");
@@ -577,7 +581,7 @@ void MrfUdpIpClient::queueReadRequest16(
   {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     auto request = std::make_shared<Request>(
-      callback, AccessType::READ16, address, 0, true
+      callback, AccessType::READ16, address, 0, true, protocolVersion
     );
     newRequests.emplace_back(std::move(request));
     sendSelector.wakeUp();
@@ -587,6 +591,11 @@ void MrfUdpIpClient::queueReadRequest16(
 void MrfUdpIpClient::queueReadRequest32(
   std::uint32_t address, const std::shared_ptr<RequestCallback32> &callback
 ) {
+  if (protocolVersion == ProtocolVersion::V1) {
+    throw std::logic_error(
+      "32-bit operations are not supported when using protocol version 1."
+    );
+  }
   // We have to hold a lock on the mutex while incrementing the counter and
   // modifying the request queue. We create the request object after acquiring
   // the lock because we have to ensure that the ordering of the queueTime
@@ -605,8 +614,15 @@ void MrfUdpIpClient::queueReadRequest32(
 void MrfUdpIpClient::queueWriteRequest16(
   std::uint32_t address,
   std::uint16_t data,
-  std::shared_ptr<RequestCallback16> const &callback
+  std::shared_ptr<RequestCallback16> const &callback,
+  bool readback
 ) {
+  if (!readback && protocolVersion == ProtocolVersion::V1) {
+    throw std::logic_error(
+      "Write operations without readback are not supported when using "
+      "protocol version 1."
+    );
+  }
   // We have to hold a lock on the mutex while incrementing the counter and
   // modifying the request queue. We create the request object after acquiring
   // the lock because we have to ensure that the ordering of the queueTime
@@ -614,8 +630,11 @@ void MrfUdpIpClient::queueWriteRequest16(
   // stored in the list.
   {
     std::lock_guard<std::recursive_mutex> lock(mutex);
+    auto accessType = (
+      readback ? AccessType::WRITE16 : AccessType::WRITE16_NO_READBACK
+    );
     auto request = std::make_shared<Request>(
-      callback, AccessType::WRITE16, address, data, false
+      callback, accessType, address, data, false, protocolVersion
     );
     newRequests.emplace_back(std::move(request));
     sendSelector.wakeUp();
@@ -625,8 +644,14 @@ void MrfUdpIpClient::queueWriteRequest16(
 void MrfUdpIpClient::queueWriteRequest32(
   std::uint32_t address,
   std::uint32_t data,
-  const std::shared_ptr<RequestCallback32> &callback
+  const std::shared_ptr<RequestCallback32> &callback,
+  bool readback
 ) {
+  if (protocolVersion == ProtocolVersion::V1) {
+    throw std::logic_error(
+      "32-bit operations are not supported when using protocol version 1."
+    );
+  }
   // We have to hold a lock on the mutex while incrementing the counter and
   // modifying the request queue. We create the request object after acquiring
   // the lock because we have to ensure that the ordering of the queueTime
@@ -634,8 +659,11 @@ void MrfUdpIpClient::queueWriteRequest32(
   // stored in the list.
   {
     std::lock_guard<std::recursive_mutex> lock(mutex);
+    auto accessType = (
+      readback ? AccessType::WRITE32 : AccessType::WRITE32_NO_READBACK
+    );
     auto request = std::make_shared<Request>(
-      callback, AccessType::WRITE32, address, data, false
+      callback, accessType, address, data, false
     );
     newRequests.emplace_back(std::move(request));
     sendSelector.wakeUp();

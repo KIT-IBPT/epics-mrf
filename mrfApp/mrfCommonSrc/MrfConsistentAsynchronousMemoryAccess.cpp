@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2016 aquenos GmbH.
- * Copyright 2015-2016 Karlsruhe Institute of Technology.
+ * Copyright 2015-2026 aquenos GmbH.
+ * Copyright 2015-2026 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -43,8 +43,11 @@ MrfConsistentAsynchronousMemoryAccess::MrfConsistentAsynchronousMemoryAccess::Im
 }
 
 void MrfConsistentAsynchronousMemoryAccess::Impl::writeUInt16(
-    std::uint32_t address, std::uint16_t value,
-    std::shared_ptr<CallbackUInt16> callback) {
+  std::uint32_t address,
+  std::uint16_t value,
+  std::shared_ptr<CallbackUInt16> callback,
+  ReadbackMode readbackMode
+) {
   bool canRun;
   OperationInfo info;
   info.type = OperationType::writeUInt16;
@@ -59,8 +62,12 @@ void MrfConsistentAsynchronousMemoryAccess::Impl::writeUInt16(
     wrappingCallback->operationInfo = info;
     wrappingCallback->impl = shared_from_this();
     wrappingCallback->delegate = callback;
-    writeUInt16CallbacksAndValues.insert(
-        std::make_pair(info.id, std::make_pair(wrappingCallback, value)));
+    writeUInt16Args.insert(
+      std::make_pair(
+        info.id,
+        std::make_tuple(wrappingCallback, value, readbackMode)
+      )
+    );
     canRun = canRunOperation(info);
     if (canRun) {
       markRunOperation(info);
@@ -76,8 +83,11 @@ void MrfConsistentAsynchronousMemoryAccess::Impl::writeUInt16(
 }
 
 void MrfConsistentAsynchronousMemoryAccess::Impl::writeUInt32(
-    std::uint32_t address, std::uint32_t value,
-    std::shared_ptr<CallbackUInt32> callback) {
+  std::uint32_t address,
+  std::uint32_t value,
+  std::shared_ptr<CallbackUInt32> callback,
+  ReadbackMode readbackMode
+) {
   bool canRun;
   OperationInfo info;
   info.type = OperationType::writeUInt32;
@@ -92,8 +102,11 @@ void MrfConsistentAsynchronousMemoryAccess::Impl::writeUInt32(
     wrappingCallback->operationInfo = info;
     wrappingCallback->impl = shared_from_this();
     wrappingCallback->delegate = callback;
-    writeUInt32CallbacksAndValues.insert(
-        std::make_pair(info.id, std::make_pair(wrappingCallback, value)));
+    writeUInt32Args.insert(
+      std::make_pair(
+        info.id, std::make_tuple(wrappingCallback, value, readbackMode)
+      )
+    );
     canRun = canRunOperation(info);
     if (canRun) {
       markRunOperation(info);
@@ -227,12 +240,16 @@ void MrfConsistentAsynchronousMemoryAccess::Impl::runOperation(
   case OperationType::writeUInt16: {
     std::shared_ptr<CallbackUInt16> callback;
     std::uint16_t value;
-    std::tie(callback, value) = writeUInt16CallbacksAndValues.at(
-        operationInfo.id);
+    ReadbackMode readbackMode;
+    std::tie(callback, value, readbackMode) = (
+      writeUInt16Args.at(operationInfo.id)
+    );
     // We have to catch exceptions and call the failure callback to make sure
     // that things get cleaned up.
     try {
-      delegate.writeUInt16(operationInfo.address, value, callback);
+      delegate.writeUInt16(
+        operationInfo.address, value, callback, readbackMode
+      );
     } catch (std::exception &e) {
       try {
         callback->failure(operationInfo.address, ErrorCode::unknown,
@@ -255,12 +272,16 @@ void MrfConsistentAsynchronousMemoryAccess::Impl::runOperation(
   case OperationType::writeUInt32: {
     std::shared_ptr<CallbackUInt32> callback;
     std::uint32_t value;
-    std::tie(callback, value) = writeUInt32CallbacksAndValues.at(
-        operationInfo.id);
+    ReadbackMode readbackMode;
+    std::tie(callback, value, readbackMode) = (
+      writeUInt32Args.at(operationInfo.id)
+    );
     // We have to catch exceptions and call the failure callback to make sure
     // that things get cleaned up.
     try {
-      delegate.writeUInt32(operationInfo.address, value, callback);
+      delegate.writeUInt32(
+        operationInfo.address, value, callback, readbackMode
+      );
     } catch (std::exception &e) {
       try {
         callback->failure(operationInfo.address, ErrorCode::unknown,
@@ -376,10 +397,10 @@ void MrfConsistentAsynchronousMemoryAccess::Impl::operationFinished(
     unmarkRunOperation(operationInfo);
     switch (operationInfo.type) {
     case OperationType::writeUInt16:
-      writeUInt16CallbacksAndValues.erase(operationInfo.id);
+      writeUInt16Args.erase(operationInfo.id);
       break;
     case OperationType::writeUInt32:
-      writeUInt32CallbacksAndValues.erase(operationInfo.id);
+      writeUInt32Args.erase(operationInfo.id);
       break;
     case OperationType::updateUInt16:
       updateUInt16Callbacks.erase(operationInfo.id);

@@ -1,6 +1,6 @@
 /*
- * Copyright 2016 aquenos GmbH.
- * Copyright 2016 Karlsruhe Institute of Technology.
+ * Copyright 2016-2026 aquenos GmbH.
+ * Copyright 2016-2026 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -106,8 +106,12 @@ public:
    * operation is queued and executed asynchronously. When the operation
    * finishes, the specified callback is called.
    */
-  virtual void writeUInt16(std::uint32_t address, std::uint16_t value,
-      std::shared_ptr<CallbackUInt16>);
+  virtual void writeUInt16(
+    std::uint32_t address,
+    std::uint16_t value,
+    std::shared_ptr<CallbackUInt16>,
+    ReadbackMode readbackMode = ReadbackMode::must
+  );
 
   /**
    * Reads from an unsigned 32-bit register. This method does not block. The
@@ -122,8 +126,12 @@ public:
    * operation is queued and executed asynchronously. When the operation
    * finishes, the specified callback is called.
    */
-  virtual void writeUInt32(std::uint32_t address, std::uint32_t value,
-      std::shared_ptr<CallbackUInt32>);
+  virtual void writeUInt32(
+    std::uint32_t address,
+    std::uint32_t value,
+    std::shared_ptr<CallbackUInt32>,
+    ReadbackMode readbackMode = ReadbackMode::must
+  );
 
   // We want the methods from the base class to participate in overload
   // resolution.
@@ -165,7 +173,13 @@ private:
    * Type of a queued request.
    */
   enum class MrfIoRequestType {
-    notSpecified, readUInt16, writeUInt16, readUInt32, writeUInt32
+    notSpecified,
+    readUInt16,
+    writeUInt16,
+    writeReadUInt16,
+    readUInt32,
+    writeUInt32,
+    writeReadUInt32
   };
 
   /**

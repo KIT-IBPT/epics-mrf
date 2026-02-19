@@ -129,7 +129,10 @@ public:
    * finishes, the specified callback is called.
    */
   virtual void writeUInt32(
-    std::uint32_t address, std::uint32_t value, std::shared_ptr<CallbackUInt32>
+    std::uint32_t address,
+    std::uint32_t value,
+    std::shared_ptr<CallbackUInt32>,
+    ReadbackMode readbackMode = ReadbackMode::must
   );
 
   // We want the methods from the base class to participate in overload

@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2016 aquenos GmbH.
- * Copyright 2015-2016 Karlsruhe Institute of Technology.
+ * Copyright 2015-2026 aquenos GmbH.
+ * Copyright 2015-2026 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -33,6 +33,7 @@
 #include <forward_list>
 #include <memory>
 #include <mutex>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -89,17 +90,22 @@ public:
 
   /**
    * Writes to an unsigned 16-bit register. The method blocks until the
-   * operation has finished (either successfully or unsuccessfully). On success,
-   * the value read from the memory (after writing to it) is returned. On
-   * failure, an exception is thrown. This method delegates the write operation
-   * to the memory access which has been passed to the constructor. However,
-   * the operation is delayed automatically, if a concurrent update operation to
+   * operation has finished (either successfully or unsuccessfully). On
+   * success, the value read from the memory (after writing to it) may be
+   * returned (depending on the specified readback mode). On failure, an
+   * exception is thrown. This method delegates the write operation to the
+   * memory access which has been passed to the constructor. However, the
+   * operation is delayed automatically, if a concurrent update operation to
    * the same register is in progress.
    */
-  inline std::uint16_t writeUInt16(std::uint32_t address, std::uint16_t value) {
-    // We delegate to the implementation in the super class. This will indirectly
-    // call our asynchronous implementation.
-    return MrfMemoryAccess::writeUInt16(address, value);
+  inline std::uint16_t writeUInt16(
+    std::uint32_t address,
+    std::uint16_t value,
+    ReadbackMode readbackMode = ReadbackMode::must
+  ) {
+    // We delegate to the implementation in the super class. This will
+    // indirectly call our asynchronous implementation.
+    return MrfMemoryAccess::writeUInt16(address, value, readbackMode);
   }
 
   /**
@@ -125,9 +131,13 @@ public:
    * write without blocking might call the callback directly in the calling
    * thread.
    */
-  inline void writeUInt16(std::uint32_t address, std::uint16_t value,
-      std::shared_ptr<CallbackUInt16> callback) {
-    impl->writeUInt16(address, value, callback);
+  inline void writeUInt16(
+    std::uint32_t address,
+    std::uint16_t value,
+    std::shared_ptr<CallbackUInt16> callback,
+    ReadbackMode readbackMode = ReadbackMode::must
+  ) {
+    impl->writeUInt16(address, value, callback, readbackMode);
   }
 
   /**
@@ -143,17 +153,22 @@ public:
 
   /**
    * Writes to an unsigned 32-bit register. The method blocks until the
-   * operation has finished (either successfully or unsuccessfully). On success,
-   * the value read from the memory (after writing to it) is returned. On
-   * failure, an exception is thrown. This method delegates the write operation
-   * to the memory access which has been passed to the constructor. However, the
-   * operation is delayed automatically, if a concurrent update operation to the
-   * same register is in progress.
+   * operation has finished (either successfully or unsuccessfully). On
+   * success, the value read from the memory (after writing to it) may be
+   * returned (depending on the specified readback mode). On failure, an
+   * exception is thrown. This method delegates the write operation to the
+   * memory access which has been passed to the constructor. However, the
+   * operation is delayed automatically, if a concurrent update operation to
+   * the same register is in progress.
    */
-  inline std::uint32_t writeUInt32(std::uint32_t address, std::uint32_t value) {
-    // We delegate to the implementation in the super class. This will indirectly
-    // call our asynchronous implementation.
-    return MrfMemoryAccess::writeUInt32(address, value);
+  inline std::uint32_t writeUInt32(
+    std::uint32_t address,
+    std::uint32_t value,
+    ReadbackMode readbackMode = ReadbackMode::must
+  ) {
+    // We delegate to the implementation in the super class. This will
+    // indirectly call our asynchronous implementation.
+    return MrfMemoryAccess::writeUInt32(address, value, readbackMode);
   }
 
   /**
@@ -179,9 +194,13 @@ public:
    * write without blocking might call the callback directly in the calling
    * thread.
    */
-  inline void writeUInt32(std::uint32_t address, std::uint32_t value,
-      std::shared_ptr<CallbackUInt32> callback) {
-    return impl->writeUInt32(address, value, callback);
+  inline void writeUInt32(
+    std::uint32_t address,
+    std::uint32_t value,
+    std::shared_ptr<CallbackUInt32> callback,
+    ReadbackMode readbackMode = ReadbackMode::must
+  ) {
+    return impl->writeUInt32(address, value, callback, readbackMode);
   }
 
   /**
@@ -277,11 +296,19 @@ private:
     MrfMemoryAccess &delegate;
     std::shared_ptr<MrfMemoryAccess> delegatePtr;
 
-    void writeUInt16(std::uint32_t address, std::uint16_t value,
-        std::shared_ptr<CallbackUInt16> callback);
+    void writeUInt16(
+      std::uint32_t address,
+      std::uint16_t value,
+      std::shared_ptr<CallbackUInt16> callback,
+      ReadbackMode readbackMode
+    );
 
-    void writeUInt32(std::uint32_t address, std::uint32_t value,
-        std::shared_ptr<CallbackUInt32> callback);
+    void writeUInt32(
+      std::uint32_t address,
+      std::uint32_t value,
+      std::shared_ptr<CallbackUInt32> callback,
+      ReadbackMode readbackMode
+    );
 
     void updateUInt16(std::uint32_t address,
         std::shared_ptr<UpdatingCallbackUInt16> callback);
@@ -326,20 +353,6 @@ private:
     };
 
     /**
-     * Internal callback for write operations.
-     */
-    template<typename T>
-    struct WriteCallback: MrfMemoryAccess::Callback<T> {
-      OperationInfo operationInfo;
-      std::shared_ptr<Impl> impl;
-      std::shared_ptr<MrfMemoryAccess::Callback<T>> delegate;
-
-      void success(std::uint32_t address, T value);
-      void failure(std::uint32_t address, MrfMemoryAccess::ErrorCode errorCode,
-          const std::string &details);
-    };
-
-    /**
      * Internal callback for update operations. It is used for both stages of
      * the update operation (read and write).
      */
@@ -360,14 +373,34 @@ private:
       void write(T newValue);
     };
 
+    /**
+     * Internal callback for write operations.
+     */
+    template<typename T>
+    struct WriteCallback: MrfMemoryAccess::Callback<T> {
+      OperationInfo operationInfo;
+      std::shared_ptr<Impl> impl;
+      std::shared_ptr<MrfMemoryAccess::Callback<T>> delegate;
+
+      void success(std::uint32_t address, T value);
+      void failure(std::uint32_t address, MrfMemoryAccess::ErrorCode errorCode,
+          const std::string &details);
+    };
+
+    using WriteUInt16Args = std::tuple<
+      std::shared_ptr<CallbackUInt16>, std::uint16_t, ReadbackMode
+    >;
+
+    using WriteUInt32Args = std::tuple<
+      std::shared_ptr<CallbackUInt32>, std::uint32_t, ReadbackMode
+    >;
+
     std::recursive_mutex mutex;
     unsigned long nextId = 0;
     std::unordered_multimap<std::uint32_t, OperationInfo> pendingOperations;
     std::unordered_set<std::uint32_t> operationRunning;
-    std::unordered_map<unsigned long,
-        std::pair<std::shared_ptr<CallbackUInt16>, std::uint16_t>> writeUInt16CallbacksAndValues;
-    std::unordered_map<unsigned long,
-        std::pair<std::shared_ptr<CallbackUInt32>, std::uint32_t>> writeUInt32CallbacksAndValues;
+    std::unordered_map<unsigned long, WriteUInt16Args> writeUInt16Args;
+    std::unordered_map<unsigned long, WriteUInt32Args> writeUInt32Args;
     std::unordered_map<unsigned long, std::shared_ptr<CallbackUInt16>> updateUInt16Callbacks;
     std::unordered_map<unsigned long, std::shared_ptr<CallbackUInt32>> updateUInt32Callbacks;
 
@@ -396,37 +429,6 @@ private:
   std::shared_ptr<Impl> impl;
 
 };
-
-template<typename T>
-void MrfConsistentAsynchronousMemoryAccess::MrfConsistentAsynchronousMemoryAccess::Impl::WriteCallback<
-    T>::success(std::uint32_t address, T value) {
-  try {
-    impl->operationFinished(operationInfo);
-  } catch (...) {
-    // The code should not throw, but if it does, we still want to call the
-    // delegate's method. We do not rethrow the exception because it would be
-    // discarded by the calling code anyway.
-  }
-  if (delegate) {
-    delegate->success(address, value);
-  }
-}
-
-template<typename T>
-void MrfConsistentAsynchronousMemoryAccess::MrfConsistentAsynchronousMemoryAccess::Impl::WriteCallback<
-    T>::failure(std::uint32_t address, MrfMemoryAccess::ErrorCode errorCode,
-    const std::string &details) {
-  try {
-    impl->operationFinished(operationInfo);
-  } catch (...) {
-    // The code should not throw, but if it does, we still want to call the
-    // delegate's method. We do not rethrow the exception because it would be
-    // discarded by the calling code anyway.
-  }
-  if (delegate) {
-    delegate->failure(address, errorCode, details);
-  }
-}
 
 template<typename T>
 void MrfConsistentAsynchronousMemoryAccess::MrfConsistentAsynchronousMemoryAccess::Impl::UpdateCallback<
@@ -490,7 +492,38 @@ inline void MrfConsistentAsynchronousMemoryAccess::MrfConsistentAsynchronousMemo
       shared_from_this());
 }
 
+template<typename T>
+void MrfConsistentAsynchronousMemoryAccess::MrfConsistentAsynchronousMemoryAccess::Impl::WriteCallback<
+    T>::success(std::uint32_t address, T value) {
+  try {
+    impl->operationFinished(operationInfo);
+  } catch (...) {
+    // The code should not throw, but if it does, we still want to call the
+    // delegate's method. We do not rethrow the exception because it would be
+    // discarded by the calling code anyway.
+  }
+  if (delegate) {
+    delegate->success(address, value);
+  }
 }
+
+template<typename T>
+void MrfConsistentAsynchronousMemoryAccess::MrfConsistentAsynchronousMemoryAccess::Impl::WriteCallback<
+    T>::failure(std::uint32_t address, MrfMemoryAccess::ErrorCode errorCode,
+    const std::string &details) {
+  try {
+    impl->operationFinished(operationInfo);
+  } catch (...) {
+    // The code should not throw, but if it does, we still want to call the
+    // delegate's method. We do not rethrow the exception because it would be
+    // discarded by the calling code anyway.
+  }
+  if (delegate) {
+    delegate->failure(address, errorCode, details);
+  }
 }
+
+} // namespace mrf
+} // namespace anka
 
 #endif // ANKA_MRF_CONSISTENT_ASYNCHRONOUS_MEMORY_ACCESS_H

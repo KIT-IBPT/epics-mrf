@@ -49,60 +49,7 @@ constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvr230Register;
 constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvr300CrCsr;
 constexpr std::uint32_t MrfUdpIpMemoryAccess::baseAddressVmeEvr300Register;
 
-MrfUdpIpMemoryAccess::MrfUdpIpMemoryAccess(
-  const std::string &hostName, std::uint32_t baseAddress
-) :
-  MrfUdpIpMemoryAccess(
-    hostName,
-    baseAddress,
-    std::chrono::duration<double>(0),
-    std::chrono::duration<double>(5.0)
-  )
-{
-}
-
-MrfUdpIpMemoryAccess::MrfUdpIpMemoryAccess(
-  const std::string &hostName,
-  std::uint32_t baseAddress,
-  const std::chrono::duration<double> &queueTimeout,
-  const std::chrono::duration<double> &requestTimeout
-) :
-  baseAddress(baseAddress),
-  client(hostName, queueTimeout, requestTimeout)
-{
-}
-
 MrfUdpIpMemoryAccess::~MrfUdpIpMemoryAccess() {
-}
-
-MrfUdpIpMemoryAccess::UInt16Callback::UInt16Callback(
-  std::uint32_t address,
-  std::shared_ptr<MrfMemoryAccess::CallbackUInt16> callback
-) :
-  address(address),
-  callback(callback)
-{
-}
-
-void MrfUdpIpMemoryAccess::UInt16Callback::operator()(
-  std::uint16_t receivedData,
-  std::int8_t receivedStatus,
-  std::exception_ptr exception
-) {
-  if (callback) {
-    if (exception) {
-      ErrorCode errorCode;
-      std::string message;
-      std::tie(errorCode, message) = exceptionToErrorCodeAndMessage(exception);
-      callback->failure(this->address, errorCode, message);
-    } else if (receivedStatus != 0) {
-      callback->failure(
-        this->address, statusToErrorCode(receivedStatus), std::string()
-      );
-    } else {
-      callback->success(this->address, receivedData);
-    }
-  }
 }
 
 void MrfUdpIpMemoryAccess::readUInt16(
@@ -117,12 +64,63 @@ void MrfUdpIpMemoryAccess::readUInt16(
 void MrfUdpIpMemoryAccess::writeUInt16(
   std::uint32_t address,
   std::uint16_t value,
-  std::shared_ptr<CallbackUInt16> callback
+  std::shared_ptr<CallbackUInt16> callback,
+  ReadbackMode readbackMode
 ) {
   std::shared_ptr<UInt16Callback> internalCallback = (
     std::make_shared<UInt16Callback>(address, callback)
   );
-  client.queueWriteRequest16(baseAddress + address, value, internalCallback);
+  bool readback;
+  switch (readbackMode) {
+  case ReadbackMode::may:
+    if (client.getProtocolVersion() == ProtocolVersion::V1) {
+      readback = true;
+    } else {
+      readback = false;
+    }
+    break;
+  case ReadbackMode::must:
+    readback = true;
+    break;
+  case ReadbackMode::mustNot:
+    if (client.getProtocolVersion() == ProtocolVersion::V1) {
+      throw std::invalid_argument(
+        "ReadbackMode::mustNot is not supported for protocol version 1."
+      );
+    }
+    readback = false;
+    break;
+  }
+  client.queueWriteRequest16(
+    baseAddress + address, value, internalCallback, readback
+  );
+}
+
+MrfUdpIpMemoryAccess::MrfUdpIpMemoryAccess(
+  ProtocolVersion protocolVersion,
+  const std::string &hostName,
+  std::uint32_t baseAddress
+) :
+  MrfUdpIpMemoryAccess(
+    protocolVersion,
+    hostName,
+    baseAddress,
+    std::chrono::duration<double>(0),
+    std::chrono::duration<double>(5.0)
+  )
+{
+}
+
+MrfUdpIpMemoryAccess::MrfUdpIpMemoryAccess(
+  ProtocolVersion protocolVersion,
+  const std::string &hostName,
+  std::uint32_t baseAddress,
+  const std::chrono::duration<double> &queueTimeout,
+  const std::chrono::duration<double> &requestTimeout
+) :
+  baseAddress(baseAddress),
+  client(protocolVersion, hostName, queueTimeout, requestTimeout)
+{
 }
 
 std::pair<
@@ -154,6 +152,36 @@ MrfMemoryAccess::ErrorCode MrfUdpIpMemoryAccess::statusToErrorCode(
     return MrfMemoryAccess::ErrorCode::invalidCommand;
   default:
     return MrfMemoryAccess::ErrorCode::unknown;
+  }
+}
+
+MrfUdpIpMemoryAccess::UInt16Callback::UInt16Callback(
+  std::uint32_t address,
+  std::shared_ptr<MrfMemoryAccess::CallbackUInt16> callback
+) :
+  address(address),
+  callback(callback)
+{
+}
+
+void MrfUdpIpMemoryAccess::UInt16Callback::operator()(
+  std::uint16_t receivedData,
+  std::int8_t receivedStatus,
+  std::exception_ptr exception
+) {
+  if (callback) {
+    if (exception) {
+      ErrorCode errorCode;
+      std::string message;
+      std::tie(errorCode, message) = exceptionToErrorCodeAndMessage(exception);
+      callback->failure(this->address, errorCode, message);
+    } else if (receivedStatus != 0) {
+      callback->failure(
+        this->address, statusToErrorCode(receivedStatus), std::string()
+      );
+    } else {
+      callback->success(this->address, receivedData);
+    }
   }
 }
 

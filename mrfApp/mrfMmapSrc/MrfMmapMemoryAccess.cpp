@@ -1,6 +1,6 @@
 /*
- * Copyright 2016-2025 aquenos GmbH.
- * Copyright 2016-2025 Karlsruhe Institute of Technology.
+ * Copyright 2016-2026 aquenos GmbH.
+ * Copyright 2016-2026 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -113,12 +113,22 @@ void MrfMmapMemoryAccess::readUInt16(std::uint32_t address,
   queueIoRequest(std::move(request));
 }
 
-void MrfMmapMemoryAccess::writeUInt16(std::uint32_t address,
-    std::uint16_t value, std::shared_ptr<CallbackUInt16> callback) {
+void MrfMmapMemoryAccess::writeUInt16(
+  std::uint32_t address,
+  std::uint16_t value,
+  std::shared_ptr<CallbackUInt16> callback,
+  ReadbackMode readbackMode
+) {
   if (!verifyAddress16(address, memorySize, callback)) {
     return;
   }
-  MrfIoRequest request(MrfIoRequestType::writeUInt16, address, value, callback);
+  MrfIoRequestType requestType;
+  if (readbackMode == ReadbackMode::must) {
+    requestType = MrfIoRequestType::writeReadUInt16;
+  } else {
+    requestType = MrfIoRequestType::writeUInt16;
+  }
+  MrfIoRequest request(requestType, address, value, callback);
   queueIoRequest(std::move(request));
 }
 
@@ -131,12 +141,22 @@ void MrfMmapMemoryAccess::readUInt32(std::uint32_t address,
   queueIoRequest(std::move(request));
 }
 
-void MrfMmapMemoryAccess::writeUInt32(std::uint32_t address,
-    std::uint32_t value, std::shared_ptr<CallbackUInt32> callback) {
+void MrfMmapMemoryAccess::writeUInt32(
+  std::uint32_t address,
+  std::uint32_t value,
+  std::shared_ptr<CallbackUInt32> callback,
+  ReadbackMode readbackMode
+) {
   if (!verifyAddress32(address, memorySize, callback)) {
     return;
   }
-  MrfIoRequest request(MrfIoRequestType::writeUInt32, address, value, callback);
+  MrfIoRequestType requestType;
+  if (readbackMode == ReadbackMode::must) {
+    requestType = MrfIoRequestType::writeReadUInt32;
+  } else {
+    requestType = MrfIoRequestType::writeUInt32;
+  }
+  MrfIoRequest request(requestType, address, value, callback);
   queueIoRequest(std::move(request));
 }
 
@@ -324,6 +344,7 @@ void MrfMmapMemoryAccess::MrfIoRequest::fail(ErrorCode errorCode,
         "MrfIoRequest::fail has been called on an uninitialized object.");
   case MrfIoRequestType::readUInt16:
   case MrfIoRequestType::writeUInt16:
+  case MrfIoRequestType::writeReadUInt16:
     try {
       if (callback16) {
         callback16->failure(address, errorCode, details);
@@ -335,6 +356,7 @@ void MrfMmapMemoryAccess::MrfIoRequest::fail(ErrorCode errorCode,
     break;
   case MrfIoRequestType::readUInt32:
   case MrfIoRequestType::writeUInt32:
+  case MrfIoRequestType::writeReadUInt32:
     try {
       if (callback32) {
         callback32->failure(address, errorCode, details);
@@ -390,7 +412,9 @@ void MrfMmapMemoryAccess::queueIoRequest(MrfIoRequest &&request) {
 // the kernel driver.
 #define ANKA_MRF_IOCTL_IRQ_DISABLE _IO(220, 2)
 
-static void prepareInterrupt(int fileDescriptor) {
+namespace {
+
+void prepareInterrupt(int fileDescriptor) {
   // We set this thread as the file owner. This ensures that SIGIO signals are
   // delivered to the I/O thread and not to the whole process.
   struct ::f_owner_ex owner;
@@ -418,7 +442,7 @@ static void prepareInterrupt(int fileDescriptor) {
   }
 }
 
-static void enableInterrupt(int fileDescriptor) {
+void enableInterrupt(int fileDescriptor) {
   if (::ioctl(fileDescriptor, ANKA_MRF_IOCTL_IRQ_ENABLE) == -1) {
     throw std::system_error(
         errno,
@@ -427,7 +451,7 @@ static void enableInterrupt(int fileDescriptor) {
   }
 }
 
-inline static void prepareIo(void *targetAddress) noexcept {
+inline void prepareIo(void *targetAddress) noexcept {
   // When the I/O operation fails with a SIGBUS, our signal handler ensures
   // that the execution jumps back to the point where we called sigsetjmp and
   // that this function returns a non-zero value.
@@ -453,7 +477,7 @@ inline static void prepareIo(void *targetAddress) noexcept {
   std::atomic_signal_fence(std::memory_order_acquire);
 }
 
-inline static void finishIo() noexcept {
+inline void finishIo() noexcept {
   // Doing both a release and acquire before resetting the active flag should
   // ensure that the hardware access never gets reordered after resetting the
   // flag.
@@ -466,8 +490,8 @@ inline static void finishIo() noexcept {
   std::atomic_signal_fence(std::memory_order_release);
 }
 
-inline static bool ioReadUInt16(void *targetAddress, std::uint16_t &value)
-    noexcept {
+template <typename Func, typename ValueType>
+inline bool performIo(void *targetAddress, ValueType &value) {
   // If sigsetjmp returns a non-zero value, siglongjmp was called by the signal
   // handler which means that an error occurred.
   if (::sigsetjmp(threadLocalIoInfo.jumpBuffer, 1)) {
@@ -475,84 +499,99 @@ inline static bool ioReadUInt16(void *targetAddress, std::uint16_t &value)
     return false;
   }
   prepareIo(targetAddress);
-  // The MRF devices use big endian internally, so we have to convert when we
-  // are running on a little endian system. htonl, htons, ntohl, and ntohs can
-  // be preprocessor macros, so we cannot qualify them explicitly with "::".
-  value = ntohs(*(reinterpret_cast<volatile std::uint16_t *>(targetAddress)));
+  Func()(targetAddress, value);
   finishIo();
   return true;
 }
 
-inline static bool ioReadUInt32(void *targetAddress, std::uint32_t &value)
-    noexcept {
-  // If sigsetjmp returns a non-zero value, siglongjmp was called by the signal
-  // handler which means that an error occurred.
-  if (::sigsetjmp(threadLocalIoInfo.jumpBuffer, 1)) {
-    finishIo();
-    return false;
+struct IoReadUInt16 {
+  inline void operator()(void *targetAddress, std::uint16_t &value) noexcept {
+    // The MRF devices use big endian internally, so we have to convert when we
+    // are running on a little endian system. htonl, htons, ntohl, and ntohs
+    // can be preprocessor macros, so we cannot qualify them explicitly with
+    // "::".
+    value = ntohs(
+      *(reinterpret_cast<volatile std::uint16_t *>(targetAddress))
+    );
   }
-  prepareIo(targetAddress);
-  // The MRF devices use big endian internally, so we have to convert when we
-  // are running on a little endian system. htonl, htons, ntohl, and ntohs can
-  // be preprocessor macros, so we cannot qualify them explicitly with "::".
-  value = ntohl(*(reinterpret_cast<volatile std::uint32_t *>(targetAddress)));
-  finishIo();
-  return true;
-}
+};
 
-inline static bool ioReadWriteBackUInt32(void *targetAddress, std::uint32_t &value)
-    noexcept {
-  // If sigsetjmp returns a non-zero value, siglongjmp was called by the signal
-  // handler which means that an error occurred.
-  if (::sigsetjmp(threadLocalIoInfo.jumpBuffer, 1)) {
-    finishIo();
-    return false;
+struct IoReadUInt32 {
+  inline void operator()(void *targetAddress, std::uint32_t &value) noexcept {
+    // The MRF devices use big endian internally, so we have to convert when we
+    // are running on a little endian system. htonl, htons, ntohl, and ntohs
+    // can be preprocessor macros, so we cannot qualify them explicitly with
+    // "::".
+    value = ntohl(
+      *(reinterpret_cast<volatile std::uint32_t *>(targetAddress))
+    );
   }
-  prepareIo(targetAddress);
-  // The MRF devices use big endian internally, so we have to convert when we
-  // are running on a little endian system. htonl, htons, ntohl, and ntohs can
-  // be preprocessor macros, so we cannot qualify them explicitly with "::".
-  value = ntohl(*(reinterpret_cast<volatile std::uint32_t *>(targetAddress)));
-  *(reinterpret_cast<volatile std::uint32_t *>(targetAddress)) = htonl(value);
-  finishIo();
-  return true;
-}
+};
 
-inline static bool ioWriteReadUInt16(void *targetAddress, std::uint16_t &value)
-    noexcept {
-  // If sigsetjmp returns a non-zero value, siglongjmp was called by the signal
-  // handler which means that an error occurred.
-  if (::sigsetjmp(threadLocalIoInfo.jumpBuffer, 1)) {
-    finishIo();
-    return false;
+struct IoReadWriteBackUInt32 {
+  inline void operator()(
+    void *targetAddress, std::uint32_t &value
+  ) noexcept {
+    // The MRF devices use big endian internally, so we have to convert when we
+    // are running on a little endian system. htonl, htons, ntohl, and ntohs
+    // can be preprocessor macros, so we cannot qualify them explicitly with
+    // "::".
+    value = ntohl(
+      *(reinterpret_cast<volatile std::uint32_t *>(targetAddress))
+    );
+    *(reinterpret_cast<volatile std::uint32_t *>(targetAddress)) = htonl(
+      value
+    );
   }
-  prepareIo(targetAddress);
-  // The MRF devices use big endian internally, so we have to convert when we
-  // are running on a little endian system. htonl, htons, ntohl, and ntohs can
-  // be preprocessor macros, so we cannot qualify them explicitly with "::".
-  *(reinterpret_cast<volatile std::uint16_t *>(targetAddress)) = htons(value);
-  value = ntohs(*(reinterpret_cast<volatile std::uint16_t *>(targetAddress)));
-  finishIo();
-  return true;
-}
+};
 
-inline static bool ioWriteReadUInt32(void *targetAddress, std::uint32_t &value)
-    noexcept {
-  // If sigsetjmp returns a non-zero value, siglongjmp was called by the signal
-  // handler which means that an error occurred.
-  if (::sigsetjmp(threadLocalIoInfo.jumpBuffer, 1)) {
-    finishIo();
-    return false;
+struct IoWriteUInt16 {
+  inline void operator()(
+    void *targetAddress, std::uint16_t &value
+  ) noexcept {
+    // The MRF devices use big endian internally, so we have to convert when we
+    // are running on a little endian system. htonl, htons, ntohl, and ntohs
+    // can be preprocessor macros, so we cannot qualify them explicitly with
+    // "::".
+    *(reinterpret_cast<volatile std::uint16_t *>(targetAddress)) = htons(
+      value
+    );
   }
-  prepareIo(targetAddress);
-  // The MRF devices use big endian internally, so we have to convert when we
-  // are running on a little endian system. htonl, htons, ntohl, and ntohs can
-  // be preprocessor macros, so we cannot qualify them explicitly with "::".
-  *(reinterpret_cast<volatile std::uint32_t *>(targetAddress)) = htonl(value);
-  value = ntohl(*(reinterpret_cast<volatile std::uint32_t *>(targetAddress)));
-  finishIo();
-  return true;
-}
+};
+
+struct IoWriteUInt32 {
+  inline void operator()(
+    void *targetAddress, std::uint32_t &value
+  ) noexcept {
+    // The MRF devices use big endian internally, so we have to convert when we
+    // are running on a little endian system. htonl, htons, ntohl, and ntohs
+    // can be preprocessor macros, so we cannot qualify them explicitly with
+    // "::".
+    *(reinterpret_cast<volatile std::uint32_t *>(targetAddress)) = htonl(
+      value
+    );
+  }
+};
+
+struct IoWriteReadUInt16 {
+  inline void operator()(
+    void *targetAddress, std::uint16_t &value
+  ) noexcept {
+    IoWriteUInt16()(targetAddress, value);
+    IoReadUInt16()(targetAddress, value);
+  }
+};
+
+struct IoWriteReadUInt32 {
+  inline void operator()(
+    void *targetAddress, std::uint32_t &value
+  ) noexcept {
+    IoWriteUInt32()(targetAddress, value);
+    IoReadUInt32()(targetAddress, value);
+  }
+};
+
+} // anonymous namespace
 
 void MrfMmapMemoryAccess::runIoThread() {
   // We block the SIGIO signal for this thread. We want to read this signal from
@@ -718,16 +757,30 @@ void MrfMmapMemoryAccess::runIoThread() {
         throw std::logic_error(
             "The I/O request queue contained an uninitialized request.");
       case MrfIoRequestType::readUInt16:
-        ioSuccessful = ioReadUInt16(targetAddress, request.value16);
+        ioSuccessful = performIo<IoReadUInt16>(targetAddress, request.value16);
         break;
       case MrfIoRequestType::writeUInt16:
-        ioSuccessful = ioWriteReadUInt16(targetAddress, request.value16);
+        ioSuccessful = (
+          performIo<IoWriteUInt16>(targetAddress, request.value16)
+        );
+        break;
+      case MrfIoRequestType::writeReadUInt16:
+        ioSuccessful = (
+          performIo<IoWriteReadUInt16>(targetAddress, request.value16)
+        );
         break;
       case MrfIoRequestType::readUInt32:
-        ioSuccessful = ioReadUInt32(targetAddress, request.value32);
+        ioSuccessful = performIo<IoReadUInt32>(targetAddress, request.value32);
         break;
       case MrfIoRequestType::writeUInt32:
-        ioSuccessful = ioWriteReadUInt32(targetAddress, request.value32);
+        ioSuccessful = (
+          performIo<IoWriteUInt32>(targetAddress, request.value32)
+        );
+        break;
+      case MrfIoRequestType::writeReadUInt32:
+        ioSuccessful = (
+          performIo<IoWriteReadUInt32>(targetAddress, request.value32)
+        );
         break;
       }
       // We have to notify the callback of the result of the operation.
@@ -740,6 +793,7 @@ void MrfMmapMemoryAccess::runIoThread() {
               "MrfIoRequest::fail has been called on an uninitialized object.");
         case MrfIoRequestType::readUInt16:
         case MrfIoRequestType::writeUInt16:
+        case MrfIoRequestType::writeReadUInt16:
           try {
             if (request.callback16) {
               request.callback16->success(request.address, request.value16);
@@ -751,6 +805,7 @@ void MrfMmapMemoryAccess::runIoThread() {
           break;
         case MrfIoRequestType::readUInt32:
         case MrfIoRequestType::writeUInt32:
+        case MrfIoRequestType::writeReadUInt32:
           try {
             if (request.callback32) {
               request.callback32->success(request.address, request.value32);
@@ -787,10 +842,14 @@ void MrfMmapMemoryAccess::runIoThread() {
       // We get the value of the interrupt enable register, save the value of
       // the interrupt flag register, and reset the flags so that we can
       // re-enable interrupts without getting an interrupt right again.
-      ioSuccessful = ioReadUInt32(interruptEnableRegisterAddress,
-          interruptEnableRegister)
-          && ioReadWriteBackUInt32(interruptFlagRegisterAddress,
-              interruptFlagRegister);
+      ioSuccessful = (
+        performIo<IoReadUInt32>(
+          interruptEnableRegisterAddress, interruptEnableRegister
+        ) && performIo<IoReadWriteBackUInt32>(
+          interruptFlagRegisterAddress,
+          interruptFlagRegister
+        )
+      );
       if (ioSuccessful) {
         // We only want to use those bits of the interrupt flag register for
         // which interrupts are actually enabled. The might be other bits in the

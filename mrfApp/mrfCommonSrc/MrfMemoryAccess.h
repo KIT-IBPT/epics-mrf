@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2016 aquenos GmbH.
- * Copyright 2015-2016 Karlsruhe Institute of Technology.
+ * Copyright 2015-2026 aquenos GmbH.
+ * Copyright 2015-2026 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -79,6 +79,32 @@ public:
   };
 
   /**
+   * Readback behavior when writing to a register.
+   */
+  enum class ReadbackMode {
+
+    /**
+     * The write operation may but does not have to read back the register that
+     * was just written. This mode is always supported.
+     */
+    may,
+
+    /**
+     * The write operation must read the back the register that was just
+     * written and provide the value to the calling code. This mode is always
+     * supported.
+     */
+    must,
+
+    /**
+     * The write operation must not read back the register that was just
+     * written. This mode is not supported when accessing a device through
+     * MrfUdpIpMemoryAccessV1.
+     */
+    mustNot
+  };
+
+  /**
    * Interface for a memory-access callback. Callbacks allow memory access in an
    * asynchronous way, so that a register can be read or written without having
    * to wait until the operation finishes.
@@ -91,7 +117,8 @@ public:
     /**
      * Called when a read or write operation succeeds. The address passed is the
      * address specified in the read or write request. The value passed is the
-     * value read from the device memory (even for write operations).
+     * value read from the device memory (unless a write operation specifies
+     * ReadbackMode::may or ReadbackMode::mustNot).
      */
     virtual void success(std::uint32_t address, T value) = 0;
 
@@ -189,11 +216,16 @@ public:
 
   /**
    * Writes to an unsigned 16-bit register. The method blocks until the
-   * operation has finished (either successfully or unsuccessfully). On success,
-   * the value read from the memory (after writing to it) is returned. On
-   * failure, an exception is thrown.
+   * operation has finished (either successfully or unsuccessfully). On
+   * success, the value read from the memory (after writing to it) may be
+   * returned (depending on the specified readback mode). On failure, an
+   * exception is thrown.
    */
-  virtual std::uint16_t writeUInt16(std::uint32_t address, std::uint16_t value);
+  virtual std::uint16_t writeUInt16(
+    std::uint32_t address,
+    std::uint16_t value,
+    ReadbackMode readbackMode = ReadbackMode::must
+  );
 
   /**
    * Reads from an unsigned 16-bit register. This method does not block. The
@@ -210,8 +242,12 @@ public:
    * finishes, the specified callback is called. Implementations that can write
    * without blocking might call the callback directly in the calling thread.
    */
-  virtual void writeUInt16(std::uint32_t address, std::uint16_t value,
-      std::shared_ptr<CallbackUInt16> callback) = 0;
+  virtual void writeUInt16(
+    std::uint32_t address,
+    std::uint16_t value,
+    std::shared_ptr<CallbackUInt16> callback,
+    ReadbackMode readbackMode = ReadbackMode::must
+  ) = 0;
 
   /**
    * Reads from an unsigned 32-bit register. The method blocks until the
@@ -223,11 +259,16 @@ public:
 
   /**
    * Writes to an unsigned 32-bit register. The method blocks until the
-   * operation has finished (either successfully or unsuccessfully). On success,
-   * the value read from the memory (after writing to it) is returned. On
-   * failure, an exception is thrown.
+   * operation has finished (either successfully or unsuccessfully). On
+   * success, the value read from the memory (after writing to it) may be
+   * returned (depending on the specified readback mode). On failure, an
+   * exception is thrown.
    */
-  virtual std::uint32_t writeUInt32(std::uint32_t address, std::uint32_t value);
+  virtual std::uint32_t writeUInt32(
+    std::uint32_t address,
+    std::uint32_t value,
+    ReadbackMode readbackMode = ReadbackMode::must
+  );
 
   /**
    * Reads from an unsigned 32-bit register. This method does not block. The
@@ -244,8 +285,12 @@ public:
    * finishes, the specified callback is called. Implementations that can write
    * without blocking might call the callback directly in the calling thread.
    */
-  virtual void writeUInt32(std::uint32_t address, std::uint32_t value,
-      std::shared_ptr<CallbackUInt32> callback) = 0;
+  virtual void writeUInt32(
+    std::uint32_t address,
+    std::uint32_t value,
+    std::shared_ptr<CallbackUInt32> callback,
+    ReadbackMode readbackMode = ReadbackMode::must
+  ) = 0;
 
   /**
    * Tells whether this memory access supports interrupts. If the memory access

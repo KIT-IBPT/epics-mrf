@@ -32,6 +32,8 @@
 
 #include <cstdint>
 
+#include "MrfUdpIpProtocolVersion.h"
+
 namespace anka {
 namespace mrf {
 
@@ -43,16 +45,7 @@ class MrfUdpPacket {
 
 public:
 
-  /**
-   * Version of the UDP-based protocol.
-   *
-   * Version 1 only supports 16-bit operations, version 32 supports both 16-
-   * and 32-bit operations.
-   */
-  enum class ProtocolVersion {
-    V1,
-    V2
-  };
+  using ProtocolVersion = MrfUdpIpProtocolVersion;
 
   /**
    * Default constructor.

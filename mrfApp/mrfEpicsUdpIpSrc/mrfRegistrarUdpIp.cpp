@@ -43,6 +43,7 @@
 #include <MrfUdpIpMemoryAccess.h>
 #include <MrfUdpIpMemoryAccessV1.h>
 #include <MrfUdpIpMemoryAccessV2.h>
+#include <MrfUdpIpProtocolVersion.h>
 #include <mrfEpicsError.h>
 
 #if EPICS_VERSION_INT >= VERSION_INT(7,0,3,1)
@@ -57,9 +58,7 @@ using namespace anka::mrf::epics;
 
 namespace {
 
-enum class ProtocolVersion {
-  V1, V2
-};
+using ProtocolVersion = MrfUdpIpProtocolVersion;
 
 /**
  * Preheats the cache for a VME-EVG-230. This helps reduce the initialization

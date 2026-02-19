@@ -40,7 +40,7 @@ namespace mrf {
 MrfUdpIpMemoryAccessV2::MrfUdpIpMemoryAccessV2(
   const std::string &hostName, std::uint32_t baseAddress
 ) :
-  MrfUdpIpMemoryAccess(hostName, baseAddress)
+  MrfUdpIpMemoryAccess(ProtocolVersion::V2, hostName, baseAddress)
 {
 }
 
@@ -50,7 +50,9 @@ MrfUdpIpMemoryAccessV2::MrfUdpIpMemoryAccessV2(
   const std::chrono::duration<double> &queueTimeout,
   const std::chrono::duration<double> &requestTimeout
 ) :
-  MrfUdpIpMemoryAccess(hostName, baseAddress, queueTimeout, requestTimeout)
+  MrfUdpIpMemoryAccess(
+    ProtocolVersion::V2, hostName, baseAddress, queueTimeout, requestTimeout
+  )
 {
 }
 
@@ -99,12 +101,16 @@ void MrfUdpIpMemoryAccessV2::readUInt32(
 void MrfUdpIpMemoryAccessV2::writeUInt32(
   std::uint32_t address,
   std::uint32_t value,
-  std::shared_ptr<CallbackUInt32> callback
+  std::shared_ptr<CallbackUInt32> callback,
+  ReadbackMode readbackMode
 ) {
   std::shared_ptr<UInt32Callback> internalCallback = (
     std::make_shared<UInt32Callback>(address, callback)
   );
-  client.queueWriteRequest32(baseAddress + address, value, internalCallback);
+  auto readback = (readbackMode == ReadbackMode::must);
+  client.queueWriteRequest32(
+    baseAddress + address, value, internalCallback, readback
+  );
 }
 
 } // namespace mrf

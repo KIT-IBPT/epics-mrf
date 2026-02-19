@@ -46,6 +46,7 @@
 
 #include <MrfFdSelector.h>
 #include "MrfUdpPacket.h"
+#include "MrfUdpIpProtocolVersion.h"
 
 namespace anka {
 namespace mrf {
@@ -67,6 +68,8 @@ public:
     PeerOfflineException() : std::runtime_error("Peer is offline") {
     };
   };
+
+  using ProtocolVersion = MrfUdpIpProtocolVersion;
 
   /**
    * Data structure that is used for the request callbacks.
@@ -100,6 +103,10 @@ public:
   /**
    * Creates a UDP/IP client for an MRF device.
    *
+   * The protocol version does not only define the on-wire format but also
+   * defines the feature set that is available. When using protocol version 1,
+   * 32-bit operations and write operations without readback are not supported.
+   *
    * The specified host name can either be a DNS name or an IP address.
    *
    * The queue timeout is the time between queuing a request and it being
@@ -122,13 +129,18 @@ public:
    */
   template<typename Rep1, typename Period1, typename Rep2, typename Period2>
   MrfUdpIpClient(
-      const std::string &hostName,
-      const std::chrono::duration<Rep1, Period1> &queueTimeout,
-      const std::chrono::duration<Rep2, Period2> &requestTimeout) :
-      MrfUdpIpClient(
-        hostName,
-        std::chrono::duration_cast<Clock::duration>(queueTimeout),
-        std::chrono::duration_cast<Clock::duration>(requestTimeout)) {
+    ProtocolVersion protocolVersion,
+    const std::string &hostName,
+    const std::chrono::duration<Rep1, Period1> &queueTimeout,
+    const std::chrono::duration<Rep2, Period2> &requestTimeout
+  ) :
+    MrfUdpIpClient(
+      protocolVersion,
+      hostName,
+      std::chrono::duration_cast<Clock::duration>(queueTimeout),
+      std::chrono::duration_cast<Clock::duration>(requestTimeout)
+    )
+  {
   }
 
   /**
@@ -136,6 +148,13 @@ public:
    * background threads.
    */
   virtual ~MrfUdpIpClient();
+
+  /**
+   * Returns the protocol version in use.
+   */
+  inline ProtocolVersion getProtocolVersion() {
+    return protocolVersion;
+  }
 
   /**
    * Queues a request for reading a word from a memory address.
@@ -159,7 +178,8 @@ public:
   void queueWriteRequest16(
     std::uint32_t address,
     std::uint16_t data,
-    const std::shared_ptr<RequestCallback16> &callback
+    const std::shared_ptr<RequestCallback16> &callback,
+    bool readback
   );
 
   /**
@@ -168,7 +188,8 @@ public:
   void queueWriteRequest32(
     std::uint32_t address,
     std::uint32_t data,
-    const std::shared_ptr<RequestCallback32> &callback
+    const std::shared_ptr<RequestCallback32> &callback,
+    bool readback
   );
 
 private:
@@ -193,9 +214,21 @@ private:
     WRITE16 = 2,
 
     /**
+     * Write word without reading back the register (only valid with protocol
+     * version 2).
+     */
+    WRITE16_NO_READBACK = 3,
+
+    /**
      * Write double word (only valid with protocol version 2).
      */
-    WRITE32 = 5
+    WRITE32 = 5,
+
+    /**
+     * Write double word without reading back the register (only valid with
+     * protocol version 2).
+     */
+    WRITE32_NO_READBACK = 6
   };
 
   /**
@@ -216,14 +249,31 @@ private:
       AccessType accessType,
       std::uint32_t address,
       std::uint16_t data,
-      bool idempotent
+      bool idempotent,
+      ProtocolVersion protocolVersion
     ) :
       callback(callback),
       idempotent(idempotent),
-      packet(static_cast<std::int8_t>(accessType), address, data, 0, 0),
       queueTime(Clock::now()),
       successOrTimeout(false)
     {
+      // Protocol version 1 uses a 16-bit data field, while protocol version 2
+      // uses a 32-bit data field. Protocol version 2 can still be used to
+      // access 16-bit registers. This happens by specifying the respective
+      // access type.
+      if (protocolVersion == ProtocolVersion::V1) {
+        packet = MrfUdpPacket(
+          static_cast<std::int8_t>(accessType), address, data, 0, 0
+        );
+      } else {
+        packet = MrfUdpPacket(
+          static_cast<std::int8_t>(accessType),
+          address,
+          static_cast<std::uint32_t>(data),
+          0,
+          0
+        );
+      }
     }
 
     Request(
@@ -302,9 +352,11 @@ private:
    * type that is compatible with the system clock.
    */
   MrfUdpIpClient(
-      const std::string &hostName,
-      const Clock::duration &queueTimeout,
-      const Clock::duration &requestTimeout);
+    ProtocolVersion protocolVersion,
+    const std::string &hostName,
+    const Clock::duration &queueTimeout,
+    const Clock::duration &requestTimeout
+  );
 
   // We do not want to allow copy or move construction or assignment.
   MrfUdpIpClient(const MrfUdpIpClient &) = delete;
@@ -493,6 +545,11 @@ private:
    * Ref that is going to be used for the next packet that is sent.
    */
   std::uint32_t nextRef = 0;
+
+  /**
+   * Version of the protocol that is used.
+   */
+  ProtocolVersion protocolVersion;
 
   /**
    * Timeout determining how long a request can stay in the queue before being

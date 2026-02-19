@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2016 aquenos GmbH.
- * Copyright 2015-2016 Karlsruhe Institute of Technology.
+ * Copyright 2015-2026 aquenos GmbH.
+ * Copyright 2015-2026 Karlsruhe Institute of Technology.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -98,7 +98,7 @@ public:
 
 };
 
-}
+} // anonymous namespace
 
 std::uint16_t MrfMemoryAccess::readUInt16(std::uint32_t address) {
   auto callback = std::make_shared<CallbackImpl<std::uint16_t>>();
@@ -106,10 +106,13 @@ std::uint16_t MrfMemoryAccess::readUInt16(std::uint32_t address) {
   return callback->getResult();
 }
 
-std::uint16_t MrfMemoryAccess::writeUInt16(std::uint32_t address,
-    std::uint16_t value) {
+std::uint16_t MrfMemoryAccess::writeUInt16(
+  std::uint32_t address,
+  std::uint16_t value,
+  ReadbackMode readbackMode
+) {
   auto callback = std::make_shared<CallbackImpl<std::uint16_t>>();
-  this->writeUInt16(address, value, callback);
+  this->writeUInt16(address, value, callback, readbackMode);
   return callback->getResult();
 }
 
@@ -119,10 +122,13 @@ std::uint32_t MrfMemoryAccess::readUInt32(std::uint32_t address) {
   return callback->getResult();
 }
 
-std::uint32_t MrfMemoryAccess::writeUInt32(std::uint32_t address,
-    std::uint32_t value) {
+std::uint32_t MrfMemoryAccess::writeUInt32(
+  std::uint32_t address,
+  std::uint32_t value,
+  ReadbackMode readbackMode
+) {
   auto callback = std::make_shared<CallbackImpl<std::uint32_t>>();
-  this->writeUInt32(address, value, callback);
+  this->writeUInt32(address, value, callback, readbackMode);
   return callback->getResult();
 }
 

@@ -90,8 +90,49 @@ public:
   static constexpr std::uint32_t baseAddressVmeEvr300Register = 0x80000000;
 
   /**
+   * Destructor. Shuts down and destroys the underlying UDP client.
+   */
+  virtual ~MrfUdpIpMemoryAccess();
+
+  /**
+   * Reads from an unsigned 16-bit register. This method does not block. The
+   * operation is queued and executed asynchronously. When the operation
+   * finishes, the specified callback is called.
+   */
+  virtual void readUInt16(
+    std::uint32_t address, std::shared_ptr<CallbackUInt16> callback
+  );
+
+  /**
+   * Writes to an unsigned 16-bit register. This method does not block. The
+   * operation is queued and executed asynchronously. When the operation
+   * finishes, the specified callback is called.
+   */
+  virtual void writeUInt16(
+    std::uint32_t address,
+    std::uint16_t value,
+    std::shared_ptr<CallbackUInt16>,
+    ReadbackMode readbackMode = ReadbackMode::must
+  );
+
+  // We want the methods from the base class to participate in overload
+  // resolution.
+  using MrfMemoryAccess::readUInt16;
+  using MrfMemoryAccess::readUInt32;
+  using MrfMemoryAccess::writeUInt16;
+  using MrfMemoryAccess::writeUInt32;
+
+protected:
+
+  using ProtocolVersion = MrfUdpIpClient::ProtocolVersion;
+
+  /**
    * Creates a memory-access object for an MRF device that can be controlled
    * via UDP/IP.
+   *
+   * The protocol version does not only define the on-wire format but also
+   * defines the feature set that is available. When using protocol version 1,
+   * 32-bit operations and write operations without readback are not supported.
    *
    * The specified host name can either be a DNS name or an IP address.
    *
@@ -110,11 +151,19 @@ public:
    * cannot be initialized, the background threads cannot be created, or if one
    * of the parameters is invalid.
    */
-  MrfUdpIpMemoryAccess(const std::string &hostName, std::uint32_t baseAddress);
+  MrfUdpIpMemoryAccess(
+    ProtocolVersion protocolVersion,
+    std::string const &hostName,
+    std::uint32_t baseAddress
+  );
 
   /**
    * Creates a memory-access object for an MRF device that can be controlled
    * via UDP/IP.
+   *
+   * The protocol version does not only define the on-wire format but also
+   * defines the feature set that is available. When using protocol version 1,
+   * 32-bit operations and write operations without readback are not supported.
    *
    * The specified host name can either be a DNS name or an IP address.
    *
@@ -142,43 +191,12 @@ public:
    * of the parameters is invalid.
    */
   MrfUdpIpMemoryAccess(
+    ProtocolVersion protocolVersion,
     const std::string &hostName,
     std::uint32_t baseAddress,
     const std::chrono::duration<double> &queueTimeout,
     const std::chrono::duration<double> &requestTimeout
   );
-
-  /**
-   * Destructor. Shuts down and destroys the underlying UDP client.
-   */
-  virtual ~MrfUdpIpMemoryAccess();
-
-  /**
-   * Reads from an unsigned 16-bit register. This method does not block. The
-   * operation is queued and executed asynchronously. When the operation
-   * finishes, the specified callback is called.
-   */
-  virtual void readUInt16(
-    std::uint32_t address, std::shared_ptr<CallbackUInt16> callback
-  );
-
-  /**
-   * Writes to an unsigned 16-bit register. This method does not block. The
-   * operation is queued and executed asynchronously. When the operation
-   * finishes, the specified callback is called.
-   */
-  virtual void writeUInt16(
-    std::uint32_t address, std::uint16_t value, std::shared_ptr<CallbackUInt16>
-  );
-
-  // We want the methods from the base class to participate in overload
-  // resolution.
-  using MrfMemoryAccess::readUInt16;
-  using MrfMemoryAccess::readUInt32;
-  using MrfMemoryAccess::writeUInt16;
-  using MrfMemoryAccess::writeUInt32;
-
-protected:
 
   /**
    * Base address for memory access.

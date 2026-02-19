@@ -40,7 +40,7 @@ namespace mrf {
 MrfUdpIpMemoryAccessV1::MrfUdpIpMemoryAccessV1(
   const std::string &hostName, std::uint32_t baseAddress
 ) :
-  MrfUdpIpMemoryAccess(hostName, baseAddress)
+  MrfUdpIpMemoryAccess(ProtocolVersion::V1, hostName, baseAddress)
 {
 }
 
@@ -50,7 +50,9 @@ MrfUdpIpMemoryAccessV1::MrfUdpIpMemoryAccessV1(
   const std::chrono::duration<double> &queueTimeout,
   const std::chrono::duration<double> &requestTimeout
 ) :
-  MrfUdpIpMemoryAccess(hostName, baseAddress, queueTimeout, requestTimeout)
+  MrfUdpIpMemoryAccess(
+    ProtocolVersion::V1, hostName, baseAddress, queueTimeout, requestTimeout
+  )
 {
 }
 
@@ -270,8 +272,10 @@ void MrfUdpIpMemoryAccessV1::UInt32WriteHighCallback::operator()(
           address, receivedData, callback
         )
       );
+      // Version 1 of the protocol only supports writes with readback, so we
+      // have to set the respective flag.
       memoryAccess.client.queueWriteRequest16(
-        memoryAccess.baseAddress + address + 2, lowData, internalCallback
+        memoryAccess.baseAddress + address + 2, lowData, internalCallback, true
       );
     } catch (std::exception &e) {
       callback->failure(address, ErrorCode::unknown,
@@ -333,8 +337,17 @@ void MrfUdpIpMemoryAccessV1::readUInt32(
 void MrfUdpIpMemoryAccessV1::writeUInt32(
   std::uint32_t address,
   std::uint32_t value,
-  std::shared_ptr<CallbackUInt32> callback
+  std::shared_ptr<CallbackUInt32> callback,
+  ReadbackMode readbackMode
 ) {
+  // When using version 1 of the protocol, there is no way to write a value
+  // without also reading the register, so we raise an exception if this is
+  // requested.
+  if (readbackMode == ReadbackMode::mustNot) {
+    throw std::invalid_argument(
+      "ReadbackMode::mustNot is not supported for protocol version 1."
+    );
+  }
   std::uint16_t lowWord = static_cast<std::uint16_t>(value);
   std::uint16_t highWord = static_cast<std::uint16_t>(value >> 16);
   // We have to write the high word first. Once it has been written, we can
@@ -346,8 +359,10 @@ void MrfUdpIpMemoryAccessV1::writeUInt32(
       *this, address, lowWord, callback
     )
   );
+  // Version 1 of the protocol only supports writes with readback, so we have
+  // to set the respective flag.
   client.queueWriteRequest16(
-    baseAddress + address, highWord, internalCallback
+    baseAddress + address, highWord, internalCallback, true
   );
 }
 
